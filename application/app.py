@@ -1,4 +1,6 @@
 from flask import Flask, render_template, redirect, url_for
+import sys
+sys.dont_write_bytecode = True
 
 # create a Flask app
 app = Flask(__name__, template_folder='templates', static_folder='static')
