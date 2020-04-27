@@ -10,6 +10,11 @@ from Modules import *
 
 app.register_blueprint(DashboardController)
 
+'''
+from Modules.Database import Engine, Base
+Base.metadata.create_all(Engine)
+'''
+
 @app.route('/')
 def index():
     return 'hello world'
