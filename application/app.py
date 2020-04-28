@@ -11,7 +11,7 @@ from Modules import *
 app.register_blueprint(DashboardController)
 
 '''
-from Modules.Database import Engine, Base
+from Database import Engine, Base
 Base.metadata.create_all(Engine)
 '''
 
