@@ -1,9 +1,9 @@
 from flask import current_app, Blueprint, render_template, request, url_for, redirect, flash, session, jsonify
 from app import app
 
-from Database import Session, Customers
+from Models import Session, Customers
 
-DashboardController = Blueprint('DashboardController', __name__, url_prefix='/admin', template_folder='Views', static_folder='static')
+DashboardController = Blueprint('DashboardController', __name__, url_prefix='/admin', template_folder='../../../Views/Admin/Dashboard', static_folder='../../../webroot')
 
 @DashboardController.route('/')
 def index():
