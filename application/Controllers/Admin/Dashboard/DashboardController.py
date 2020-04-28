@@ -1,7 +1,7 @@
 from flask import current_app, Blueprint, render_template, request, url_for, redirect, flash, session, jsonify
 from app import app
 
-from Models import Session, Customers
+from Models import Session
 
 DashboardController = Blueprint('DashboardController', __name__, url_prefix='/admin', template_folder='../../../Views/Admin/Dashboard', static_folder='../../../webroot')
 
