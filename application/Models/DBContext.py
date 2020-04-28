@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, Boolean, DateTime, Table
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, Boolean, DateTime, Table, LargeBinary
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 import datetime
@@ -65,6 +65,7 @@ class Post(Base):
     nests = relationship('Nest', back_populates='post')
     term = relationship('Term', back_populates='page')
     terms = relationship('Term', secondary=Post_Term, back_populates='posts')
+    groupers = relationship('Grouper', back_populates='post')
 
 
 class Nest(Base):
@@ -109,3 +110,79 @@ class Taxonomy(Base):
     # relationships
     terms = relationship('Term', back_populates='taxonomy')
     post_types = relationship('PostType', secondary=Post_Type_Taxonomy, back_populates='taxonomies')
+
+
+class Grouper(Base):
+    __tablename__ = 'Grouper'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(String(255), nullable=True)
+    order = Column(Integer, nullable=False)
+    # foreignKeys
+    parent_id = Column(Integer, ForeignKey('Grouper.id'), nullable=True)
+    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
+    # relationships
+    parent = relationship('Grouper', back_populates='children')
+    children = relationship('Grouper', back_populates='parent')
+    post = relationship('Post', back_populates='groupers')
+    fields = relationship('Field', back_populates='grouper')
+
+
+class Field(Base):
+    __tablename__ = 'Field'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(String(255), nullable=True)
+    type = Column(String(15), nullable=False)
+    order = Column(Integer, nullable=False)
+    # foreignKeys
+    grouer_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
+    # relationships
+    grouper = relationship('Grouper', back_populates='fields')
+    contents = relationship('FieldContent', back_populates='field')
+    texts = relationship('FieldText', back_populates='field')
+    files = relationship('FieldFile', back_populates='field')
+
+
+class FieldContent(Base):
+    __tablename__ = 'Field_Content'
+    id = Column(Integer, primary_key=True)
+    content = Column(Text(4294000000), nullable=False)
+    # foreignKeys
+    field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
+    # relationships
+    field = relationship('Field', back_populates='contents')
+
+
+class FieldText(Base):
+    __tablename__ = 'Field_Text'
+    id = Column(Integer, primary_key=True)
+    content = Column(String(255), nullable=False)
+    # foreignKeys
+    field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
+    # relationships
+    field = relationship('Field', back_populates='texts')
+
+
+class FieldFile(Base):
+    __tablename__ = 'Field_File'
+    id = Column(Integer, primary_key=True)
+    content = Column(String(255), nullable=False)
+    # foreignKeys
+    field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
+    media_id = Column(Integer, ForeignKey('Media.id'), nullable=False)
+    # relationships
+    field = relationship('Field', back_populates='files')
+    media = relationship('Media', back_populates='media')
+
+
+class Media(Base):
+    __tablename__ = 'Media'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(String(255), nullable=True)
+    type = Column(String(100), nullable=False)
+    file = Column(LargeBinary, nullable=False)
+    origin = Column(String(50), nullable=False)
+    # relationships
+    field_files = relationship('FieldFile', back_populates='media')
