@@ -20,6 +20,12 @@ Post_Type_Taxonomy = Table('Post_Type_Taxonomy', Base.metadata,
 )
 
 
+Sector_Menu = Table('Sector_Menu', Base.metadata,
+    Column('sector_id', Integer, ForeignKey('Sector.id'), nullable=False),
+    Column('menu_id', Integer, ForeignKey('Menu.id'), nullable=False)
+)
+
+
 class Template(Base):
     __tablename__ = 'Template'
     id = Column(Integer, primary_key=True)
@@ -186,3 +192,41 @@ class Media(Base):
     origin = Column(String(50), nullable=False)
     # relationships
     field_files = relationship('FieldFile', back_populates='media')
+
+
+class Sector(Base):
+    __tablename__ = 'Sector'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(String(255), nullable=True)
+    # relationships
+    menus = relationship('Menu', secondary=Sector_Menu, back_populates='sectors')
+
+
+class Menu(Base):
+    __tablename__ = 'Menu'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    order = Column(Integer, nullable=False)
+    description = Column(String(255), nullable=True)
+    # relationships
+    sectors = relationship('Sector', secondary=Sector_Menu, back_populates='menus')
+    items = relationship('MenuItem', back_populates='menu')
+
+
+class MenuItem(Base):
+    __tablename__ = 'Menu_Item'
+    id = Column(Integer, primary_key=True)
+    type = Column(String(50), nullable=False)
+    behavior = Column(String(50), nullable=False)
+    url = Column(String(255), nullable=True)
+    target_id = Column(Integer, nullable=True)
+    title = Column(String(255), nullable=False)
+    order = Column(Integer, nullable=False)
+    # foreignKeys
+    parent_id = Column(Integer, ForeignKey('Menu_Item.id'), nullable=True)
+    menu_id = Column(Integer, ForeignKey('Menu.id'), nullable=False)
+    # relationships
+    parent = relationship('MenuItem', back_populates='children')
+    children = relationship('MenuItem', back_populates='parent')
+    menu = relationship('Menu', back_populates='items')
