@@ -26,12 +26,18 @@ Sector_Menu = Table('Sector_Menu', Base.metadata,
 )
 
 
+Capability_Role = Table('Capability_Role', Base.metadata,
+    Column('capability_id', Integer, ForeignKey('Capability.id'), nullable=False),
+    Column('role_id', Integer, ForeignKey('Role.id'), nullable=False)
+)
+
+
 class Template(Base):
     __tablename__ = 'Template'
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
-    value = Column(Text(4294000000), nullable=False)
+    value = Column(Text(4294000000), nullable=False) # will have a json configuration structure
     # relationships
     post_types = relationship('PostType', back_populates='template')
 
@@ -40,7 +46,7 @@ class PostType(Base):
     __tablename__ = 'Post_Type'
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False, unique=True)
-    type = Column(String(50), nullable=False)
+    type = Column(String(50), nullable=False) # if the page will be to nest, user, tax, post, static, etc.
     # foreignKeys
     template_id = Column(Integer, ForeignKey('Template.id'))
     # relationships
@@ -53,11 +59,11 @@ class PostType(Base):
 class Post(Base):
     __tablename__ = 'Post'
     id = Column(Integer, primary_key=True)
-    slug = Column(String(255), nullable=False, unique=True)
+    slug = Column(String(255), nullable=False, unique=True) # unique name/url path
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     status = Column(String(15), nullable=False)
-    is_protected = Column(Boolean, nullable=False)
+    is_protected = Column(Boolean, nullable=False) # if will be accessable to read without login
     has_comments = Column(Boolean, nullable=False)
     created = Column(DateTime, default=now, nullable=False)
     edited = Column(DateTime, default=now, onupdate=now, nullable=False)
@@ -97,7 +103,7 @@ class Term(Base):
     description = Column(String(255), nullable=True)
     # foreignKeys
     parent_id = Column(Integer, ForeignKey('Term.id'), nullable=True)
-    page_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
+    page_id = Column(Integer, ForeignKey('Post.id'), nullable=True) # the term's custom page
     taxonomy_id = Column(Integer, ForeignKey('Taxonomy.id'), nullable=True)
     # relationships
     parent = relationship('Term', back_populates='children')
@@ -112,7 +118,7 @@ class Taxonomy(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
-    has_child = Column(Boolean, nullable=False)
+    has_child = Column(Boolean, nullable=False) # if will have hierarchy
     # relationships
     terms = relationship('Term', back_populates='taxonomy')
     post_types = relationship('PostType', secondary=Post_Type_Taxonomy, back_populates='taxonomies')
@@ -139,7 +145,7 @@ class Field(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
-    type = Column(String(15), nullable=False)
+    type = Column(String(15), nullable=False) # can be content, text and file
     order = Column(Integer, nullable=False)
     # foreignKeys
     grouer_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
@@ -189,7 +195,7 @@ class Media(Base):
     description = Column(String(255), nullable=True)
     type = Column(String(100), nullable=False)
     file = Column(LargeBinary, nullable=False)
-    origin = Column(String(50), nullable=False)
+    origin = Column(String(50), nullable=False) # where came from (post, user avatar, configuration, etc...)
     # relationships
     field_files = relationship('FieldFile', back_populates='media')
 
@@ -217,8 +223,8 @@ class Menu(Base):
 class MenuItem(Base):
     __tablename__ = 'Menu_Item'
     id = Column(Integer, primary_key=True)
-    type = Column(String(50), nullable=False)
-    behavior = Column(String(50), nullable=False)
+    type = Column(String(50), nullable=False) # can be anchor, external link, link, etc...
+    behavior = Column(String(50), nullable=False) # what window will be opened
     url = Column(String(255), nullable=True)
     target_id = Column(Integer, nullable=True)
     title = Column(String(255), nullable=False)
@@ -230,3 +236,43 @@ class MenuItem(Base):
     parent = relationship('MenuItem', back_populates='children')
     children = relationship('MenuItem', back_populates='parent')
     menu = relationship('Menu', back_populates='items')
+
+
+class Capability(Base):
+    __tablename__ = 'Capability'
+    id = Column(Integer, primary_key=True)
+    description = Column(String(255), nullable=True)
+    type = Column(String(50), nullable=False) # what will access specifically (single-post, post-type, menu, user, etc...)
+    target_id = Column(Integer, nullable=True) # specifc post and post_type id if type is single-post or post-type
+    can_write = Column(Boolean, nullable=False)
+    can_read = Column(Boolean, nullable=False)
+    can_delete = Column(Boolean, nullable=False)
+    # relationships
+    roles = relationship('Role', secondary=Capability_Role, back_populates='capabilities')
+
+
+class Role(Base):
+    __tablename__ = 'Role'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(String(255), nullable=True)
+    can_access_admin = Column(Boolean, nullable=False)
+    # relationships
+    capabilities = relationship('Capability', secondary=Capability_Role, back_populates='roles')
+    users = relationship('User', back_populates='role')
+
+class User(Base):
+    __tablename__ = 'User'
+    id = Column(Integer, primary_key=True)
+    login = Column(String(100), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
+    nickname = Column(String(100), nullable=True)
+    first_name = Column(String(100), nullable=True)
+    last_name = Column(String(100), nullable=True)
+    email = Column(String(100), nullable=False)
+    registered = Column(DateTime, default=now, nullable=False)
+    status = Column(String(15), nullable=False)
+    # foreignKeys
+    role_id = Column(Integer, ForeignKey('Role.id'), nullable=False)
+    # relationships
+    role = relationship('Role', back_populates='users')
