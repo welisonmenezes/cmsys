@@ -71,6 +71,7 @@ class Post(Base):
     parent_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
     post_type_id = Column(Integer, ForeignKey('Post_Type.id'), nullable=False)
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     # relationships
     parent = relationship('Post', back_populates='children')
     children = relationship('Post', back_populates='parent')
@@ -79,7 +80,10 @@ class Post(Base):
     term = relationship('Term', back_populates='page')
     terms = relationship('Term', secondary=Post_Term, back_populates='posts')
     groupers = relationship('Grouper', back_populates='post')
-    language = relationship('Language', back_populates='languages')
+    language = relationship('Language', back_populates='posts')
+    comments = relationship('Comment', back_populates='post')
+    profile = relationship('User', back_populates='page')
+    user = relationship('User', back_populates='posts')
 
 
 class Nest(Base):
@@ -200,8 +204,11 @@ class Media(Base):
     type = Column(String(100), nullable=False)
     file = Column(LargeBinary, nullable=False)
     origin = Column(String(50), nullable=False) # where came from (post, user avatar, configuration, etc...)
+    # foreignKeys
+    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     # relationships
     field_files = relationship('FieldFile', back_populates='media')
+    user = relationship('User', back_populates='medias')
 
 
 class Sector(Base):
@@ -219,9 +226,12 @@ class Menu(Base):
     name = Column(String(100), nullable=False, unique=True)
     order = Column(Integer, nullable=False)
     description = Column(String(255), nullable=True)
+    # foreignKeys
+    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
     sectors = relationship('Sector', secondary=Sector_Menu, back_populates='menus')
     items = relationship('MenuItem', back_populates='menu')
+    language = relationship('Language', back_populates='menus')
 
 
 class MenuItem(Base):
@@ -278,9 +288,15 @@ class User(Base):
     status = Column(String(15), nullable=False)
     # foreignKeys
     role_id = Column(Integer, ForeignKey('Role.id'), nullable=False)
+    media_id = Column(Integer, ForeignKey('Media.id'), nullable=True)
+    page_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
     # relationships
     role = relationship('Role', back_populates='users')
     socials = relationship('Social', back_populates='user')
+    comments = relationship('Comment', back_populates='user')
+    medias = relationship('Media', back_populates='user')
+    page = relationship('Post', back_populates='profile')
+    posts = relationship('Post', back_populates='user')
 
 
 class Language(Base):
@@ -294,6 +310,8 @@ class Language(Base):
     posts = relationship('Post', back_populates='language')
     terms = relationship('Term', back_populates='language')
     configurations = relationship('Configuration', back_populates='language')
+    comments = relationship('Comment', back_populates='language')
+    menus = relationship('Menu', back_populates='language')
 
 
 class Configuration(Base):
@@ -324,3 +342,24 @@ class Social(Base):
     # relationships
     configuration = relationship('Configuration', back_populates='socials')
     user = relationship('User', back_populates='socials')
+
+
+class Comment(Base):
+    __tablename__ = 'Comment'
+    id = Column(Integer, primary_key=True)
+    comment = Column(Text, nullable=False)
+    status = Column(String(15), nullable=False)
+    origin_ip = Column(String(100), nullable=False)
+    origin_agent = Column(String(255), nullable=False)
+    created = Column(DateTime, default=now, nullable=False)
+    # foreignKeys
+    parent_id = Column(Integer, ForeignKey('Comment.id'), nullable=True)
+    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
+    # relationships
+    parent = relationship('Comment', back_populates='children')
+    children = relationship('Comment', back_populates='parent')
+    user = relationship('User', back_populates='comments')
+    post = relationship('Post', back_populates='comments')
+    language = relationship('Language', back_populates='comments')
