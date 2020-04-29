@@ -8,11 +8,11 @@ from Controllers import *
 app.register_blueprint(DashboardController)
 
 
-'''
+
 from Models import Engine, Base
 #Base.metadata.drop_all(Engine)
-Base.metadata.create_all(Engine)
-'''
+#Base.metadata.create_all(Engine)
+
 
 
 if __name__ == "__main__":

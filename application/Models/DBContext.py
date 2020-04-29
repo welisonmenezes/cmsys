@@ -50,10 +50,10 @@ class PostType(Base):
     # foreignKeys
     template_id = Column(Integer, ForeignKey('Template.id'))
     # relationships
-    template = relationship('Template', back_populates='post_types')
+    taxonomies = relationship('Taxonomy', secondary=Post_Type_Taxonomy, back_populates='post_types')
+    template = relationship('Template', back_populates='post_types', foreign_keys='PostType.template_id')
     posts = relationship('Post', back_populates='post_type')
-    nests = relationship('Nest', back_populates='post')
-    post_types = relationship('PostType', secondary=Post_Type_Taxonomy, back_populates='taxonomies')
+    pt_nests = relationship('Nest', back_populates='post_type')
     
 
 class Post(Base):
@@ -73,17 +73,17 @@ class Post(Base):
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     # relationships
-    parent = relationship('Post', back_populates='children')
-    children = relationship('Post', back_populates='parent')
-    post_type = relationship('PostType', back_populates='posts')
+    terms = relationship('Term', secondary=Post_Term, back_populates='posts')
+    parent = relationship('Post', back_populates='children', foreign_keys='Post.parent_id')
+    children = relationship('Post', back_populates='parent', remote_side='Post.id')
+    post_type = relationship('PostType', back_populates='posts', foreign_keys='Post.post_type_id')
     nests = relationship('Nest', back_populates='post')
     term = relationship('Term', back_populates='page')
-    terms = relationship('Term', secondary=Post_Term, back_populates='posts')
     groupers = relationship('Grouper', back_populates='post')
-    language = relationship('Language', back_populates='posts')
+    language = relationship('Language', back_populates='posts', foreign_keys='Post.language_id')
     comments = relationship('Comment', back_populates='post')
-    profile = relationship('User', back_populates='page')
-    user = relationship('User', back_populates='posts')
+    page_owner = relationship('User', back_populates='page', foreign_keys='User.page_id')
+    user = relationship('User', back_populates='posts', foreign_keys='Post.user_id')
 
 
 class Nest(Base):
@@ -97,8 +97,8 @@ class Nest(Base):
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     post_type_id = Column(Integer, ForeignKey('Post_Type.id'), nullable=False)
     # relationships
-    post = relationship('Post', back_populates='nests')
-    post_type = relationship('PostType', back_populates='nests')
+    post = relationship('Post', back_populates='nests', foreign_keys='Nest.post_id')
+    post_type = relationship('PostType', back_populates='pt_nests', foreign_keys='Nest.post_type_id')
 
 
 class Term(Base):
@@ -113,12 +113,12 @@ class Term(Base):
     taxonomy_id = Column(Integer, ForeignKey('Taxonomy.id'), nullable=False)
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
-    parent = relationship('Term', back_populates='children')
-    children = relationship('Term', back_populates='parent')
-    page = relationship('Post', back_populates='term')
     posts = relationship('Post', secondary=Post_Term, back_populates='terms')
-    taxonomy = relationship('Taxonomy', back_populates='terms')
-    language = relationship('Language', back_populates='terms')
+    parent = relationship('Term', back_populates='children', foreign_keys='Term.parent_id')
+    children = relationship('Term', back_populates='parent', remote_side='Term.id')
+    page = relationship('Post', back_populates='term', foreign_keys='Term.page_id')
+    taxonomy = relationship('Taxonomy', back_populates='terms', foreign_keys='Term.taxonomy_id')
+    language = relationship('Language', back_populates='terms', foreign_keys='Term.language_id')
 
 
 class Taxonomy(Base):
@@ -128,8 +128,8 @@ class Taxonomy(Base):
     description = Column(String(255), nullable=True)
     has_child = Column(Boolean, nullable=False) # if will have hierarchy
     # relationships
-    terms = relationship('Term', back_populates='taxonomy')
     post_types = relationship('PostType', secondary=Post_Type_Taxonomy, back_populates='taxonomies')
+    terms = relationship('Term', back_populates='taxonomy')
 
 
 class Grouper(Base):
@@ -142,9 +142,9 @@ class Grouper(Base):
     parent_id = Column(Integer, ForeignKey('Grouper.id'), nullable=True)
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
-    parent = relationship('Grouper', back_populates='children')
-    children = relationship('Grouper', back_populates='parent')
-    post = relationship('Post', back_populates='groupers')
+    parent = relationship('Grouper', back_populates='children', foreign_keys='Grouper.parent_id')
+    children = relationship('Grouper', back_populates='parent', remote_side='Grouper.id')
+    post = relationship('Post', back_populates='groupers', foreign_keys='Grouper.post_id')
     fields = relationship('Field', back_populates='grouper')
 
 
@@ -156,9 +156,9 @@ class Field(Base):
     type = Column(String(15), nullable=False) # can be content, text and file
     order = Column(Integer, nullable=False)
     # foreignKeys
-    grouer_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
     # relationships
-    grouper = relationship('Grouper', back_populates='fields')
+    grouper = relationship('Grouper', back_populates='fields', foreign_keys='Field.grouper_id')
     contents = relationship('FieldContent', back_populates='field')
     texts = relationship('FieldText', back_populates='field')
     files = relationship('FieldFile', back_populates='field')
@@ -171,7 +171,7 @@ class FieldContent(Base):
     # foreignKeys
     field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
     # relationships
-    field = relationship('Field', back_populates='contents')
+    field = relationship('Field', back_populates='contents', foreign_keys='FieldContent.field_id')
 
 
 class FieldText(Base):
@@ -181,7 +181,7 @@ class FieldText(Base):
     # foreignKeys
     field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
     # relationships
-    field = relationship('Field', back_populates='texts')
+    field = relationship('Field', back_populates='texts', foreign_keys='FieldText.field_id')
 
 
 class FieldFile(Base):
@@ -192,8 +192,8 @@ class FieldFile(Base):
     field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
     media_id = Column(Integer, ForeignKey('Media.id'), nullable=False)
     # relationships
-    field = relationship('Field', back_populates='files')
-    media = relationship('Media', back_populates='media')
+    field = relationship('Field', back_populates='files', foreign_keys='FieldFile.field_id')
+    media = relationship('Media', back_populates='field_files', foreign_keys='FieldFile.media_id')
 
 
 class Media(Base):
@@ -208,7 +208,8 @@ class Media(Base):
     user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     # relationships
     field_files = relationship('FieldFile', back_populates='media')
-    user = relationship('User', back_populates='medias')
+    user = relationship('User', back_populates='medias', foreign_keys='Media.user_id')
+    avatar_owner = relationship('User', back_populates='avatar', foreign_keys='User.avatar_id')
 
 
 class Sector(Base):
@@ -231,7 +232,7 @@ class Menu(Base):
     # relationships
     sectors = relationship('Sector', secondary=Sector_Menu, back_populates='menus')
     items = relationship('MenuItem', back_populates='menu')
-    language = relationship('Language', back_populates='menus')
+    language = relationship('Language', back_populates='menus', foreign_keys='Menu.language_id')
 
 
 class MenuItem(Base):
@@ -247,9 +248,9 @@ class MenuItem(Base):
     parent_id = Column(Integer, ForeignKey('Menu_Item.id'), nullable=True)
     menu_id = Column(Integer, ForeignKey('Menu.id'), nullable=False)
     # relationships
-    parent = relationship('MenuItem', back_populates='children')
-    children = relationship('MenuItem', back_populates='parent')
-    menu = relationship('Menu', back_populates='items')
+    parent = relationship('MenuItem', back_populates='children', foreign_keys='MenuItem.parent_id')
+    children = relationship('MenuItem', back_populates='parent', remote_side='MenuItem.id')
+    menu = relationship('Menu', back_populates='items', foreign_keys='MenuItem.menu_id')
 
 
 class Capability(Base):
@@ -288,15 +289,16 @@ class User(Base):
     status = Column(String(15), nullable=False)
     # foreignKeys
     role_id = Column(Integer, ForeignKey('Role.id'), nullable=False)
-    media_id = Column(Integer, ForeignKey('Media.id'), nullable=True)
+    avatar_id = Column(Integer, ForeignKey('Media.id'), nullable=True)
     page_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
     # relationships
-    role = relationship('Role', back_populates='users')
+    role = relationship('Role', back_populates='users', foreign_keys='User.role_id')
     socials = relationship('Social', back_populates='user')
     comments = relationship('Comment', back_populates='user')
-    medias = relationship('Media', back_populates='user')
-    page = relationship('Post', back_populates='profile')
-    posts = relationship('Post', back_populates='user')
+    medias = relationship('Media', back_populates='user', foreign_keys='Media.user_id')
+    avatar = relationship('Media', back_populates='avatar_owner', foreign_keys='User.avatar_id')
+    page = relationship('Post', back_populates='page_owner', foreign_keys='User.page_id')
+    posts = relationship('Post', back_populates='user', foreign_keys='Post.user_id')
 
 
 class Language(Base):
@@ -324,8 +326,8 @@ class Configuration(Base):
     # foreignKeys
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
-    language = relationship('Language', back_populates='configurations')
-    socials = relationship('Social', back_populates='configurations')
+    language = relationship('Language', back_populates='configurations', foreign_keys='Configuration.language_id')
+    socials = relationship('Social', back_populates='configuration')
 
 
 class Social(Base):
@@ -340,8 +342,8 @@ class Social(Base):
     configuration_id = Column(Integer, ForeignKey('Configuration.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     # relationships
-    configuration = relationship('Configuration', back_populates='socials')
-    user = relationship('User', back_populates='socials')
+    configuration = relationship('Configuration', back_populates='socials', foreign_keys='Social.configuration_id')
+    user = relationship('User', back_populates='socials', foreign_keys='Social.user_id')
 
 
 class Comment(Base):
@@ -358,8 +360,8 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
-    parent = relationship('Comment', back_populates='children')
-    children = relationship('Comment', back_populates='parent')
-    user = relationship('User', back_populates='comments')
-    post = relationship('Post', back_populates='comments')
-    language = relationship('Language', back_populates='comments')
+    parent = relationship('Comment', back_populates='children', foreign_keys='Comment.parent_id')
+    children = relationship('Comment', back_populates='parent', remote_side='Comment.id')
+    user = relationship('User', back_populates='comments', foreign_keys='Comment.user_id')
+    post = relationship('Post', back_populates='comments', foreign_keys='Comment.post_id')
+    language = relationship('Language', back_populates='comments', foreign_keys='Comment.language_id')
