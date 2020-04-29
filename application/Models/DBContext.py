@@ -70,6 +70,7 @@ class Post(Base):
     # foreignKeys
     parent_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
     post_type_id = Column(Integer, ForeignKey('Post_Type.id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
     parent = relationship('Post', back_populates='children')
     children = relationship('Post', back_populates='parent')
@@ -78,6 +79,7 @@ class Post(Base):
     term = relationship('Term', back_populates='page')
     terms = relationship('Term', secondary=Post_Term, back_populates='posts')
     groupers = relationship('Grouper', back_populates='post')
+    language = relationship('Language', back_populates='languages')
 
 
 class Nest(Base):
@@ -104,13 +106,15 @@ class Term(Base):
     # foreignKeys
     parent_id = Column(Integer, ForeignKey('Term.id'), nullable=True)
     page_id = Column(Integer, ForeignKey('Post.id'), nullable=True) # the term's custom page
-    taxonomy_id = Column(Integer, ForeignKey('Taxonomy.id'), nullable=True)
+    taxonomy_id = Column(Integer, ForeignKey('Taxonomy.id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
     parent = relationship('Term', back_populates='children')
     children = relationship('Term', back_populates='parent')
     page = relationship('Post', back_populates='term')
     posts = relationship('Post', secondary=Post_Term, back_populates='terms')
     taxonomy = relationship('Taxonomy', back_populates='terms')
+    language = relationship('Language', back_populates='terms')
 
 
 class Taxonomy(Base):
@@ -276,3 +280,47 @@ class User(Base):
     role_id = Column(Integer, ForeignKey('Role.id'), nullable=False)
     # relationships
     role = relationship('Role', back_populates='users')
+    socials = relationship('Social', back_populates='user')
+
+
+class Language(Base):
+    __tablename__ = 'Language'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    code = Column(String(10), nullable=False, unique=True)
+    status = Column(String(15), nullable=False)
+    datetime_format = Column(String(100), nullable=True) # must be an regular expression
+    # relationships
+    posts = relationship('Post', back_populates='language')
+    terms = relationship('Term', back_populates='language')
+    configurations = relationship('Configuration', back_populates='language')
+
+
+class Configuration(Base):
+    __tablename__ = 'Configuration'
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
+    description = Column(String(255), nullable=True)
+    has_comments = Column(Boolean, nullable=False)
+    email = Column(String(100), nullable=True)
+    # foreignKeys
+    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
+    # relationships
+    language = relationship('Language', back_populates='configurations')
+    socials = relationship('Social', back_populates='configurations')
+
+
+class Social(Base):
+    __tablename__ = 'Social'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    url = Column(String(255), nullable=False)
+    target = Column(String(15), nullable=True)
+    description = Column(String(255), nullable=True)
+    origin = Column(String(50), nullable=False)
+    # foreignKeys
+    configuration_id = Column(Integer, ForeignKey('Configuration.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
+    # relationships
+    configuration = relationship('Configuration', back_populates='socials')
+    user = relationship('User', back_populates='socials')
