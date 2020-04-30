@@ -365,3 +365,18 @@ class Comment(Base):
     user = relationship('User', back_populates='comments', foreign_keys='Comment.user_id')
     post = relationship('Post', back_populates='comments', foreign_keys='Comment.post_id')
     language = relationship('Language', back_populates='comments', foreign_keys='Comment.language_id')
+
+
+class Balcklist(Base):
+    __tablename__ = 'Blacklist'
+    id = Column(Integer, primary_key=True)
+    type = Column(String(50), nullable=False) # must be what kind of item is (email, ip,  user, etc...)
+    value = Column(Text, nullable=False)
+    target = Column(String(100), nullable=False) # must be what kind of element will be protected (login, comments, etc...)
+
+
+class Variable(Base):
+    __tablename__ = 'Variable'
+    id = Column(Integer, primary_key=True)
+    key = Column(String(255), nullable=False)
+    value = Column(Text(4294000000), nullable=False)
