@@ -1,34 +1,20 @@
-from flask import current_app, Blueprint, render_template, request, url_for, redirect, flash, session, jsonify
-from app import app
-
-from Models import Session
-
-DashboardController = Blueprint('DashboardController', __name__, url_prefix='/admin', template_folder='../../../Views/Admin/Dashboard', static_folder='../../../webroot')
-
-@DashboardController.route('/')
-def index():
-
-    # add
-    '''
+# add
+'''
     session = Session()
     c1 = Customers(name = 'Giovana Menezes', address = 'Universitário, Coral.', email = 'giovana@gmail.com')
     session.add(c1)
     session.commit()
     session.close()
     '''
-
-
-    # consultar
-    '''
+# consultar
+'''
     session = Session()
     result = session.query(Customers).all()
     for row in result:
         print ("Name: ",row.name, "Address:",row.address, "Email:",row.email)
     '''
-
-
-    # editar
-    '''
+# editar
+'''
     session = Session()
     x = session.query(Customers).get(2)
     print ("Name: ", x.name, "Address:", x.address, "Email:", x.email)
@@ -37,10 +23,8 @@ def index():
     x.email = 'iracema@hotmail.com'
     session.commit()
     '''
-
-
-    # filtro
-    '''
+# filtro
+'''
     session = Session()
     result = session.query(Customers).filter(Customers.name.like('Gi%'))
     #result = session.query(Customers).filter(Customers.id>2)
@@ -48,10 +32,8 @@ def index():
     for row in result:
         print ("Name: ",row.name, "Address:",row.address, "Email:",row.email)
     '''
-
-
-    # textual sql
-    '''
+# textual sql
+'''
     session = Session()
     #result = session.query(Customers).filter(text('id = :value')).params(value = 1)
     result = session.query(Customers).from_statement(text("SELECT * FROM customers")).all()
@@ -60,10 +42,8 @@ def index():
     for row in result:
         print ("Name: ",row.name, "Address:",row.address, "Email:",row.email)
     '''
-
-
-    # many to many (from parent)
-    '''
+# many to many (from parent)
+'''
     session = Session()
     result = session.query(Parent).all()
     for row in result:
@@ -72,10 +52,8 @@ def index():
             for rowc in row.children:
                 print('     - Id: ', rowc.id, 'Value: ', rowc.value)
     '''
-
-
-    # many to many (from child)
-    '''
+# many to many (from child)
+'''
     session = Session()
     result = session.query(Child).all()
     for row in result:
@@ -84,20 +62,15 @@ def index():
             for rowc in row.children:
                 print('     - Id: ', rowc.id, 'Name: ', rowc.child.name, 'Value: ', rowc.value)
     '''
-
-
-    # many to many (from association)
-    '''
+# many to many (from association)
+'''
     session = Session()
     result = session.query(Association).all()
     for row in result:
         print ('Id: ', row.id, 'Value: ', row.value, 'Child: ', row.child.name, 'Parent:', row.parent.name)
     '''
-
-
-
-    # manu to many (create)
-    '''
+# manu to many (create)
+'''
     session = Session()
 
     p = Parent(name="Pai Um")
@@ -114,10 +87,8 @@ def index():
     session.commit()
     session.close()
     '''
-
-
-    # many to many (add child)
-    '''
+# many to many (add child)
+'''
     session = Session()
     pai = session.query(Parent).first()
     filho = session.query(Child).get(5)
@@ -129,10 +100,8 @@ def index():
     session.commit()
     session.close()
     '''
-
-
-    # many to many (delete association)
-    '''
+# many to many (delete association)
+'''
     session = Session()
     result = session.query(Association).filter(Association.child == None)
     for row in result:
@@ -140,5 +109,3 @@ def index():
     session.commit()
     session.close()
     '''
-
-    return render_template('index.html')
