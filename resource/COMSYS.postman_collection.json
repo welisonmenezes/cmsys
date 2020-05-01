@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "3a9bdd03-0f16-408d-b546-8dd59d0abbff",
+		"name": "COMSYS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Variable",
+			"item": [
+				{
+					"name": "variable-get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Uniplac\",\n\t\"email\": \"email@test.com\",\n\t\"phone\": \"2222-2222\",\n\t\"new_images\": [1, 3],\n\t\"old_images\": []\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/variable",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"variable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable-get-by-id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Uniplac\",\n\t\"email\": \"email@test.com\",\n\t\"phone\": \"2222-2222\",\n\t\"new_images\": [1, 3],\n\t\"old_images\": []\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/variable/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"variable",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable-post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"key\": \"test-4\",\n\t\"value\": \"lorem ipsum test four\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/variable",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"variable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable-put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"key\": \"test-edited\",\n\t\"value\": \"lorem ipsum test edited\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/variable/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"variable",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

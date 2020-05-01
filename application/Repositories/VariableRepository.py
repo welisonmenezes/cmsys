@@ -1,6 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
-from flask import  request
 from app import errorHandler
 
 from Models import Session, Variable, VariableSchema
@@ -78,6 +77,48 @@ class VariableRepository():
                     'id': last_id
                 }, 200
                 
+            except SQLAlchemyError as e:
+                session.rollback()
+                return errorHandler.error_500_handler(e)
+
+            except HTTPException as e:
+                session.rollback()
+                return errorHandler.error_500_handler(e)
+                
+            finally:
+                session.close()
+
+        else:
+            return {'message': 'No data send.'}, 400
+
+
+    def update(self, id, request):
+
+        data = request.get_json()
+
+        if (data):
+
+            session = Session()
+
+            try:
+
+                variable = session.query(Variable).filter_by(id=id).first()
+
+                if (variable):
+
+                    variable.key = data['key']
+                    variable.value = data['value']
+
+                    session.commit()
+
+                    return {
+                        'message': 'Variable updated successfully.',
+                        'id': variable.id
+                    }, 200
+
+                else:
+                    return errorHandler.error_404_handler('No Variable found.')
+
             except SQLAlchemyError as e:
                 session.rollback()
                 return errorHandler.error_500_handler(e)

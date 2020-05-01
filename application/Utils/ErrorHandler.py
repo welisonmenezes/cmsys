@@ -7,7 +7,7 @@ class ErrorHandler():
         }, 500
 
 
-    def error_04_handler(self, message):
+    def error_404_handler(self, message):
         return {
             'message': message
         }, 404
