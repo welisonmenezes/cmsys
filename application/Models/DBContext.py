@@ -276,6 +276,7 @@ class Role(Base):
     capabilities = relationship('Capability', secondary=Capability_Role, back_populates='roles')
     users = relationship('User', back_populates='role')
 
+
 class User(Base):
     __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
