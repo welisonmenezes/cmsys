@@ -6,9 +6,13 @@ class VariableValidator(ValidatorBase):
 
         self.request = obj_data
 
-        self.required_fields = [
+        self.required_keys = [
             'key',
             'value'
+        ]
+
+        self.required_fields = [
+            'key'
         ]
 
         self.errors = []
