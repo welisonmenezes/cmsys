@@ -13,3 +13,10 @@ class VariableController(Resource):
             return repo.getByID(id)
         else:
             return repo.getAll()
+
+    
+    def post(self):
+        
+        repo = VariableRepository()
+
+        return repo.createNew(request)

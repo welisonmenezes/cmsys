@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
-from app import app, errorHandler
+from flask import  request
+from app import errorHandler
 
 from Models import Session, Variable, VariableSchema
 
@@ -53,3 +54,40 @@ class VariableRepository():
 
         finally:
             session.close()
+
+    
+    def createNew(self, request):
+
+        data = request.get_json()
+
+        if (data):
+
+            session = Session()
+
+            try:
+                variable = Variable(
+                    key = data['key'],
+                    value = data['value']
+                )
+                session.add(variable)
+                session.commit()
+                last_id = variable.id
+
+                return {
+                    'message': 'Variable saved successfully.',
+                    'id': last_id
+                }, 200
+                
+            except SQLAlchemyError as e:
+                session.rollback()
+                return errorHandler.error500Handler(e)
+
+            except HTTPException as e:
+                session.rollback()
+                return errorHandler.error500Handler(e)
+                
+            finally:
+                session.close()
+
+        else:
+            return {'message': 'No data send.'}, 400
