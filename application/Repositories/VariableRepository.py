@@ -3,6 +3,7 @@ from werkzeug.exceptions import HTTPException
 from app import errorHandler
 
 from Models import Session, Variable, VariableSchema
+from Validators import VariableValidator
 
 class VariableRepository():
     
@@ -61,35 +62,42 @@ class VariableRepository():
 
         if (data):
 
-            session = Session()
+            validator = VariableValidator(data)
+            
+            if (validator.is_valid()):
 
-            try:
-                variable = Variable(
-                    key = data['key'],
-                    value = data['value']
-                )
-                session.add(variable)
-                session.commit()
-                last_id = variable.id
+                session = Session()
 
-                return {
-                    'message': 'Variable saved successfully.',
-                    'id': last_id
-                }, 200
-                
-            except SQLAlchemyError as e:
-                session.rollback()
-                return errorHandler.error_500_handler(e)
+                try:
+                    variable = Variable(
+                        key = data['key'],
+                        value = data['value']
+                    )
+                    session.add(variable)
+                    session.commit()
+                    last_id = variable.id
 
-            except HTTPException as e:
-                session.rollback()
-                return errorHandler.error_500_handler(e)
-                
-            finally:
-                session.close()
+                    return {
+                        'message': 'Variable saved successfully.',
+                        'id': last_id
+                    }, 200
+                    
+                except SQLAlchemyError as e:
+                    session.rollback()
+                    return errorHandler.error_500_handler(e)
+
+                except HTTPException as e:
+                    session.rollback()
+                    return errorHandler.error_500_handler(e)
+                    
+                finally:
+                    session.close()
+            
+            else:
+                return errorHandler.invalid_request_handler(validator.get_errors())
 
         else:
-            return {'message': 'No data send.'}, 400
+            return errorHandler.no_data_send_handler()
 
 
     def update(self, id, request):
@@ -98,37 +106,44 @@ class VariableRepository():
 
         if (data):
 
-            session = Session()
+            validator = VariableValidator(data)
 
-            try:
+            if (validator.is_valid()):
 
-                variable = session.query(Variable).filter_by(id=id).first()
+                session = Session()
 
-                if (variable):
+                try:
 
-                    variable.key = data['key']
-                    variable.value = data['value']
+                    variable = session.query(Variable).filter_by(id=id).first()
 
-                    session.commit()
+                    if (variable):
 
-                    return {
-                        'message': 'Variable updated successfully.',
-                        'id': variable.id
-                    }, 200
+                        variable.key = data['key']
+                        variable.value = data['value']
 
-                else:
-                    return errorHandler.error_404_handler('No Variable found.')
+                        session.commit()
 
-            except SQLAlchemyError as e:
-                session.rollback()
-                return errorHandler.error_500_handler(e)
+                        return {
+                            'message': 'Variable updated successfully.',
+                            'id': variable.id
+                        }, 200
 
-            except HTTPException as e:
-                session.rollback()
-                return errorHandler.error_500_handler(e)
-                
-            finally:
-                session.close()
+                    else:
+                        return errorHandler.error_404_handler('No Variable found.')
+
+                except SQLAlchemyError as e:
+                    session.rollback()
+                    return errorHandler.error_500_handler(e)
+
+                except HTTPException as e:
+                    session.rollback()
+                    return errorHandler.error_500_handler(e)
+                    
+                finally:
+                    session.close()
+
+            else:
+                return errorHandler.invalid_request_handler(validator.get_errors())
 
         else:
-            return {'message': 'No data send.'}, 400
+            return errorHandler.no_data_send_handler()
