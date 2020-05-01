@@ -12,10 +12,9 @@ cors = CORS(ApiBP, resources={r"/*": {"origins": "*"}})
 api = Api(ApiBP)
 app.register_blueprint(ApiBP)
 
-
 # start controllers
 from Controllers import start_controllers
-start_controllers(api)
+start_controllers(app, api)
 
 # start views
 from Views import start_view
