@@ -12,7 +12,8 @@ class VariableValidator(ValidatorBase):
         ]
 
         self.required_fields = [
-            'key'
+            'key',
+            'value'
         ]
 
         self.errors = []

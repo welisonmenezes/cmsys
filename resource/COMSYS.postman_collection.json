@@ -29,7 +29,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Uniplac\",\n\t\"email\": \"email@test.com\",\n\t\"phone\": \"2222-2222\",\n\t\"new_images\": [1, 3],\n\t\"old_images\": []\n}"
+							"raw": ""
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable",
@@ -70,10 +70,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Uniplac\",\n\t\"email\": \"email@test.com\",\n\t\"phone\": \"2222-2222\",\n\t\"new_images\": [1, 3],\n\t\"old_images\": []\n}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/variable/1",
+							"raw": "http://127.0.0.1:5000/api/variable/11",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -85,7 +85,7 @@
 							"path": [
 								"api",
 								"variable",
-								"1"
+								"11"
 							]
 						}
 					},
@@ -104,7 +104,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"key\": \"test-4\",\n\t\"value\": \"lorem ipsum test four\"\n}"
+							"raw": "{\n\t\"key\": \"test-6\",\n\t\"value\": \"lorem ipsum test four\"\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable",
@@ -138,6 +138,40 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"key\": \"test-edited\",\n\t\"value\": \"lorem ipsum test edited\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/variable/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"variable",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable-delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable/1",

@@ -21,3 +21,8 @@ class VariableController(Resource):
     def put(self, id=None):
         repo = VariableRepository()
         return repo.update(id, request)
+
+
+    def delete(self, id=None):
+        repo = VariableRepository()
+        return repo.delete(id)

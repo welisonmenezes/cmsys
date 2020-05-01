@@ -147,3 +147,35 @@ class VariableRepository():
 
         else:
             return errorHandler.no_data_send_handler()
+
+
+    def delete(self, id):
+
+        session = Session()
+
+        variable = Session.query(Variable).filter_by(id=id).first()
+
+        if (variable):
+
+            try:
+                session.delete(variable)
+                session.commit()
+
+                return {
+                    'message': 'Variable deleted successfully.',
+                    'id': id
+                }, 200
+
+            except SQLAlchemyError as e:
+                session.rollback()
+                return errorHandler.error_500_handler(e)
+
+            except HTTPException as e:
+                session.rollback()
+                return errorHandler.error_500_handler(e)
+                
+            finally:
+                session.close()
+        
+        else:
+            return errorHandler.error_404_handler('No Variable found.')
