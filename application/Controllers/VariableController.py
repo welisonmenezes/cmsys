@@ -10,13 +10,13 @@ class VariableController(Resource):
         repo = VariableRepository()
 
         if id:
-            return repo.getByID(id)
+            return repo.get_by_id(id)
         else:
-            return repo.getAll()
+            return repo.get()
 
     
     def post(self):
         
         repo = VariableRepository()
 
-        return repo.createNew(request)
+        return repo.create(request)

@@ -7,7 +7,7 @@ from Models import Session, Variable, VariableSchema
 
 class VariableRepository():
     
-    def getAll(self):
+    def get(self):
 
         session = Session()
         schema = VariableSchema(many=True)
@@ -20,16 +20,16 @@ class VariableRepository():
             }, 200
 
         except SQLAlchemyError as e:
-            return errorHandler.error500Handler(e)
+            return errorHandler.error_500_handler(e)
 
         except HTTPException as e:
-            return errorHandler.error500Handler(e)
+            return errorHandler.error_500_handler(e)
 
         finally:
             session.close()
 
 
-    def getByID(self, id):
+    def get_by_id(self, id):
 
         session = Session()
         schema = VariableSchema(many=False)
@@ -44,19 +44,19 @@ class VariableRepository():
                     'data': data
                 }, 200
             else:
-                return errorHandler.error404Handler('No Variable found.')
+                return errorHandler.error_404_handler('No Variable found.')
 
         except SQLAlchemyError as e:
-            return errorHandler.error500Handler(e)
+            return errorHandler.error_500_handler(e)
 
         except HTTPException as e:
-            return errorHandler.error500Handler(e)
+            return errorHandler.error_500_handler(e)
 
         finally:
             session.close()
 
     
-    def createNew(self, request):
+    def create(self, request):
 
         data = request.get_json()
 
@@ -80,11 +80,11 @@ class VariableRepository():
                 
             except SQLAlchemyError as e:
                 session.rollback()
-                return errorHandler.error500Handler(e)
+                return errorHandler.error_500_handler(e)
 
             except HTTPException as e:
                 session.rollback()
-                return errorHandler.error500Handler(e)
+                return errorHandler.error_500_handler(e)
                 
             finally:
                 session.close()
