@@ -37,7 +37,7 @@ class VariableRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler.error_handler(404, 'No Variable found.')
+                return ErrorHandler(404, 'No Variable found.').response
 
         return self.response(fn, False)
 
@@ -63,10 +63,10 @@ class VariableRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler.error_handler(400, validator.get_errors())
+                    return ErrorHandler(400, validator.get_errors()).response
 
             else:
-                return ErrorHandler.error_handler(400, 'No data send.')
+                return ErrorHandler(400, 'No data send.').response
 
         return self.response(fn, True)
 
@@ -91,13 +91,13 @@ class VariableRepository(RepositoryBase):
                             'id': variable.id
                         }, 200
                     else:
-                        return ErrorHandler.error_handler(404, 'No Variable found.')
+                        return ErrorHandler(404, 'No Variable found.').response
 
                 else:
-                    return ErrorHandler.error_handler(400, validator.get_errors())
+                    return ErrorHandler(400, validator.get_errors()).response
 
             else:
-                return ErrorHandler.error_handler(400, 'No data send.')
+                return ErrorHandler(400, 'No data send.').response
 
         return self.response(fn, True)
 
@@ -116,6 +116,6 @@ class VariableRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return ErrorHandler.error_handler(404, 'No Variable found.')
+                return ErrorHandler(404, 'No Variable found.').response
 
         return self.response(fn, True)
