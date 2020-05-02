@@ -2,29 +2,43 @@ import math
 
 class Paginate(object):
 
-    def __init__(self, query, page, page_size):
+    def __init__(self, query, page, size):
 
         if page <= 0:
             raise AttributeError('page needs to be >= 1')
-        if page_size <= 0:
-            raise AttributeError('page_size needs to be >= 1')
 
-        items = query.limit(page_size).offset((page - 1) * page_size).all()
-        previous_items = (page - 1) * page_size
-        total = query.order_by(None).count()
+        if size <= 0:
+            raise AttributeError('size needs to be >= 1')
 
+        items = query.limit(size).offset((page - 1) * size).all()
 
         self.items = items
-        self.previous_page = None
-        self.next_page = None
-        self.has_previous = page > 1
-        self.has_next = previous_items + len(items) < total
+        self.build_pagination_infos(query, items, page, size)
 
-        if self.has_previous:
-            self.previous_page = page - 1
+        
+    def build_pagination_infos(self, query, items, page, size):
+
+        prev_items = (page - 1) * size
+        total = query.order_by(None).count()
+        prev = None
+        next = None
+        has_prev = page > 1
+        has_next = prev_items + len(items) < total
+        pages = int(math.ceil(total / float(size)))
+
+        if has_prev:
+            prev = page - 1
             
-        if self.has_next:
-            self.next_page = page + 1
-
-        self.total = total
-        self.pages = int(math.ceil(total / float(page_size)))
+        if has_next:
+            next = page + 1
+            
+        self.pagination = {
+            'current': page,
+            'prev': prev,
+            'next': next,
+            'has_prev': has_prev,
+            'has_next': has_next,
+            'size': size,
+            'pages': pages,
+            'total': total
+        }

@@ -19,7 +19,8 @@ class VariableRepository():
 
             data = schema.dump(result.items)
             return {
-                'data': data
+                'data': data,
+                'paginate': result.pagination
             }, 200
 
         except SQLAlchemyError as e:
