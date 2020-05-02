@@ -12,14 +12,14 @@ class RepositoryBase():
         except SQLAlchemyError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler.error_500_handler(e)
+            return ErrorHandler.error_handler(500, e)
         except AttributeError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler.error_400_handler(e)
+            return ErrorHandler.error_handler(400, e)
         except HTTPException as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler.error_500_handler(e)
+            return ErrorHandler.error_handler(500, e)
         finally:
             session.close()

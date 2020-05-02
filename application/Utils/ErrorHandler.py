@@ -1,42 +1,13 @@
 class ErrorHandler(object):
 
     @staticmethod
-    def error_500_handler(e):
-        error = str(e)
+    def error_handler(error_code, error_message):
+        if (type(error_message) == list or type(error_message) == str):
+            error = error_message
+        else:
+            error = str(error_message)
+
         return {
-            'error': 500,
+            'error': error_code,
             'message': error
-        }, 500
-
-
-    @staticmethod
-    def error_400_handler(e):
-        error = str(e)
-        return {
-            'error': 400,
-            'message': error
-        }, 400
-
-
-    @staticmethod
-    def error_404_handler(message):
-        return {
-            'error': 404,
-            'message': message
-        }, 404
-
-
-    @staticmethod
-    def invalid_request_handler(errors):
-        return {
-            'error': 400,
-            'errors': errors
-        }, 400
-
-
-    @staticmethod
-    def no_data_send_handler():
-        return {
-            'error': 400,
-            'message': 'No data send.'
-        }, 400
+        }, error_code

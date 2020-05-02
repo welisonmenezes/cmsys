@@ -15,7 +15,7 @@ class VariableRepository(RepositoryBase):
 
             schema = VariableSchema(many=True)
             query = session.query(Variable).filter(*filter)
-            result = Paginate(query, -1, 10)
+            result = Paginate(query, 1, 10)
             data = schema.dump(result.items)
 
             return {
@@ -37,7 +37,7 @@ class VariableRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler.error_404_handler('No Variable found.')
+                return ErrorHandler.error_handler(404, 'No Variable found.')
 
         return self.response(fn, False)
 
@@ -63,10 +63,10 @@ class VariableRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler.invalid_request_handler(validator.get_errors())
+                    return ErrorHandler.error_handler(400, validator.get_errors())
 
             else:
-                return ErrorHandler.no_data_send_handler()
+                return ErrorHandler.error_handler(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -91,13 +91,13 @@ class VariableRepository(RepositoryBase):
                             'id': variable.id
                         }, 200
                     else:
-                        return ErrorHandler.error_404_handler('No Variable found.')
+                        return ErrorHandler.error_handler(404, 'No Variable found.')
 
                 else:
-                    return ErrorHandler.invalid_request_handler(validator.get_errors())
+                    return ErrorHandler.error_handler(400, validator.get_errors())
 
             else:
-                return ErrorHandler.no_data_send_handler()
+                return ErrorHandler.error_handler(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -116,6 +116,6 @@ class VariableRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return ErrorHandler.error_404_handler('No Variable found.')
+                return ErrorHandler.error_handler(404, 'No Variable found.')
 
         return self.response(fn, True)
