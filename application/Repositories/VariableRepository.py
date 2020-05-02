@@ -4,6 +4,7 @@ from app import errorHandler
 
 from Models import Session, Variable, VariableSchema
 from Validators import VariableValidator
+from Utils import Paginate
 
 class VariableRepository():
     
@@ -13,14 +14,19 @@ class VariableRepository():
         schema = VariableSchema(many=True)
         
         try:
-            result = session.query(Variable).all()
-            data = schema.dump(result)
+            query = session.query(Variable)
+            result = Paginate(query, 1, 10)
+
+            data = schema.dump(result.items)
             return {
                 'data': data
             }, 200
 
         except SQLAlchemyError as e:
             return errorHandler.error_500_handler(e)
+
+        except AttributeError as e:
+            return errorHandler.error_400_handler(e)
 
         except HTTPException as e:
             return errorHandler.error_500_handler(e)

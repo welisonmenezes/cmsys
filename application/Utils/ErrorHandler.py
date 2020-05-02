@@ -7,6 +7,14 @@ class ErrorHandler():
             'message': error
         }, 500
 
+    
+    def error_400_handler(self, e):
+        error = str(e)
+        return {
+            'error': 400,
+            'message': error
+        }, 400
+
 
     def error_404_handler(self, message):
         return {
