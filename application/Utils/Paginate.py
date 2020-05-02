@@ -13,10 +13,10 @@ class Paginate(object):
         items = query.limit(size).offset((page - 1) * size).all()
 
         self.items = items
-        self.build_pagination_infos(query, items, page, size)
+        self.pagination = self.get_pagination_infos(query, items, page, size)
 
         
-    def build_pagination_infos(self, query, items, page, size):
+    def get_pagination_infos(self, query, items, page, size):
 
         prev_items = (page - 1) * size
         total = query.order_by(None).count()
@@ -32,7 +32,7 @@ class Paginate(object):
         if has_next:
             next = page + 1
             
-        self.pagination = {
+        return {
             'current': page,
             'prev': prev,
             'next': next,
