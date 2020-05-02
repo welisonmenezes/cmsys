@@ -10,27 +10,9 @@
 			"item": [
 				{
 					"name": "variable-get",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable",
 							"protocol": "http",
@@ -50,28 +32,39 @@
 					"response": []
 				},
 				{
-					"name": "variable-get-by-id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "variable-filter",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/variable?s=xxx",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"variable"
+							],
+							"query": [
+								{
+									"key": "s",
+									"value": "xxx"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable-get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable/11",
 							"protocol": "http",
@@ -104,7 +97,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"key\": \"test-6\",\n\t\"value\": \"lorem ipsum test four\"\n}"
+							"raw": "{\n\t\"key\": \"test-7\",\n\t\"value\": \"lorem ipsum test seven\"\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable",
@@ -140,7 +133,7 @@
 							"raw": "{\n\t\"key\": \"test-edited\",\n\t\"value\": \"lorem ipsum test edited\"\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/variable/1",
+							"raw": "http://127.0.0.1:5000/api/variable/4",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -152,7 +145,7 @@
 							"path": [
 								"api",
 								"variable",
-								"1"
+								"4"
 							]
 						}
 					},
@@ -169,12 +162,8 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/variable/1",
+							"raw": "http://127.0.0.1:5000/api/variable/3",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -186,7 +175,7 @@
 							"path": [
 								"api",
 								"variable",
-								"1"
+								"3"
 							]
 						}
 					},
