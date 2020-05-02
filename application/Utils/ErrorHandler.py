@@ -1,3 +1,5 @@
+from app import app
+
 class ErrorHandler(object):
 
     def __init__(self, error_code, error_message):
@@ -5,6 +7,11 @@ class ErrorHandler(object):
             error = error_message
         else:
             error = str(error_message)
+
+        if (error_code == 500):
+            app.logger.error(str(error))
+        else:
+            app.logger.info(str(error))
 
         self.response = {
             'error': error_code,
