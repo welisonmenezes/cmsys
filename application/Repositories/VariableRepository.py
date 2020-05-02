@@ -1,18 +1,13 @@
-from flask_restful import reqparse
 from sqlalchemy import or_
-from app import errorHandler
 from Models import Variable, VariableSchema
 from Validators import VariableValidator
-from Utils import Paginate
+from Utils import Paginate, ErrorHandler
 from .RepositoryBase import RepositoryBase
 
 class VariableRepository(RepositoryBase):
     
-    def get(self):
+    def get(self, args):
         def fn(session):
-            parser = reqparse.RequestParser()
-            parser.add_argument('s')
-            args = parser.parse_args()
             filter = ()
 
             if (args['s']):
@@ -20,7 +15,7 @@ class VariableRepository(RepositoryBase):
 
             schema = VariableSchema(many=True)
             query = session.query(Variable).filter(*filter)
-            result = Paginate(query, 1, 10)
+            result = Paginate(query, -1, 10)
             data = schema.dump(result.items)
 
             return {
@@ -42,7 +37,7 @@ class VariableRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return errorHandler.error_404_handler('No Variable found.')
+                return ErrorHandler.error_404_handler('No Variable found.')
 
         return self.response(fn, False)
 
@@ -68,10 +63,10 @@ class VariableRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return errorHandler.invalid_request_handler(validator.get_errors())
+                    return ErrorHandler.invalid_request_handler(validator.get_errors())
 
             else:
-                return errorHandler.no_data_send_handler()
+                return ErrorHandler.no_data_send_handler()
 
         return self.response(fn, True)
 
@@ -96,13 +91,13 @@ class VariableRepository(RepositoryBase):
                             'id': variable.id
                         }, 200
                     else:
-                        return errorHandler.error_404_handler('No Variable found.')
+                        return ErrorHandler.error_404_handler('No Variable found.')
 
                 else:
-                    return errorHandler.invalid_request_handler(validator.get_errors())
+                    return ErrorHandler.invalid_request_handler(validator.get_errors())
 
             else:
-                return errorHandler.no_data_send_handler()
+                return ErrorHandler.no_data_send_handler()
 
         return self.response(fn, True)
 
@@ -121,6 +116,6 @@ class VariableRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return errorHandler.error_404_handler('No Variable found.')
-                
+                return ErrorHandler.error_404_handler('No Variable found.')
+
         return self.response(fn, True)

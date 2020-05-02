@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
-from app import errorHandler
+from Utils import ErrorHandler
 from Models import Session
 
 class RepositoryBase():
@@ -12,14 +12,14 @@ class RepositoryBase():
         except SQLAlchemyError as e:
             if (need_rollback):
                 session.rollback()
-            return errorHandler.error_500_handler(e)
+            return ErrorHandler.error_500_handler(e)
         except AttributeError as e:
             if (need_rollback):
                 session.rollback()
-            return errorHandler.error_400_handler(e)
+            return ErrorHandler.error_400_handler(e)
         except HTTPException as e:
             if (need_rollback):
                 session.rollback()
-            return errorHandler.error_500_handler(e)
+            return ErrorHandler.error_500_handler(e)
         finally:
             session.close()
