@@ -1,4 +1,5 @@
 from .ValidatorBase import ValidatorBase
+from Models import Session, Variable
 
 class VariableValidator(ValidatorBase):
 
@@ -11,7 +12,8 @@ class VariableValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 255,
-                'min_length': 1
+                'min_length': 1,
+                'is_unique': True
             },
             'value': {
                 'key_required': True,
@@ -22,3 +24,6 @@ class VariableValidator(ValidatorBase):
 
         self.errors = []
         self.has_error = False
+        self.complete_key_list = True
+        self.model = Variable
+        self.session = Session

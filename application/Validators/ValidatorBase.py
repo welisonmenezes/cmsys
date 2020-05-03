@@ -44,7 +44,7 @@ class ValidatorBase():
 
     def is_unique(self, key, config):
         if ('is_unique' in config and isinstance(config['is_unique'], int)):
-            count_el = self.session.query(self.model).filter_by(name=self.request[key]).count()
+            count_el = self.session.query(self.model).filter(getattr(self.model, key)==self.request[key]).count()
             if (count_el > 0):
                 self.handle_validation_error('The field \'' + key + '\' already exists in database.')
 

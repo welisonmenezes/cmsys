@@ -379,5 +379,5 @@ class Blacklist(Base):
 class Variable(Base):
     __tablename__ = 'Variable'
     id = Column(Integer, primary_key=True)
-    key = Column(String(255), nullable=False)
+    key = Column(String(255), nullable=False, unique=True)
     value = Column(Text(4294000000), nullable=False)

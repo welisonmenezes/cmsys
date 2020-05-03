@@ -45,3 +45,5 @@ class CapabilityValidator(ValidatorBase):
         self.errors = []
         self.has_error = False
         self.complete_key_list = True
+        self.model = None
+        self.session = None

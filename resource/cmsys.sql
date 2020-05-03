@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 30-Abr-2020 às 02:46
+-- Generation Time: 03-Maio-2020 às 23:17
 -- Versão do servidor: 10.1.38-MariaDB
 -- versão do PHP: 7.3.2
 
@@ -38,6 +38,17 @@ CREATE TABLE `blacklist` (
   `target` varchar(100) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Extraindo dados da tabela `blacklist`
+--
+
+INSERT INTO `blacklist` (`id`, `type`, `value`, `target`) VALUES
+(1, 'type edited', '222.222.22.222', 'target edited'),
+(2, 'ip', '222.222.22.222', 'comment'),
+(4, 'email', '222.222.22.222', 'comment'),
+(5, 'user', '222.222.22.222', 'login'),
+(6, 'ip', '222.222.22.222', 'login');
+
 -- --------------------------------------------------------
 
 --
@@ -55,6 +66,21 @@ CREATE TABLE `capability` (
   `can_delete` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Extraindo dados da tabela `capability`
+--
+
+INSERT INTO `capability` (`id`, `description`, `type`, `target_id`, `can_write`, `can_read`, `can_delete`) VALUES
+(1, 'description edited', 'type edited', 1, 1, 1, 1),
+(2, 'description test', 'type test', 1, 0, 1, 0),
+(4, 'description xxxx', 'xxx', 1, 0, 0, 0),
+(5, 'description xxxx', 'xxx', 1, 1, 1, 1),
+(6, 'description xxxx', 'aaa', 1, 1, 1, 1),
+(7, 'description xxxx', 'aaa', 2, 1, 1, 1),
+(8, 'description xxxx', 'aaa', 2, 1, 1, 1),
+(9, 'description xxxx', 'aaa', 2, 1, 0, 1),
+(11, 'add-by-role', 'test', 1, 1, 1, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -66,6 +92,13 @@ CREATE TABLE `capability_role` (
   `capability_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Extraindo dados da tabela `capability_role`
+--
+
+INSERT INTO `capability_role` (`capability_id`, `role_id`) VALUES
+(11, 8);
 
 -- --------------------------------------------------------
 
@@ -333,6 +366,17 @@ CREATE TABLE `role` (
   `can_access_admin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Extraindo dados da tabela `role`
+--
+
+INSERT INTO `role` (`id`, `name`, `description`, `can_access_admin`) VALUES
+(1, 'role-name', 'role-description-edited', 1),
+(2, 'role-name 2', 'role-description', 1),
+(4, 'role-name 4', 'role-description', 1),
+(7, 'role-name 5', 'role-description', 1),
+(8, 'role-name 6', 'role-description', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -456,6 +500,17 @@ CREATE TABLE `variable` (
   `key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `value` longtext COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Extraindo dados da tabela `variable`
+--
+
+INSERT INTO `variable` (`id`, `key`, `value`) VALUES
+(4, 'test-edited', 'lorem ipsum test edited'),
+(5, 'test-5', 'lorem ipsum test five'),
+(6, 'test-6', 'lorem ipsum test four'),
+(7, 'test-7', 'lorem ipsum test seven'),
+(9, 'test-8', 'lorem ipsum test seven');
 
 --
 -- Indexes for dumped tables
@@ -678,7 +733,8 @@ ALTER TABLE `user`
 -- Indexes for table `variable`
 --
 ALTER TABLE `variable`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `key` (`key`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -688,13 +744,13 @@ ALTER TABLE `variable`
 -- AUTO_INCREMENT for table `blacklist`
 --
 ALTER TABLE `blacklist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `capability`
 --
 ALTER TABLE `capability`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `comment`
@@ -784,7 +840,7 @@ ALTER TABLE `post_type`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `sector`
@@ -826,7 +882,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `variable`
 --
 ALTER TABLE `variable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
