@@ -10,6 +10,8 @@ class BlacklistController(Resource):
         repo = BlacklistRepository()
         parser = reqparse.RequestParser()
         parser.add_argument('s')
+        parser.add_argument('type')
+        parser.add_argument('target')
         args = parser.parse_args()
         if id:
             return repo.get_by_id(id)

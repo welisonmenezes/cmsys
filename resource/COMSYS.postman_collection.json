@@ -9,7 +9,7 @@
 			"name": "Variable",
 			"item": [
 				{
-					"name": "variable-get",
+					"name": "get",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -32,7 +32,7 @@
 					"response": []
 				},
 				{
-					"name": "variable-filter",
+					"name": "filter",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -61,7 +61,7 @@
 					"response": []
 				},
 				{
-					"name": "variable-get-by-id",
+					"name": "get-by-id",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -85,7 +85,7 @@
 					"response": []
 				},
 				{
-					"name": "variable-post",
+					"name": "post",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -118,7 +118,7 @@
 					"response": []
 				},
 				{
-					"name": "variable-put",
+					"name": "put",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -152,7 +152,7 @@
 					"response": []
 				},
 				{
-					"name": "variable-delete",
+					"name": "delete",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -175,6 +175,193 @@
 							"path": [
 								"api",
 								"variable",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Blacklist",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist?s=22&type=ip&target=login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist"
+							],
+							"query": [
+								{
+									"key": "s",
+									"value": "22"
+								},
+								{
+									"key": "type",
+									"value": "ip"
+								},
+								{
+									"key": "target",
+									"value": "login"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"ip\",\n\t\"value\": \"222.222.22.222\",\n\t\"target\": \"login\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"type edited\",\n\t\"value\": \"value edited\",\n\t\"target\": \"target edited\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist",
 								"3"
 							]
 						}

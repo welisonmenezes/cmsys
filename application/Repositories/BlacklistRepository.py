@@ -11,7 +11,13 @@ class BlacklistRepository(RepositoryBase):
             filter = ()
 
             if (args['s']):
-                filter += (Blacklist.value.like('%'+args['s']+'%'),)
+                filter += (Blacklist.value.like('%' + args['s'] + '%'),)
+
+            if (args['type']):
+                filter += (Blacklist.type == args['type'],)
+
+            if (args['target']):
+                filter += (Blacklist.target == args['target'],)
 
             schema = BlacklistSchema(many=True)
             query = session.query(Blacklist).filter(*filter)
