@@ -1,7 +1,32 @@
 from flask import  request
-from app import app
+from flask_restful import reqparse
 from flask_restful import Resource
 
+from Repositories import BlacklistRepository
+
 class BlacklistController(Resource):
+    
     def get(self, id=None):
-        return {'message': 'BlacklistController'}, 200
+        repo = BlacklistRepository()
+        parser = reqparse.RequestParser()
+        parser.add_argument('s')
+        args = parser.parse_args()
+        if id:
+            return repo.get_by_id(id)
+        else:
+            return repo.get(args)
+
+    
+    def post(self):
+        repo = BlacklistRepository()
+        return repo.create(request)
+
+
+    def put(self, id=None):
+        repo = BlacklistRepository()
+        return repo.update(id, request)
+
+
+    def delete(self, id=None):
+        repo = BlacklistRepository()
+        return repo.delete(id)

@@ -368,7 +368,7 @@ class Comment(Base):
     language = relationship('Language', back_populates='comments', foreign_keys='Comment.language_id')
 
 
-class Balcklist(Base):
+class Blacklist(Base):
     __tablename__ = 'Blacklist'
     id = Column(Integer, primary_key=True)
     type = Column(String(50), nullable=False) # must be what kind of item is (email, ip,  user, etc...)

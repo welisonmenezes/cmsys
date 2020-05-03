@@ -8,3 +8,10 @@ class VariableSchema(ma.Schema):
     id = fields.Integer()
     key = fields.String()
     value = fields.String()
+
+
+class BlacklistSchema(ma.Schema):
+    id = fields.Integer()
+    type = fields.String()
+    value = fields.String()
+    target = fields.String()

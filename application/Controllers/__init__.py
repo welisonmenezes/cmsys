@@ -34,5 +34,5 @@ def start_controllers(app, api):
         }), 500
 
     # resources
-    api.add_resource(BlacklistController, '/blacklist')
+    api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
     api.add_resource(VariableController, '/variable', '/variable/<int:id>')
