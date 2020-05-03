@@ -9,7 +9,12 @@ class CapabilityController(Resource):
     def get(self, id=None):
         repo = CapabilityRepository()
         parser = reqparse.RequestParser()
-        parser.add_argument('s')
+        parser.add_argument('description')
+        parser.add_argument('type')
+        parser.add_argument('target_id')
+        parser.add_argument('can_write')
+        parser.add_argument('can_read')
+        parser.add_argument('can_delete')
         args = parser.parse_args()
         if id:
             return repo.get_by_id(id)

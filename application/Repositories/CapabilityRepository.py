@@ -9,8 +9,23 @@ class CapabilityRepository(RepositoryBase):
         def fn(session):
             filter = ()
 
-            # if (args['value']):
-            #     filter += (Capability.value.like('%' + args['value'] + '%'),)
+            if (args['description']):
+                filter += (Capability.description.like('%' + args['description'] + '%'),)
+
+            if (args['type']):
+                filter += (Capability.type == args['type'],)
+
+            if (args['target_id']):
+                filter += (Capability.target_id == args['target_id'],)
+
+            if (args['can_write']):
+                filter += (Capability.can_write == args['can_write'],)
+
+            if (args['can_read']):
+                filter += (Capability.can_read == args['can_read'],)
+
+            if (args['can_delete']):
+                filter += (Capability.can_delete == args['can_delete'],)
 
             schema = CapabilitySchema(many=True)
             query = session.query(Capability).filter(*filter)
