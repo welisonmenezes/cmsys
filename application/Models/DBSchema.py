@@ -6,30 +6,22 @@ ma = Marshmallow(app)
 
 
 class BlacklistSchema(ma.Schema):
-    id = fields.Integer()
-    type = fields.String()
-    value = fields.String()
-    target = fields.String()
+    class Meta:
+        fields = ('id', 'type', 'value', 'target')
 
 
 class CapabilitySchema(ma.Schema):
-    id = fields.Integer()
-    description = fields.String()
-    type = fields.String()
-    target_id = fields.Integer()
-    can_write = fields.Integer()
-    can_read = fields.Integer()
-    can_delete = fields.Integer()
+    roles = fields.Nested('RoleSchema', many=True, exclude=('capabilities',))
+    class Meta:
+        fields = ('id', 'description', 'type', 'target_id', 'can_write', 'can_write', 'can_read', 'can_delete', 'roles')
 
 
 class RoleSchema(ma.Schema):
-    id = fields.Integer()
-    name = fields.String()
-    description = fields.String()
-    can_access_admin = fields.Integer()
+    capabilities = fields.Nested('CapabilitySchema', many=True, exclude=('roles',))
+    class Meta:
+        fields = ('id', 'name', 'description', 'can_access_admin', 'capabilities')
 
 
 class VariableSchema(ma.Schema):
-    id = fields.Integer()
-    key = fields.String()
-    value = fields.String()
+    class Meta:
+        fields = ('id', 'key', 'value')

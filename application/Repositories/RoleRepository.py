@@ -27,7 +27,16 @@ class RoleRepository(RepositoryBase):
                 filter += (Role.can_access_admin == args['can_access_admin'],)
 
             schema = RoleSchema(many=True)
-            query = session.query(Role).filter(*filter)
+
+            if (args['get_capabilities'] and args['get_capabilities'] == '1'):
+                query = session.query(Role).filter(*filter)
+            else:
+                query = session.query(
+                    Role.id, Role.name,
+                    Role.description,
+                    Role.can_access_admin
+                ).filter(*filter)
+
             result = Paginate(query, page, limit)
             data = schema.dump(result.items)
 

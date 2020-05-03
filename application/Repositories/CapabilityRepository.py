@@ -36,7 +36,20 @@ class CapabilityRepository(RepositoryBase):
                 filter += (Capability.can_delete == args['can_delete'],)
 
             schema = CapabilitySchema(many=True)
-            query = session.query(Capability).filter(*filter)
+
+            if (args['get_roles'] and args['get_roles'] == '1'):
+                query = session.query(Capability).filter(*filter)
+            else:
+                query = session.query(
+                    Capability.id,
+                    Capability.description,
+                    Capability.type,
+                    Capability.target_id,
+                    Capability.can_write,
+                    Capability.can_read,
+                    Capability.can_delete
+                ).filter(*filter)
+
             result = Paginate(query, page, limit)
             data = schema.dump(result.items)
 
