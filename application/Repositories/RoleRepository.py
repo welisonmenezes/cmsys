@@ -1,5 +1,5 @@
 from Models import Role, RoleSchema, Capability
-from Validators import RoleValidator
+from Validators import RoleValidator, CapabilityValidator
 from Utils import Paginate, ErrorHandler, Checker
 from .RepositoryBase import RepositoryBase
 
@@ -69,18 +69,9 @@ class RoleRepository(RepositoryBase):
                         can_access_admin = data['can_access_admin'],
                     )
 
-                    '''
-                    capability = Capability(
-                        description = 'add-by-role',
-                        type = 'test',
-                        target_id = 1,
-                        can_write = 1,
-                        can_read = 1,
-                        can_delete = 0
-                    )
-                    role.capabilities.append(capability)
-                    '''
-
+                    add_capabilite = self.add_capability(role, data, session)
+                    if (add_capabilite != True):
+                        return add_capabilite
 
                     session.add(role)
                     session.commit()
@@ -147,3 +138,32 @@ class RoleRepository(RepositoryBase):
                 return ErrorHandler(404, 'No Role found.').response
 
         return self.response(fn, True)
+
+
+    def add_capability(self, role, data, session):
+        if ('capabilities' in data and isinstance(data['capabilities'], list)):
+            for capability in data['capabilities']:
+                if ('id' in capability and Checker.can_be_integer(capability['id'])):
+                    registered_capability = session.query(Capability).filter_by(id=int(capability['id'])).first()
+                    if (registered_capability):
+                        role.capabilities.append(registered_capability)
+                    else:
+                        return ErrorHandler(400, 'Capability ' + str(capability['id']) + ' does not exists.').response
+                else:
+                    capability_validator = CapabilityValidator(capability)
+                    if (capability_validator.is_valid()):
+                        capability = Capability(
+                            description = capability['description'],
+                            type = capability['type'],
+                            target_id = capability['target_id'],
+                            can_write = capability['can_write'],
+                            can_read = capability['can_read'],
+                            can_delete = capability['can_delete']
+                        )
+                        role.capabilities.append(capability)
+                    else:
+                        capability_validator.get_errors().insert(0, {
+                            'message': 'Check if all Capability object is configured correctly.'
+                        })
+                        return ErrorHandler(400, capability_validator.get_errors()).response
+        return True
