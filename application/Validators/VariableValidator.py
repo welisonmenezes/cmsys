@@ -6,15 +6,16 @@ class VariableValidator(ValidatorBase):
 
         self.request = obj_data
 
-        self.required_keys = [
-            'key',
-            'value'
-        ]
-
-        self.required_fields = [
-            'key',
-            'value'
-        ]
+        self.validate_config = {
+            'key': {
+                'key_required': True,
+                'field_required': True
+            },
+            'value': {
+                'key_required': True,
+                'field_required': True
+            }
+        }
 
         self.errors = []
         self.has_error = False

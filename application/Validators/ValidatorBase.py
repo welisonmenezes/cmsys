@@ -1,45 +1,31 @@
 class ValidatorBase():
 
-    def validate_required_keys(self):
-        for field in self.required_keys:
-            if not self.has_key(field):
-                self.errors.append(
-                    {
-                        'message': 'The request object does not have the field: \'' + field + '\'.'
-                    }
-                )
-                self.has_error = True
-    
-
-    def has_key(self, field):
-        if not self.request.get(field) and self.request.get(field) != '' and self.request.get(field) != []:
-            return False
-        else:
-            return True
+    def handle_validation_error(self, message):
+        self.errors.append({ 'message': message })
+        self.has_error = True
 
 
-    def validate_required_fields(self):
-        for field in self.required_fields:
-            if (not self.has_key(field)):
-                continue
-            if self.is_empty(field):
-                self.errors.append(
-                    {
-                        'message': 'The field \'' + field + '\' cannot be empty.'
-                    }
-                )
-                self.has_error = True
+    def has_key(self, key, config):
+        if ('key_required' in config and config['key_required']):
+            if (not self.request.get(key) and self.request.get(key) != '' and self.request.get(key) != []):
+                self.handle_validation_error('The request object does not have the field: \'' + key + '\'.')
 
     
-    def is_empty(self, field):
-        if not self.request[field] and self.request[field] == '':
-            return True
-        return False
+    def is_empty(self, key, config):
+        if ('field_required' in config and config['field_required']):
+            if (not self.request[key] and self.request[key] == ''):
+                self.handle_validation_error('The field \'' + key + '\' cannot be empty.')
 
     
     def is_valid(self):
-        self.validate_required_keys()
-        self.validate_required_fields()
+
+        for key in self.validate_config:
+            config = self.validate_config[key]
+            
+            # run validations
+            self.has_key(key, config)
+            self.is_empty(key, config)
+
         return not self.has_error
 
 
