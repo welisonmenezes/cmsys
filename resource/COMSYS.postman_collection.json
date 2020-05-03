@@ -211,7 +211,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10",
+							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10&get_roles=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -232,6 +232,10 @@
 								{
 									"key": "limit",
 									"value": "10"
+								},
+								{
+									"key": "get_roles",
+									"value": "1"
 								}
 							]
 						}
@@ -412,6 +416,207 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "Role",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/role?page=1&limit=10&get_capabilities=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"role"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "get_capabilities",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/role?name=r&description=edited&can_access_admin=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"role"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "r"
+								},
+								{
+									"key": "description",
+									"value": "edited"
+								},
+								{
+									"key": "can_access_admin",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/role/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"role",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"role-name 12\",\n\t\"description\": \"role-description\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [\n\t\t{\n\t\t\t\"description\": \"test-1\",\n\t\t\t\"type\": \"test-1\",\n\t\t\t\"target_id\": 3,\n\t\t\t\"can_write\": 1,\n\t\t\t\"can_read\": 1,\n\t\t\t\"can_delete\": 1\n\t\t},\n\t\t{\n\t\t\t\"id\": 111,\n\t\t\t\"description\": \"test-2\",\n\t\t\t\"type\": \"test-2\",\n\t\t\t\"target_id\": 3,\n\t\t\t\"can_write\": 1,\n\t\t\t\"can_read\": 1,\n\t\t\t\"can_delete\": 1\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/role",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"role-name\",\n\t\"description\": \"role-description-edited\",\n\t\"can_access_admin\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/role/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"role",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/role/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"role",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Variable",
 			"item": [
 				{
@@ -513,7 +718,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"key\": \"test-7\",\n\t\"value\": \"lorem ipsum test seven\"\n}"
+							"raw": "{\n\t\"key\": \"test-8\",\n\t\"value\": \"lorem ipsum test seven\"\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable",
