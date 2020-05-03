@@ -1,4 +1,4 @@
-from Models import Role, RoleSchema
+from Models import Role, RoleSchema, Capability
 from Validators import RoleValidator
 from Utils import Paginate, ErrorHandler, Checker
 from .RepositoryBase import RepositoryBase
@@ -66,8 +66,22 @@ class RoleRepository(RepositoryBase):
                     role = Role(
                         name = data['name'],
                         description = data['description'],
-                        can_access_admin = data['can_access_admin']
+                        can_access_admin = data['can_access_admin'],
                     )
+
+                    '''
+                    capability = Capability(
+                        description = 'add-by-role',
+                        type = 'test',
+                        target_id = 1,
+                        can_write = 1,
+                        can_read = 1,
+                        can_delete = 0
+                    )
+                    role.capabilities.append(capability)
+                    '''
+
+
                     session.add(role)
                     session.commit()
                     last_id = role.id

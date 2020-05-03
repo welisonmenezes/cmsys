@@ -41,6 +41,13 @@ class ValidatorBase():
             if (not isinstance(self.request[key], int) or self.request[key] < 0 or self.request[key] > 1):
                 self.handle_validation_error('The field \'' + key + '\' only accpet 0 or 1 value.')
 
+
+    def is_unique(self, key, config):
+        if ('is_unique' in config and isinstance(config['is_unique'], int)):
+            count_el = self.session.query(self.model).filter_by(name=self.request[key]).count()
+            if (count_el > 0):
+                self.handle_validation_error('The field \'' + key + '\' already exists in database.')
+
     
     def is_valid(self):
 
@@ -55,6 +62,7 @@ class ValidatorBase():
                 self.min_length(key, config)
                 self.is_integer(key, config)
                 self.is_boolean(key, config)
+                self.is_unique(key, config)
 
         return not self.has_error
 

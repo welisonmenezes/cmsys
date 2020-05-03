@@ -1,4 +1,5 @@
 from .ValidatorBase import ValidatorBase
+from Models import Session, Role
 
 class RoleValidator(ValidatorBase):
 
@@ -11,7 +12,8 @@ class RoleValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 100,
-                'min_length': 1
+                'min_length': 1,
+                'is_unique': True
             },
             'description': {
                 'key_required': False,
@@ -28,3 +30,5 @@ class RoleValidator(ValidatorBase):
         self.errors = []
         self.has_error = False
         self.complete_key_list = True
+        self.model = Role
+        self.session = Session
