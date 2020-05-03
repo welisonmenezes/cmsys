@@ -1,2 +1,3 @@
-from .VariableRepository import *
 from .BlacklistRepository import *
+from .CapabilityRepository import *
+from .VariableRepository import *

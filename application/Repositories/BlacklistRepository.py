@@ -1,4 +1,3 @@
-from sqlalchemy import or_
 from Models import Blacklist, BlacklistSchema
 from Validators import BlacklistValidator
 from Utils import Paginate, ErrorHandler
@@ -10,8 +9,8 @@ class BlacklistRepository(RepositoryBase):
         def fn(session):
             filter = ()
 
-            if (args['s']):
-                filter += (Blacklist.value.like('%' + args['s'] + '%'),)
+            if (args['value']):
+                filter += (Blacklist.value.like('%' + args['value'] + '%'),)
 
             if (args['type']):
                 filter += (Blacklist.type == args['type'],)
@@ -90,7 +89,7 @@ class BlacklistRepository(RepositoryBase):
 
                     if (blacklist):
                         blacklist.type = data['type']
-                        blacklist.value = data['value'],
+                        blacklist.value = data['value']
                         blacklist.target = data['target']
                         session.commit()
 

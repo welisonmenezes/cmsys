@@ -7,7 +7,7 @@ class ValidatorBase():
 
     def has_key(self, key, config):
         if ('key_required' in config and config['key_required']):
-            if (not self.request.get(key) and self.request.get(key) != '' and self.request.get(key) != []):
+            if (not key in self.request):
                 self.handle_validation_error('The request object does not have the field: \'' + key + '\'.')
                 self.complete_key_list = False
 
@@ -20,13 +20,13 @@ class ValidatorBase():
 
     def max_length(self, key, config):
         if ('max_length' in config and isinstance(config['max_length'], int)):
-            if (len(self.request[key]) > config['max_length']):
+            if (len(str(self.request[key])) > config['max_length']):
                 self.handle_validation_error('The field \'' + key + '\' length cannot be greater than ' + str(config['max_length']))
 
 
     def min_length(self, key, config):
         if ('min_length' in config and isinstance(config['min_length'], int)):
-            if (len(self.request[key]) < config['min_length']):
+            if (len(str(self.request[key])) < config['min_length']):
                 self.handle_validation_error('The field \'' + key + '\' length cannot be less than ' + str(config['min_length']))
 
     

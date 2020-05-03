@@ -1,2 +1,3 @@
-from .VariableValidator import *
 from .BlacklistValidator import *
+from .CapabilityValidator import *
+from .VariableValidator import *

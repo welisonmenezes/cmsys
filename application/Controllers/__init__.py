@@ -1,6 +1,8 @@
 from flask import jsonify
 from .BlacklistController import BlacklistController
+from .CapabilityController import CapabilityController
 from .VariableController import VariableController
+
 
 def start_controllers(app, api):
 
@@ -33,6 +35,8 @@ def start_controllers(app, api):
             'message': 'An internal error has occurred'
         }), 500
 
+
     # resources
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
+    api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
     api.add_resource(VariableController, '/variable', '/variable/<int:id>')
