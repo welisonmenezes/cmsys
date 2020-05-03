@@ -22,19 +22,23 @@ class CapabilityValidator(ValidatorBase):
             'target_id': {
                 'key_required': True,
                 'field_required': True,
-                'min_length': 1
+                'min_length': 1,
+                'is_integer': True
             },
             'can_write': {
                 'key_required': True,
-                'field_required': True
+                'field_required': True,
+                'is_boolean': True
             },
             'can_read': {
                 'key_required': True,
-                'field_required': True
+                'field_required': True,
+                'is_boolean': True
             },
             'can_delete': {
                 'key_required': True,
-                'field_required': True
+                'field_required': True,
+                'is_boolean': True
             }
         }
 

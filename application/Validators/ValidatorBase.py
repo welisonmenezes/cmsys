@@ -21,13 +21,25 @@ class ValidatorBase():
     def max_length(self, key, config):
         if ('max_length' in config and isinstance(config['max_length'], int)):
             if (len(str(self.request[key])) > config['max_length']):
-                self.handle_validation_error('The field \'' + key + '\' length cannot be greater than ' + str(config['max_length']))
+                self.handle_validation_error('The field \'' + key + '\' length cannot be greater than ' + str(config['max_length'] + '.'))
 
 
     def min_length(self, key, config):
         if ('min_length' in config and isinstance(config['min_length'], int)):
             if (len(str(self.request[key])) < config['min_length']):
-                self.handle_validation_error('The field \'' + key + '\' length cannot be less than ' + str(config['min_length']))
+                self.handle_validation_error('The field \'' + key + '\' length cannot be less than ' + str(config['min_length'] + '.'))
+
+
+    def is_integer(self, key, config):
+        if ('is_integer' in config and isinstance(config['is_integer'], int)):
+            if (not isinstance(self.request[key], int)):
+                self.handle_validation_error('The field \'' + key + '\' must be an integer.')
+
+    
+    def is_boolean(self, key, config):
+        if ('is_boolean' in config and isinstance(config['is_boolean'], int)):
+            if (not isinstance(self.request[key], int) or self.request[key] < 0 or self.request[key] > 1):
+                self.handle_validation_error('The field \'' + key + '\' only accpet 0 or 1 value.')
 
     
     def is_valid(self):
@@ -41,6 +53,8 @@ class ValidatorBase():
                 self.is_empty(key, config)
                 self.max_length(key, config)
                 self.min_length(key, config)
+                self.is_integer(key, config)
+                self.is_boolean(key, config)
 
         return not self.has_error
 
