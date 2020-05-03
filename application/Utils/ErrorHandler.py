@@ -1,4 +1,4 @@
-from app import app, logHandler
+from app import app
 
 class ErrorHandler(object):
 
@@ -12,8 +12,6 @@ class ErrorHandler(object):
             app.logger.error(str(error))
         else:
             app.logger.info(str(error))
-
-        #logHandler.doRollover()
 
         self.response = {
             'error': error_code,

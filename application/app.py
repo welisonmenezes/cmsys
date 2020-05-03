@@ -1,6 +1,3 @@
-#from logging.config import fileConfig
-import logging, os
-import logging.handlers as handlers
 from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_cors import CORS
@@ -10,12 +7,8 @@ app = Flask(__name__, template_folder='Views/UI', static_folder='Views/UI/static
 app.config.from_pyfile('config.py')
 
 # configurate logging
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logHandler = handlers.RotatingFileHandler(os.path.abspath('logging/log.log'), maxBytes=1048576, backupCount=3, encoding=None, delay=True)
-logHandler.setLevel(logging.NOTSET)
-logHandler.setFormatter(formatter)
-app.logger.addHandler(logHandler)
-app.logger.debug('Aplication started!')
+from Utils import Logger
+Logger(app)
 
 # create api blueprint
 ApiBP = Blueprint('ApiBP', __name__, url_prefix='/api')
