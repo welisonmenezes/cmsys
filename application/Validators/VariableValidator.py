@@ -9,11 +9,14 @@ class VariableValidator(ValidatorBase):
         self.validate_config = {
             'key': {
                 'key_required': True,
-                'field_required': True
+                'field_required': True,
+                'max_length': 255,
+                'min_length': 1
             },
             'value': {
                 'key_required': True,
-                'field_required': True
+                'field_required': True,
+                'min_length': 1
             }
         }
 

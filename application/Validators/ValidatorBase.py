@@ -16,6 +16,18 @@ class ValidatorBase():
             if (not self.request[key] and self.request[key] == ''):
                 self.handle_validation_error('The field \'' + key + '\' cannot be empty.')
 
+
+    def max_length(self, key, config):
+        if ('max_length' in config and isinstance(config['max_length'], int)):
+            if (len(self.request[key]) > config['max_length']):
+                self.handle_validation_error('The field \'' + key + '\' length cannot be greater than ' + str(config['max_length']))
+
+
+    def min_length(self, key, config):
+        if ('min_length' in config and isinstance(config['min_length'], int)):
+            if (len(self.request[key]) < config['min_length']):
+                self.handle_validation_error('The field \'' + key + '\' length cannot be less than ' + str(config['min_length']))
+
     
     def is_valid(self):
 
@@ -25,6 +37,8 @@ class ValidatorBase():
             # run validations
             self.has_key(key, config)
             self.is_empty(key, config)
+            self.max_length(key, config)
+            self.min_length(key, config)
 
         return not self.has_error
 
