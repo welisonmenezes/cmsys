@@ -11,6 +11,9 @@ class RoleController(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('page')
         parser.add_argument('limit')
+        parser.add_argument('name')
+        parser.add_argument('description')
+        parser.add_argument('can_access_admin')
         args = parser.parse_args()
         if id:
             return repo.get_by_id(id)
