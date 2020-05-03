@@ -1,6 +1,6 @@
 from Models import Capability, CapabilitySchema
 from Validators import CapabilityValidator
-from Utils import Paginate, ErrorHandler
+from Utils import Paginate, ErrorHandler, Checker
 from .RepositoryBase import RepositoryBase
 
 class CapabilityRepository(RepositoryBase):
@@ -8,6 +8,14 @@ class CapabilityRepository(RepositoryBase):
     def get(self, args):
         def fn(session):
             filter = ()
+            page = 1
+            limit = 10
+
+            if (args['page'] and Checker.can_be_integer(args['page'])):
+                page = int(args['page'])
+
+            if (args['limit'] and Checker.can_be_integer(args['limit'])):
+                limit = int(args['limit'])
 
             if (args['description']):
                 filter += (Capability.description.like('%' + args['description'] + '%'),)
@@ -29,7 +37,7 @@ class CapabilityRepository(RepositoryBase):
 
             schema = CapabilitySchema(many=True)
             query = session.query(Capability).filter(*filter)
-            result = Paginate(query, 1, 10)
+            result = Paginate(query, page, limit)
             data = schema.dump(result.items)
 
             return {

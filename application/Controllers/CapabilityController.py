@@ -9,6 +9,8 @@ class CapabilityController(Resource):
     def get(self, id=None):
         repo = CapabilityRepository()
         parser = reqparse.RequestParser()
+        parser.add_argument('page')
+        parser.add_argument('limit')
         parser.add_argument('description')
         parser.add_argument('type')
         parser.add_argument('target_id')

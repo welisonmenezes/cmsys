@@ -9,6 +9,8 @@ class VariableController(Resource):
     def get(self, id=None):
         repo = VariableRepository()
         parser = reqparse.RequestParser()
+        parser.add_argument('page')
+        parser.add_argument('limit')
         parser.add_argument('s')
         args = parser.parse_args()
         if id:

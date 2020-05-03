@@ -1,7 +1,7 @@
 from sqlalchemy import or_
 from Models import Variable, VariableSchema
 from Validators import VariableValidator
-from Utils import Paginate, ErrorHandler
+from Utils import Paginate, ErrorHandler, Checker
 from .RepositoryBase import RepositoryBase
 
 class VariableRepository(RepositoryBase):
@@ -9,13 +9,21 @@ class VariableRepository(RepositoryBase):
     def get(self, args):
         def fn(session):
             filter = ()
+            page = 1
+            limit = 10
+
+            if (args['page'] and Checker.can_be_integer(args['page'])):
+                page = int(args['page'])
+
+            if (args['limit'] and Checker.can_be_integer(args['limit'])):
+                limit = int(args['limit'])
 
             if (args['s']):
                 filter += (or_(Variable.key.like('%'+args['s']+'%'), Variable.value.like('%'+args['s']+'%')),)
 
             schema = VariableSchema(many=True)
             query = session.query(Variable).filter(*filter)
-            result = Paginate(query, 1, 10)
+            result = Paginate(query, page, limit)
             data = schema.dump(result.items)
 
             return {

@@ -1,3 +1,4 @@
+from .Checker import *
 from .ErrorHandler import *
-from .Paginate import *
 from .Logger import *
+from .Paginate import *
