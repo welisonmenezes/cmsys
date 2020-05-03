@@ -9,6 +9,7 @@ class ValidatorBase():
         if ('key_required' in config and config['key_required']):
             if (not self.request.get(key) and self.request.get(key) != '' and self.request.get(key) != []):
                 self.handle_validation_error('The request object does not have the field: \'' + key + '\'.')
+                self.complete_key_list = False
 
     
     def is_empty(self, key, config):
@@ -36,9 +37,10 @@ class ValidatorBase():
             
             # run validations
             self.has_key(key, config)
-            self.is_empty(key, config)
-            self.max_length(key, config)
-            self.min_length(key, config)
+            if (self.complete_key_list):
+                self.is_empty(key, config)
+                self.max_length(key, config)
+                self.min_length(key, config)
 
         return not self.has_error
 

@@ -104,7 +104,6 @@ class VariableRepository(RepositoryBase):
 
     def delete(self, id):
         def fn(session):
-
             variable = session.query(Variable).filter_by(id=id).first()
 
             if (variable):
