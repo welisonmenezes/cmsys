@@ -1,38 +1,31 @@
-from flask import  request
-from flask_restful import reqparse
-from flask_restful import Resource
-
+from .ControllerBase import ControllerBase
 from Repositories import RoleRepository
 
-class RoleController(Resource):
+class RoleController(ControllerBase):
     
     def get(self, id=None):
         repo = RoleRepository()
-        parser = reqparse.RequestParser()
-        parser.add_argument('page')
-        parser.add_argument('limit')
-        parser.add_argument('order')
-        parser.add_argument('order_by')
-        parser.add_argument('get_capabilities')
-        parser.add_argument('name')
-        parser.add_argument('description')
-        parser.add_argument('can_access_admin')
-        parser.add_argument('capability_description')
-        args = parser.parse_args()
+        self.parser.add_argument('get_capabilities')
+        self.parser.add_argument('name')
+        self.parser.add_argument('description')
+        self.parser.add_argument('can_access_admin')
+        self.parser.add_argument('capability_description')
+        self.args = self.parser.parse_args()
+        
         if id:
             return repo.get_by_id(id)
         else:
-            return repo.get(args)
+            return repo.get(self.args)
 
     
     def post(self):
         repo = RoleRepository()
-        return repo.create(request)
+        return repo.create(self.request)
 
 
     def put(self, id=None):
         repo = RoleRepository()
-        return repo.update(id, request)
+        return repo.update(id, self.request)
 
 
     def delete(self, id=None):

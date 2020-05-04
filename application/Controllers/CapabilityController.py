@@ -1,40 +1,33 @@
-from flask import  request
-from flask_restful import reqparse
-from flask_restful import Resource
-
+from .ControllerBase import ControllerBase
 from Repositories import CapabilityRepository
 
-class CapabilityController(Resource):
+class CapabilityController(ControllerBase):
     
     def get(self, id=None):
         repo = CapabilityRepository()
-        parser = reqparse.RequestParser()
-        parser.add_argument('page')
-        parser.add_argument('limit')
-        parser.add_argument('order')
-        parser.add_argument('order_by')
-        parser.add_argument('get_roles')
-        parser.add_argument('description')
-        parser.add_argument('type')
-        parser.add_argument('target_id')
-        parser.add_argument('can_write')
-        parser.add_argument('can_read')
-        parser.add_argument('can_delete')
-        args = parser.parse_args()
+        self.parser.add_argument('get_roles')
+        self.parser.add_argument('description')
+        self.parser.add_argument('type')
+        self.parser.add_argument('target_id')
+        self.parser.add_argument('can_write')
+        self.parser.add_argument('can_read')
+        self.parser.add_argument('can_delete')
+        self.args = self.parser.parse_args()
+
         if id:
             return repo.get_by_id(id)
         else:
-            return repo.get(args)
+            return repo.get(self.args)
 
     
     def post(self):
         repo = CapabilityRepository()
-        return repo.create(request)
+        return repo.create(self.request)
 
 
     def put(self, id=None):
         repo = CapabilityRepository()
-        return repo.update(id, request)
+        return repo.update(id, self.request)
 
 
     def delete(self, id=None):

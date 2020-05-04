@@ -1,4 +1,5 @@
 from flask import jsonify
+from .ControllerBase import *
 from .BlacklistController import BlacklistController
 from .CapabilityController import CapabilityController
 from .RoleController import RoleController
