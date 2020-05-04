@@ -1,34 +1,24 @@
 from Models import Blacklist, BlacklistSchema
 from Validators import BlacklistValidator
-from Utils import Paginate, ErrorHandler, Checker
+from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
 
 class BlacklistRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            filter = ()
-            page = 1
-            limit = 10
+            # filter params
+            fb = FilterBuilder(Blacklist, args)
+            fb.set_equals_filter('type')
+            fb.set_equals_filter('target')
+            fb.set_like_filter('value')
+            filter = fb.get_filter()
+            page = fb.get_page()
+            limit = fb.get_limit()
 
-            if (args['page'] and Checker.can_be_integer(args['page'])):
-                page = int(args['page'])
-
-            if (args['limit'] and Checker.can_be_integer(args['limit'])):
-                limit = int(args['limit'])
-
-            if (args['value']):
-                filter += (Blacklist.value.like('%' + args['value'] + '%'),)
-
-            if (args['type']):
-                filter += (Blacklist.type == args['type'],)
-
-            if (args['target']):
-                filter += (Blacklist.target == args['target'],)
-
-            schema = BlacklistSchema(many=True)
             query = session.query(Blacklist).filter(*filter)
             result = Paginate(query, page, limit)
+            schema = BlacklistSchema(many=True)
             data = schema.dump(result.items)
 
             return {
