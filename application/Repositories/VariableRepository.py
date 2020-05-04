@@ -1,29 +1,25 @@
 from sqlalchemy import or_
 from Models import Variable, VariableSchema
 from Validators import VariableValidator
-from Utils import Paginate, ErrorHandler, Checker
+from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
 
 class VariableRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            filter = ()
-            page = 1
-            limit = 10
-
-            if (args['page'] and Checker.can_be_integer(args['page'])):
-                page = int(args['page'])
-
-            if (args['limit'] and Checker.can_be_integer(args['limit'])):
-                limit = int(args['limit'])
+            # filter params
+            fb = FilterBuilder(Variable, args)
+            filter = fb.get_filter()
+            page = fb.get_page()
+            limit = fb.get_limit()
 
             if (args['s']):
                 filter += (or_(Variable.key.like('%'+args['s']+'%'), Variable.value.like('%'+args['s']+'%')),)
 
-            schema = VariableSchema(many=True)
             query = session.query(Variable).filter(*filter)
             result = Paginate(query, page, limit)
+            schema = VariableSchema(many=True)
             data = schema.dump(result.items)
 
             return {
