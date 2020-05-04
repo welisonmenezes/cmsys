@@ -83,7 +83,7 @@ class VariableRepository(RepositoryBase):
             if (data):
                 validator = VariableValidator(data)
 
-                if (validator.is_valid()):
+                if (validator.is_valid(id=id)):
                     variable = session.query(Variable).filter_by(id=id).first()
 
                     if (variable):

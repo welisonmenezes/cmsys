@@ -96,7 +96,7 @@ class CapabilityRepository(RepositoryBase):
             if (data):
                 validator = CapabilityValidator(data)
 
-                if (validator.is_valid()):
+                if (validator.is_valid(id=id)):
                     capability = session.query(Capability).filter_by(id=id).first()
 
                     if (capability):

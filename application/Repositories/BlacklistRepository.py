@@ -83,7 +83,7 @@ class BlacklistRepository(RepositoryBase):
             if (data):
                 validator = BlacklistValidator(data)
 
-                if (validator.is_valid()):
+                if (validator.is_valid(id=id)):
                     blacklist = session.query(Blacklist).filter_by(id=id).first()
 
                     if (blacklist):
