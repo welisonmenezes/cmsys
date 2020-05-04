@@ -1,56 +1,34 @@
 from Models import Capability, CapabilitySchema
 from Validators import CapabilityValidator
-from Utils import Paginate, ErrorHandler, Checker
+from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
 
 class CapabilityRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            filter = ()
-            page = 1
-            limit = 10
-
-            if (args['page'] and Checker.can_be_integer(args['page'])):
-                page = int(args['page'])
-
-            if (args['limit'] and Checker.can_be_integer(args['limit'])):
-                limit = int(args['limit'])
-
-            if (args['description']):
-                filter += (Capability.description.like('%' + args['description'] + '%'),)
-
-            if (args['type']):
-                filter += (Capability.type == args['type'],)
-
-            if (args['target_id']):
-                filter += (Capability.target_id == args['target_id'],)
-
-            if (args['can_write']):
-                filter += (Capability.can_write == args['can_write'],)
-
-            if (args['can_read']):
-                filter += (Capability.can_read == args['can_read'],)
-
-            if (args['can_delete']):
-                filter += (Capability.can_delete == args['can_delete'],)
-
-            schema = CapabilitySchema(many=True)
+            # filter params
+            fb = FilterBuilder(Capability, args)
+            fb.set_equals_filter('type')
+            fb.set_equals_filter('target_id')
+            fb.set_equals_filter('can_write')
+            fb.set_equals_filter('can_read')
+            fb.set_equals_filter('can_delete')
+            fb.set_like_filter('description')
+            filter = fb.get_filter()
+            page = fb.get_page()
+            limit = fb.get_limit()
+            joins = []
 
             if (args['get_roles'] and args['get_roles'] == '1'):
-                query = session.query(Capability).filter(*filter)
+                fields = [Capability]
             else:
-                query = session.query(
-                    Capability.id,
-                    Capability.description,
-                    Capability.type,
-                    Capability.target_id,
-                    Capability.can_write,
-                    Capability.can_read,
-                    Capability.can_delete
-                ).filter(*filter)
-
+                fields = [Capability.id, Capability.description, Capability.type, Capability.target_id, 
+                            Capability.can_write,  Capability.can_read, Capability.can_delete]
+            
+            query = session.query(*fields).join(*joins).filter(*filter)
             result = Paginate(query, page, limit)
+            schema = CapabilitySchema(many=True)
             data = schema.dump(result.items)
 
             return {
