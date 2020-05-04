@@ -1,32 +1,22 @@
 from Models import Role, RoleSchema, Capability
 from Validators import RoleValidator, CapabilityValidator
-from Utils import Paginate, ErrorHandler, Checker
+from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
 
 class RoleRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            filter = ()
-            page = 1
-            limit = 10
-
-            if (args['page'] and Checker.can_be_integer(args['page'])):
-                page = int(args['page'])
-
-            if (args['limit'] and Checker.can_be_integer(args['limit'])):
-                limit = int(args['limit'])
-
-            if (args['name']):
-                filter += (Role.name.like('%' + args['name'] + '%'),)
-
-            if (args['description']):
-                filter += (Role.description.like('%' + args['description'] + '%'),)
-
-            if (args['can_access_admin']):
-                filter += (Role.can_access_admin == args['can_access_admin'],)
-
             schema = RoleSchema(many=True)
+
+            # filter params
+            fb = FilterBuilder(Role, args)
+            fb.set_equals_filter('can_access_admin')
+            fb.set_like_filter('name')
+            fb.set_like_filter('description')
+            filter = fb.get_filter()
+            page = fb.get_page()
+            limit = fb.get_limit()
 
             if (args['get_capabilities'] and args['get_capabilities'] == '1'):
                 query = session.query(Role).filter(*filter)
