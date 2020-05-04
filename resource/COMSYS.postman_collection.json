@@ -47,7 +47,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/blacklist?value=22&type=ip&target=login",
+							"raw": "http://127.0.0.1:5000/api/blacklist?value=22&type=&target=&page=1&limit=10&order_by=id&order=desc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -67,11 +67,27 @@
 								},
 								{
 									"key": "type",
-									"value": "ip"
+									"value": ""
 								},
 								{
 									"key": "target",
-									"value": "login"
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
 								}
 							]
 						}
@@ -115,7 +131,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"type\": \"ip\",\n\t\"value\": \"222.222.22.222\",\n\t\"target\": \"login\"\n}"
+							"raw": "{\n\t\"type\": \"ip\",\n\t\"value\": \"333.333.33.333\",\n\t\"target\": \"comment\"\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/blacklist",
@@ -248,7 +264,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability?description=xxx&type=xxx&target_id=1&can_write=0&can_delete=0&can_read=0",
+							"raw": "http://127.0.0.1:5000/api/capability?description=&type=&target_id=&can_write=&can_delete=&can_read=&get_roles=1&order_by=id&order=asc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -264,27 +280,39 @@
 							"query": [
 								{
 									"key": "description",
-									"value": "xxx"
+									"value": ""
 								},
 								{
 									"key": "type",
-									"value": "xxx"
+									"value": ""
 								},
 								{
 									"key": "target_id",
-									"value": "1"
+									"value": ""
 								},
 								{
 									"key": "can_write",
-									"value": "0"
+									"value": ""
 								},
 								{
 									"key": "can_delete",
-									"value": "0"
+									"value": ""
 								},
 								{
 									"key": "can_read",
-									"value": "0"
+									"value": ""
+								},
+								{
+									"key": "get_roles",
+									"value": "1"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "asc"
 								}
 							]
 						}
@@ -328,7 +356,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"description\": \"description xxxx\",\n\t\"type\": \"aaa\",\n\t\"target_id\": 2,\n\t\"can_write\": 1,\n\t\"can_read\": 0,\n\t\"can_delete\": 1\n}"
+							"raw": "{\n\t\"description\": \"description new controller\",\n\t\"type\": \"bbb\",\n\t\"target_id\": 2,\n\t\"can_write\": 1,\n\t\"can_read\": 1,\n\t\"can_delete\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/capability",
@@ -424,7 +452,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?page=1&limit=10&get_capabilities=1",
+							"raw": "http://127.0.0.1:5000/api/role?page=1&limit=10&get_capabilities=0",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -448,7 +476,7 @@
 								},
 								{
 									"key": "get_capabilities",
-									"value": "1"
+									"value": "0"
 								}
 							]
 						}
@@ -461,7 +489,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?name=r&description=edited&can_access_admin=1",
+							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=1&page=1&limit=10&name=&get_capabilities=0&capability_description=test-1&order_by=id&order=asc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -476,16 +504,36 @@
 							],
 							"query": [
 								{
-									"key": "name",
-									"value": "r"
-								},
-								{
-									"key": "description",
-									"value": "edited"
-								},
-								{
 									"key": "can_access_admin",
 									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "get_capabilities",
+									"value": "0"
+								},
+								{
+									"key": "capability_description",
+									"value": "test-1"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "asc"
 								}
 							]
 						}
@@ -658,7 +706,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/variable?s=xxx",
+							"raw": "http://127.0.0.1:5000/api/variable?s=test&order_by=id&order=asc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -674,7 +722,15 @@
 							"query": [
 								{
 									"key": "s",
-									"value": "xxx"
+									"value": "test"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "asc"
 								}
 							]
 						}
