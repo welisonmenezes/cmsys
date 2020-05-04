@@ -16,6 +16,7 @@ class CapabilityRepository(RepositoryBase):
             fb.set_equals_filter('can_delete')
             fb.set_like_filter('description')
             filter = fb.get_filter()
+            order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
             joins = []
@@ -26,7 +27,7 @@ class CapabilityRepository(RepositoryBase):
                 fields = [Capability.id, Capability.description, Capability.type, Capability.target_id, 
                             Capability.can_write,  Capability.can_read, Capability.can_delete]
             
-            query = session.query(*fields).join(*joins).filter(*filter)
+            query = session.query(*fields).join(*joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = CapabilitySchema(many=True)
             data = schema.dump(result.items)

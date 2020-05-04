@@ -14,10 +14,11 @@ class RoleRepository(RepositoryBase):
             fb.set_like_filter('description')
             fb.set_equals_filter('capability_description', joined=Capability, joined_key='description')
             filter = fb.get_filter()
+            order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
-            joins = []
 
+            joins = []
             if (args['capability_description'] and args['capability_description'] != ''):
                 joins.append(Role.capabilities)
 
@@ -26,7 +27,7 @@ class RoleRepository(RepositoryBase):
             else:
                 fields = [Role.id, Role.name, Role.description, Role.can_access_admin]
             
-            query = session.query(*fields).join(*joins).filter(*filter)
+            query = session.query(*fields).join(*joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = RoleSchema(many=True)
             data = schema.dump(result.items)

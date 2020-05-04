@@ -11,6 +11,8 @@ class VariableController(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('page')
         parser.add_argument('limit')
+        parser.add_argument('order')
+        parser.add_argument('order_by')
         parser.add_argument('s')
         args = parser.parse_args()
         if id:

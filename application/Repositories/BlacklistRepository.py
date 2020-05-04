@@ -13,10 +13,11 @@ class BlacklistRepository(RepositoryBase):
             fb.set_equals_filter('target')
             fb.set_like_filter('value')
             filter = fb.get_filter()
+            order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
 
-            query = session.query(Blacklist).filter(*filter)
+            query = session.query(Blacklist).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = BlacklistSchema(many=True)
             data = schema.dump(result.items)

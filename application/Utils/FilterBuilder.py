@@ -1,3 +1,4 @@
+from sqlalchemy import desc, asc
 from Utils import Checker
 
 class FilterBuilder():
@@ -40,3 +41,14 @@ class FilterBuilder():
         if (self.args['limit'] and Checker.can_be_integer(self.args['limit'])):
             self.limit = int(self.args['limit'])
         return self.limit
+
+
+    def get_order_by(self):
+        if (self.args['order_by'] and self.args['order_by'] != ''):
+            if (self.args['order'] and self.args['order'] == 'desc'):
+                order_by = [desc(getattr(self.context, self.args['order_by']))]
+            else:
+                order_by = [asc(getattr(self.context, self.args['order_by']))]
+        else:
+            order_by = [desc(self.context.id)]
+        return order_by

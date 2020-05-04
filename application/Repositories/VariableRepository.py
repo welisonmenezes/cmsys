@@ -11,13 +11,14 @@ class VariableRepository(RepositoryBase):
             # filter params
             fb = FilterBuilder(Variable, args)
             filter = fb.get_filter()
+            order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
 
             if (args['s']):
                 filter += (or_(Variable.key.like('%'+args['s']+'%'), Variable.value.like('%'+args['s']+'%')),)
 
-            query = session.query(Variable).filter(*filter)
+            query = session.query(Variable).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = VariableSchema(many=True)
             data = schema.dump(result.items)
