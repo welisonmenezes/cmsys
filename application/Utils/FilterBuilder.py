@@ -10,14 +10,20 @@ class FilterBuilder():
         self.limit = 10
 
 
-    def set_equals_filter(self, key):
+    def set_equals_filter(self, key, *args, **kwargs):
         if (self.args[key]):
-            self.filter += (getattr(self.context, key) == self.args[key],)
+            if ('joined' in kwargs and 'joined_key' in kwargs):
+                self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) == self.args[key],)
+            else:
+                self.filter += (getattr(self.context, key) == self.args[key],)
 
     
-    def set_like_filter(self, key):
+    def set_like_filter(self, key, *args, **kwargs):
         if (self.args[key]):
-            self.filter += (getattr(self.context, key).like('%' + self.args[key] + '%'),)
+            if ('joined' in kwargs and 'joined_key' in kwargs):
+                self.filter += (getattr(kwargs['joined'], kwargs['joined_key']).like('%' + self.args[key] + '%'),)
+            else:
+                self.filter += (getattr(self.context, key).like('%' + self.args[key] + '%'),)
 
     
     def get_filter(self):

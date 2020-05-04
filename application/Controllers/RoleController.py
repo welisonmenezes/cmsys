@@ -15,6 +15,7 @@ class RoleController(Resource):
         parser.add_argument('name')
         parser.add_argument('description')
         parser.add_argument('can_access_admin')
+        parser.add_argument('capability_description')
         args = parser.parse_args()
         if id:
             return repo.get_by_id(id)
