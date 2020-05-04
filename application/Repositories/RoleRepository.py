@@ -98,13 +98,22 @@ class RoleRepository(RepositoryBase):
             if (data):
                 validator = RoleValidator(data)
 
-                if (validator.is_valid()):
+                if (validator.is_valid(id=id)):
                     role = session.query(Role).filter_by(id=id).first()
 
                     if (role):
                         role.name = data['name']
                         role.description = data['description']
                         role.can_access_admin = data['can_access_admin']
+
+                        # clear deleted capabilities
+                        self.edit_capabilities(role, data, session)
+
+                        # update role's capabilities
+                        add_capabilite = self.add_capability(role, data, session)
+                        if (add_capabilite != True):
+                            return add_capabilite
+
                         session.commit()
 
                         return {
@@ -168,3 +177,24 @@ class RoleRepository(RepositoryBase):
                         })
                         return ErrorHandler(400, capability_validator.get_errors()).response
         return True
+
+
+    def edit_capabilities(self, role, data, session):
+        old_capabilities = []
+        new_old_capabilities = []
+
+        if (role.capabilities):
+            for capability in role.capabilities:
+                old_capabilities.append(capability.id)
+
+        if ('capabilities' in data and isinstance(data['capabilities'], list)):
+            for capability in data['capabilities']:
+                if ('id' in capability and Checker.can_be_integer(capability['id'])):
+                    new_old_capabilities.append(capability['id'])
+
+        capabilities_to_delete = list(set(old_capabilities) - set(new_old_capabilities))
+
+        for capability in capabilities_to_delete:
+            registered_capability = session.query(Capability).filter_by(id=int(capability)).first()
+            if (registered_capability):
+                role.capabilities.remove(registered_capability)

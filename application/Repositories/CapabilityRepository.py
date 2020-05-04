@@ -129,13 +129,19 @@ class CapabilityRepository(RepositoryBase):
             capability = session.query(Capability).filter_by(id=id).first()
 
             if (capability):
-                session.delete(capability)
-                session.commit()
 
-                return {
-                    'message': 'Capability deleted successfully.',
-                    'id': id
-                }, 200
+                if (not capability.roles):
+                    session.delete(capability)
+                    session.commit()
+
+                    return {
+                        'message': 'Capability deleted successfully.',
+                        'id': id
+                    }, 200
+
+                else:
+                    return ErrorHandler(406, 'You cannot delete this Capability because it has related Role.').response
+
             else:
                 return ErrorHandler(404, 'No Capability found.').response
 
