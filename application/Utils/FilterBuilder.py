@@ -1,5 +1,5 @@
 from sqlalchemy import desc, asc
-from Utils import Checker
+from Utils import Checker, Helper
 
 class FilterBuilder():
 
@@ -26,6 +26,50 @@ class FilterBuilder():
             else:
                 self.filter += (getattr(self.context, key).like('%' + self.args[key] + '%'),)
 
+    
+    def set_date_filter(self, key, *args, **kwargs):
+        if (self.args[key]):
+            date_time_obj = Helper.get_date_from_string(self.args[key])
+            try:
+                date_time_obj = Helper.get_date_from_string(self.args[key])
+
+                date_modifier = 'greater_or_equal'
+                if (kwargs['date_modifier']):
+                    date_modifier = kwargs['date_modifier']
+
+                if ('joined' in kwargs and 'joined_key' in kwargs):
+                    if (date_modifier == 'greater'):
+                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) > date_time_obj,)
+                    elif (date_modifier == 'less'):
+                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) < date_time_obj,)
+                    elif (date_modifier == 'greater_or_equal'):
+                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) >= date_time_obj,)
+                    elif (date_modifier == 'less_or_equla'):
+                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) <= date_time_obj,)
+                    elif (date_modifier == 'equal'):
+                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) == date_time_obj,)
+                    elif (date_modifier == 'different'):
+                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) != date_time_obj,)
+                    else:
+                        raise Exception('The parameter \'date_modifier\' must be one of these: [greater, less, greater_or_equal, less_or_equal, equal or different]')
+                else:
+                    if (date_modifier == 'greater'):
+                        self.filter += (getattr(self.context, key) > date_time_obj,)
+                    elif (date_modifier == 'less'):
+                        self.filter += (getattr(self.context, key) < date_time_obj,)
+                    elif (date_modifier == 'greater_or_equal'):
+                        self.filter += (getattr(self.context, key) >= date_time_obj,)
+                    elif (date_modifier == 'less_or_equal'):
+                        self.filter += (getattr(self.context, key) <= date_time_obj,)
+                    elif (date_modifier == 'equal'):
+                        self.filter += (getattr(self.context, key) == date_time_obj,)
+                    elif (date_modifier == 'different'):
+                        self.filter += (getattr(self.context, key) != date_time_obj,)
+                    else:
+                        raise Exception('The parameter \'date_modifier\' must be one of these: [greater, less, greater_or_equal, less_or_equal, equal or different]')
+            except Exception as e:
+                raise Exception(e)
+            
     
     def get_filter(self):
         return self.filter

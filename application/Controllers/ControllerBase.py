@@ -11,3 +11,4 @@ class ControllerBase(Resource):
         self.parser.add_argument('limit')
         self.parser.add_argument('order')
         self.parser.add_argument('order_by')
+        self.parser.add_argument('date_modifier')

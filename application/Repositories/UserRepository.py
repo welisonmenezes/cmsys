@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from Models import User, UserSchema
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
@@ -9,12 +10,22 @@ class UserRepository(RepositoryBase):
         def fn(session):
             # filter params
             fb = FilterBuilder(User, args)
-            # fb.set_equals_filter('type')
-            # fb.set_like_filter('value')
+            fb.set_like_filter('email')
+            fb.set_equals_filter('status')
+            fb.set_equals_filter('role_id')
+            
+            try:
+                fb.set_date_filter('registered', date_modifier=args['date_modifier'])
+            except Exception as e:
+                return ErrorHandler(400, e).response
+
             filter = fb.get_filter()
             order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
+
+            if (args['name']):
+                filter += (or_(User.first_name.like('%'+args['name']+'%'), User.last_name.like('%'+args['name']+'%'), User.nickname.like('%'+args['name']+'%')),)
 
             query = session.query(User).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
