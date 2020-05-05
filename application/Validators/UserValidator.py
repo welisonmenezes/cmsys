@@ -1,4 +1,5 @@
 from .ValidatorBase import ValidatorBase
+from Models import Session, User
 
 class UserValidator(ValidatorBase):
 
@@ -11,7 +12,8 @@ class UserValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 100,
-                'min_length': 1
+                'min_length': 1,
+                'is_unique': True
             },
             'password': {
                 'key_required': True,
@@ -50,11 +52,9 @@ class UserValidator(ValidatorBase):
                 'is_integer': True
             },
             'avatar_id': {
-                'key_required': True,
                 'is_integer': True
             },
             'page_id': {
-                'key_required': True,
                 'is_integer': True
             }
         }
@@ -62,5 +62,5 @@ class UserValidator(ValidatorBase):
         self.errors = []
         self.has_error = False
         self.complete_key_list = True
-        self.model = None
-        self.session = None
+        self.model = User
+        self.session = Session

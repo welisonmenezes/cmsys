@@ -1,5 +1,5 @@
 from sqlalchemy import or_
-from Models import User, UserSchema
+from Models import User, UserSchema, Media, Post, Role
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
@@ -71,11 +71,30 @@ class UserRepository(RepositoryBase):
                         first_name = data['first_name'],
                         last_name = data['last_name'],
                         email = data['email'],
-                        status = data['status'],
-                        role_id = data['role_id'],
-                        #avatar_id = data['avatar_id'],
-                        #page_id = data['page_id']
+                        status = data['status']
                     )
+                    
+                    if ('role_id' in data):
+                        role = session.query(Role.id).filter_by(id=int(data['role_id'])).first()
+                        if (role):
+                            user.role_id = role.id
+                        else:
+                            return ErrorHandler(400, 'Cannot Rind role :' + str( data['role_id'])).response
+
+                    if ('avatar_id' in data):
+                        avatar = session.query(Media.id).filter_by(id=int(data['avatar_id'])).first()
+                        if (avatar):
+                            user.avatar_id = avatar.id
+                        else:
+                            return ErrorHandler(400, 'Cannot find Media :' + str( data['avatar_id'])).response
+
+                    if ('page_id' in data):
+                        post = session.query(Post.id).filter_by(id=int(data['page_id'])).first()
+                        if (post):
+                            user.page_id = post.id
+                        else:
+                            return ErrorHandler(400, 'Cannot find Post :' + str( data['page_id'])).response
+
                     session.add(user)
                     session.commit()
                     last_id = user.id

@@ -13,37 +13,37 @@ class ValidatorBase():
 
     
     def is_empty(self, key, config):
-        if ('field_required' in config and config['field_required']):
+        if ('field_required' in config and config['field_required'] and key in self.request):
             if (not self.request[key] and self.request[key] == ''):
                 self.handle_validation_error('The field \'' + key + '\' cannot be empty.')
 
 
     def max_length(self, key, config):
-        if ('max_length' in config and isinstance(config['max_length'], int)):
+        if ('max_length' in config and isinstance(config['max_length'], int) and key in self.request):
             if (len(str(self.request[key])) > config['max_length']):
                 self.handle_validation_error('The field \'' + key + '\' length cannot be greater than ' + str(config['max_length'] + '.'))
 
 
     def min_length(self, key, config):
-        if ('min_length' in config and isinstance(config['min_length'], int)):
+        if ('min_length' in config and isinstance(config['min_length'], int) and key in self.request):
             if (len(str(self.request[key])) < config['min_length']):
                 self.handle_validation_error('The field \'' + key + '\' length cannot be less than ' + str(config['min_length'] + '.'))
 
 
     def is_integer(self, key, config):
-        if ('is_integer' in config and isinstance(config['is_integer'], int)):
+        if ('is_integer' in config and isinstance(config['is_integer'], int) and key in self.request):
             if (not isinstance(self.request[key], int)):
                 self.handle_validation_error('The field \'' + key + '\' must be an integer.')
 
     
     def is_boolean(self, key, config):
-        if ('is_boolean' in config and isinstance(config['is_boolean'], int)):
+        if ('is_boolean' in config and isinstance(config['is_boolean'], int) and key in self.request):
             if (not isinstance(self.request[key], int) or self.request[key] < 0 or self.request[key] > 1):
                 self.handle_validation_error('The field \'' + key + '\' only accpet 0 or 1 value.')
 
 
     def is_unique(self, key, config, extra_args):
-        if ('is_unique' in config and isinstance(config['is_unique'], int)):
+        if ('is_unique' in config and isinstance(config['is_unique'], int) and key in self.request):
             el = self.session.query(self.model).filter(getattr(self.model, key)==self.request[key]).first()
             if (el):
                 if ('id' in extra_args):
