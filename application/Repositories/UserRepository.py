@@ -13,7 +13,15 @@ class UserRepository(RepositoryBase):
             fb.set_like_filter('email')
             fb.set_equals_filter('status')
             fb.set_equals_filter('role_id')
+
+            if (args['get_role'] and args['get_role'] == '1'):
+                fields = [User]
+            else:
+                fields = [User.id, User.login, User.password, User.first_name, User.last_name, User.email, User.registered, User.status, User.role_id, User.avatar_id, User.page_id]
             
+            # TODO: implement get_avatar filter
+            # TODO: implement get_page filter
+
             try:
                 fb.set_date_filter('registered', date_modifier=args['date_modifier'])
             except Exception as e:
@@ -27,7 +35,7 @@ class UserRepository(RepositoryBase):
             if (args['name']):
                 filter += (or_(User.first_name.like('%'+args['name']+'%'), User.last_name.like('%'+args['name']+'%'), User.nickname.like('%'+args['name']+'%')),)
 
-            query = session.query(User).filter(*filter).order_by(*order_by)
+            query = session.query(*fields).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = UserSchema(many=True)
             data = schema.dump(result.items)
@@ -74,12 +82,14 @@ class UserRepository(RepositoryBase):
                         status = data['status']
                     )
                     
+                    # TODO: implement the following if block below as a single method
+
                     if ('role_id' in data):
                         role = session.query(Role.id).filter_by(id=int(data['role_id'])).first()
                         if (role):
                             user.role_id = role.id
                         else:
-                            return ErrorHandler(400, 'Cannot Rind role :' + str( data['role_id'])).response
+                            return ErrorHandler(400, 'Cannot Rind Role :' + str( data['role_id'])).response
 
                     if ('avatar_id' in data):
                         avatar = session.query(Media.id).filter_by(id=int(data['avatar_id'])).first()
@@ -130,9 +140,28 @@ class UserRepository(RepositoryBase):
                         user.last_name = data['last_name']
                         user.email = data['email']
                         user.status = data['status']
-                        user.role_id = data['role_id']
-                        #user.avatar_id = data['avatar_id']
-                        #user.page_id = data['page_id']
+
+                        if ('role_id' in data):
+                            role = session.query(Role.id).filter_by(id=int(data['role_id'])).first()
+                            if (role):
+                                user.role_id = role.id
+                            else:
+                                return ErrorHandler(400, 'Cannot find Role :' + str( data['role_id'])).response
+
+                        if ('avatar_id' in data):
+                            avatar = session.query(Media.id).filter_by(id=int(data['avatar_id'])).first()
+                            if (avatar):
+                                user.avatar_id = avatar.id
+                            else:
+                                return ErrorHandler(400, 'Cannot find Media :' + str( data['avatar_id'])).response
+
+                        if ('page_id' in data):
+                            post = session.query(Post.id).filter_by(id=int(data['page_id'])).first()
+                            if (post):
+                                user.page_id = post.id
+                            else:
+                                return ErrorHandler(400, 'Cannot find Post :' + str( data['page_id'])).response
+
                         session.commit()
 
                         return {
@@ -156,6 +185,12 @@ class UserRepository(RepositoryBase):
             user = session.query(User).filter_by(id=id).first()
 
             if (user):
+
+                # TODO: check if user has post (dont allow to delete)
+                # TODO: chekc if user has media (dont allow to delete)
+                # TODO: check if user has social (delete social as well)
+                # TODO: check if user has comments (delete comments as well)
+
                 session.delete(user)
                 session.commit()
 

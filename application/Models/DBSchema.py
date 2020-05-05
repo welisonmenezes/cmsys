@@ -23,9 +23,9 @@ class RoleSchema(ma.Schema):
 
 
 class UserSchema(ma.Schema):
-    #role = filter.Nested('RoleSchema', many=False)
+    role = fields.Nested('RoleSchema', many=False, exclude=('capabilities',))
     class Meta:
-        fields = ('id', 'login', 'password', 'nickname', 'first_name', 'last_name', 'email', 'registered', 'status', 'role_id', 'avatar_id', 'page_id')
+        fields = ('id', 'login', 'password', 'nickname', 'first_name', 'last_name', 'email', 'registered', 'status', 'role_id', 'avatar_id', 'page_id', 'role')
 
 
 class VariableSchema(ma.Schema):
