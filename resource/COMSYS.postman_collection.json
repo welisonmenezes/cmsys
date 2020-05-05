@@ -392,7 +392,7 @@
 							"raw": "{\n\t\"description\": \"description edited\",\n\t\"type\": \"type edited\",\n\t\"target_id\": 1,\n\t\"can_write\": 1,\n\t\"can_read\": 1,\n\t\"can_delete\": 1\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability/1",
+							"raw": "http://127.0.0.1:5000/api/capability/2",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -404,7 +404,7 @@
 							"path": [
 								"api",
 								"capability",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -422,7 +422,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability/3",
+							"raw": "http://127.0.0.1:5000/api/capability/18",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -434,7 +434,7 @@
 							"path": [
 								"api",
 								"capability",
-								"3"
+								"18"
 							]
 						}
 					},
@@ -546,7 +546,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role/1",
+							"raw": "http://127.0.0.1:5000/api/role/8",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -558,7 +558,7 @@
 							"path": [
 								"api",
 								"role",
-								"1"
+								"8"
 							]
 						}
 					},
@@ -577,7 +577,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"role-name 12\",\n\t\"description\": \"role-description\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [\n\t\t{\n\t\t\t\"description\": \"test-1\",\n\t\t\t\"type\": \"test-1\",\n\t\t\t\"target_id\": 3,\n\t\t\t\"can_write\": 1,\n\t\t\t\"can_read\": 1,\n\t\t\t\"can_delete\": 1\n\t\t},\n\t\t{\n\t\t\t\"id\": 111,\n\t\t\t\"description\": \"test-2\",\n\t\t\t\"type\": \"test-2\",\n\t\t\t\"target_id\": 3,\n\t\t\t\"can_write\": 1,\n\t\t\t\"can_read\": 1,\n\t\t\t\"can_delete\": 1\n\t\t}\n\t]\n}"
+							"raw": "{\n\t\"name\": \"role-name xxx\",\n\t\"description\": \"role-description\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [\n\t\t{\n\t\t\t\"id\": 11,\n\t\t\t\"description\": \"test-2\",\n\t\t\t\"type\": \"test-2\",\n\t\t\t\"target_id\": 3,\n\t\t\t\"can_write\": 1,\n\t\t\t\"can_read\": 1,\n\t\t\t\"can_delete\": 1\n\t\t}\n\t]\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/role",
@@ -610,8 +610,38 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"role-name\",\n\t\"description\": \"role-description-edited\",\n\t\"can_access_admin\": 1\n}"
+							"raw": "{\n\t\"name\": \"role-name\",\n\t\"description\": \"role-description-edited\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [\n\t\t{\n\t\t\t\"id\": 17,\n\t\t\t\"description\": \"test-2\",\n\t\t\t\"type\": \"test-2\",\n\t\t\t\"target_id\": 3,\n\t\t\t\"can_write\": 1,\n\t\t\t\"can_read\": 1,\n\t\t\t\"can_delete\": 1\n\t\t},\n\t\t{\n\t\t\t\"id\": 23,\n\t\t\t\"description\": \"new capability 2\",\n\t\t\t\"type\": \"test new\",\n\t\t\t\"target_id\": 6,\n\t\t\t\"can_write\": 0,\n\t\t\t\"can_read\": 0,\n\t\t\t\"can_delete\": 0\n\t\t}\n\t]\n}"
 						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/role/8",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"role",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/role/1",
 							"protocol": "http",
@@ -630,6 +660,177 @@
 						}
 					},
 					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=id&order=desc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/user/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"login\": \"user-4\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Welison\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 0,\n\t\"page_id\": 0\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/user",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"login\": \"user-edited\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Welison\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 0,\n\t\"page_id\": 0\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/user/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "delete",
@@ -643,7 +844,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role/3",
+							"raw": "http://127.0.0.1:5000/api/user/7",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -654,8 +855,8 @@
 							"port": "5000",
 							"path": [
 								"api",
-								"role",
-								"3"
+								"user",
+								"7"
 							]
 						}
 					},
