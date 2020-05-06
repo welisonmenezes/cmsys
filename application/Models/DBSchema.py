@@ -16,6 +16,13 @@ class CapabilitySchema(ma.Schema):
         fields = ('id', 'description', 'type', 'target_id', 'can_write', 'can_write', 'can_read', 'can_delete', 'roles')
 
 
+class MediaSchema(ma.Schema):
+    #capabilities = fields.Nested('CapabilitySchema', many=True, exclude=('roles',))
+    #file = BytesField(required=True)
+    class Meta:
+        fields = ('id', 'name', 'description', 'type', 'origin', 'user_id')
+
+
 class RoleSchema(ma.Schema):
     capabilities = fields.Nested('CapabilitySchema', many=True, exclude=('roles',))
     class Meta:

@@ -12,7 +12,7 @@ Logger(app)
 
 # create api blueprint
 ApiBP = Blueprint('ApiBP', __name__, url_prefix='/api')
-cors = CORS(ApiBP, resources={r"/*": {"origins": "*"}})
+cors = CORS(ApiBP, resources={r"/api/*": {"origins": "*"}})
 api = Api(ApiBP)
 app.register_blueprint(ApiBP)
 
