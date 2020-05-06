@@ -27,7 +27,8 @@ class MediaValidator(ValidatorBase):
             },
             'file': {
                 'key_required': True,
-                'field_required': True
+                'field_required': True,
+                'is_file': True
             },
             'origin': {
                 'key_required': True,

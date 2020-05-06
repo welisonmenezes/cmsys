@@ -1,3 +1,5 @@
+import base64
+
 class ValidatorBase():
 
     def handle_validation_error(self, message):
@@ -54,6 +56,14 @@ class ValidatorBase():
                     self.handle_validation_error('The field \'' + key + '\' already exists in database.')
 
     
+    def is_file(self, key, config):
+        if ('is_file' in config and key in self.request):
+            try:
+                return base64.b64encode(base64.b64decode(self.request[key])) == self.request[key]
+            except Exception:
+                self.handle_validation_error('Invalid base64 data.')
+
+    
     def is_valid(self, *args, **kwargs):
         for key in self.validate_config:
             config = self.validate_config[key]
@@ -67,6 +77,7 @@ class ValidatorBase():
                 self.is_integer(key, config)
                 self.is_boolean(key, config)
                 self.is_unique(key, config, kwargs)
+                self.is_file(key, config)
 
         return not self.has_error
 

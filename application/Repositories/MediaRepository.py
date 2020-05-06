@@ -86,7 +86,7 @@ class MediaRepository(RepositoryBase):
                 validator = MediaValidator(data)
 
                 #print(base64.decodebytes(data['file'].encode("ascii")))
-                print(base64.b64decode(data['file']))
+                #print(base64.b64decode(data['file']))
 
                 if (validator.is_valid()):
                     media = Media(
