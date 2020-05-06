@@ -4,6 +4,21 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
 
 class CapabilityRepository(RepositoryBase):
+
+    def set_query_fiields(self, args):
+        if (args['get_children'] and args['get_children'] == '1'):
+            self.fields = [Capability]
+        else:
+            self.fields = [
+                Capability.id,
+                Capability.description,
+                Capability.type,
+                Capability.target_id, 
+                Capability.can_write,
+                Capability.can_read,
+                Capability.can_delete
+            ]
+
     
     def get(self, args):
         def fn(session):
@@ -19,15 +34,10 @@ class CapabilityRepository(RepositoryBase):
             order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
-            joins = []
 
-            if (args['get_roles'] and args['get_roles'] == '1'):
-                fields = [Capability]
-            else:
-                fields = [Capability.id, Capability.description, Capability.type, Capability.target_id, 
-                            Capability.can_write,  Capability.can_read, Capability.can_delete]
+            self.set_query_fiields(args)
             
-            query = session.query(*fields).join(*joins).filter(*filter).order_by(*order_by)
+            query = session.query(*self.fields).join(*self.joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = CapabilitySchema(many=True)
             data = schema.dump(result.items)
@@ -40,10 +50,12 @@ class CapabilityRepository(RepositoryBase):
         return self.response(fn, False)
         
 
-    def get_by_id(self, id):
+    def get_by_id(self, id, args):
         def fn(session):
+            self.set_query_fiields(args)
+
             schema = CapabilitySchema(many=False)
-            result = session.query(Capability).filter_by(id=id).first()
+            result = session.query(*self.fields).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):

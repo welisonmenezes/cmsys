@@ -4,6 +4,11 @@ from Utils import ErrorHandler
 from Models import Session
 
 class RepositoryBase():
+
+    def __init__(self):
+        self.joins = []
+        self.fields = []
+
     
     def response(self, fn, need_rollback):
         session = Session()

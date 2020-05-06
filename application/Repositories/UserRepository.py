@@ -5,7 +5,26 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
 
 class UserRepository(RepositoryBase):
-    
+
+    def set_query_fiields(self, args):
+        if (args['get_children'] and args['get_children'] == '1'):
+            self.fields = [User]
+        else:
+            self.fields = [
+                User.id,
+                User.login,
+                User.password,
+                User.first_name,
+                User.last_name,
+                User.email,
+                User.registered,
+                User.status,
+                User.role_id,
+                User.avatar_id,
+                User.page_id
+            ]
+
+
     def get(self, args):
         def fn(session):
             # filter params
@@ -14,10 +33,7 @@ class UserRepository(RepositoryBase):
             fb.set_equals_filter('status')
             fb.set_equals_filter('role_id')
 
-            if (args['get_role'] and args['get_role'] == '1'):
-                fields = [User]
-            else:
-                fields = [User.id, User.login, User.password, User.first_name, User.last_name, User.email, User.registered, User.status, User.role_id, User.avatar_id, User.page_id]
+            self.set_query_fiields(args)
             
             # TODO: implement get_avatar filter
             # TODO: implement get_page filter
@@ -35,7 +51,7 @@ class UserRepository(RepositoryBase):
             if (args['name']):
                 filter += (or_(User.first_name.like('%'+args['name']+'%'), User.last_name.like('%'+args['name']+'%'), User.nickname.like('%'+args['name']+'%')),)
 
-            query = session.query(*fields).filter(*filter).order_by(*order_by)
+            query = session.query(*self.fields).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = UserSchema(many=True)
             data = schema.dump(result.items)
@@ -48,10 +64,13 @@ class UserRepository(RepositoryBase):
         return self.response(fn, False)
         
 
-    def get_by_id(self, id):
+    def get_by_id(self, id, args):
         def fn(session):
+
+            self.set_query_fiields(args)
+
             schema = UserSchema(many=False)
-            result = session.query(User).filter_by(id=id).first()
+            result = session.query(*self.fields).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):

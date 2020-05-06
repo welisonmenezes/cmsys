@@ -14,11 +14,11 @@ class UserController(ControllerBase):
         self.parser.add_argument('registered')
         self.parser.add_argument('status')
         self.parser.add_argument('role_id')
-        self.parser.add_argument('get_role')
+        self.parser.add_argument('get_children')
         self.args = self.parser.parse_args()
 
         if id:
-            return self.repo.get_by_id(id)
+            return self.repo.get_by_id(id, self.args)
         else:
             return self.repo.get(self.args)
 

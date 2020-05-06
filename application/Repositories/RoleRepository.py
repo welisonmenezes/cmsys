@@ -4,6 +4,18 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 from .RepositoryBase import RepositoryBase
 
 class RoleRepository(RepositoryBase):
+
+    def set_query_fiields(self, args):
+        if (args['get_children'] and args['get_children'] == '1'):
+            self.fields = [Role]
+        else:
+            self.fields = [
+                Role.id,
+                Role.name,
+                Role.description,
+                Role.can_access_admin
+            ]
+
     
     def get(self, args):
         def fn(session):
@@ -18,16 +30,12 @@ class RoleRepository(RepositoryBase):
             page = fb.get_page()
             limit = fb.get_limit()
 
-            joins = []
             if (args['capability_description'] and args['capability_description'] != ''):
-                joins.append(Role.capabilities)
+                self.joins.append(Role.capabilities)
 
-            if (args['get_capabilities'] and args['get_capabilities'] == '1'):
-                fields = [Role]
-            else:
-                fields = [Role.id, Role.name, Role.description, Role.can_access_admin]
+            self.set_query_fiields(args)
             
-            query = session.query(*fields).join(*joins).filter(*filter).order_by(*order_by)
+            query = session.query(*self.fields).join(*self.joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = RoleSchema(many=True)
             data = schema.dump(result.items)
@@ -40,10 +48,12 @@ class RoleRepository(RepositoryBase):
         return self.response(fn, False)
         
 
-    def get_by_id(self, id):
+    def get_by_id(self, id, args):
         def fn(session):
+            self.set_query_fiields(args)
+
             schema = RoleSchema(many=False)
-            result = session.query(Role).filter_by(id=id).first()
+            result = session.query(*self.fields).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):
