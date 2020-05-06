@@ -33,3 +33,12 @@ class RepositoryBase():
             
         finally:
             session.close()
+
+    
+    def get_existing_foreing_id(self, data, key, context, session):
+        if (key in data):
+            element = session.query(getattr(context, 'id')).filter_by(id=int(data[key])).first()
+            if (element):
+                return element.id
+            else:
+                raise Exception('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))

@@ -5,7 +5,7 @@ from .RepositoryBase import RepositoryBase
 
 class RoleRepository(RepositoryBase):
 
-    def set_query_fiields(self, args):
+    def set_query_fields(self, args):
         if (args['get_children'] and args['get_children'] == '1'):
             self.fields = [Role]
         else:
@@ -33,7 +33,7 @@ class RoleRepository(RepositoryBase):
             if (args['capability_description'] and args['capability_description'] != ''):
                 self.joins.append(Role.capabilities)
 
-            self.set_query_fiields(args)
+            self.set_query_fields(args)
             
             query = session.query(*self.fields).join(*self.joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
@@ -50,7 +50,7 @@ class RoleRepository(RepositoryBase):
 
     def get_by_id(self, id, args):
         def fn(session):
-            self.set_query_fiields(args)
+            self.set_query_fields(args)
 
             schema = RoleSchema(many=False)
             result = session.query(*self.fields).filter_by(id=id).first()

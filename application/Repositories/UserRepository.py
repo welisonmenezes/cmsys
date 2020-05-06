@@ -6,7 +6,7 @@ from .RepositoryBase import RepositoryBase
 
 class UserRepository(RepositoryBase):
 
-    def set_query_fiields(self, args):
+    def set_query_fields(self, args):
         if (args['get_children'] and args['get_children'] == '1'):
             self.fields = [User]
         else:
@@ -33,7 +33,7 @@ class UserRepository(RepositoryBase):
             fb.set_equals_filter('status')
             fb.set_equals_filter('role_id')
 
-            self.set_query_fiields(args)
+            self.set_query_fields(args)
             
             # TODO: implement get_avatar filter
             # TODO: implement get_page filter
@@ -67,7 +67,7 @@ class UserRepository(RepositoryBase):
     def get_by_id(self, id, args):
         def fn(session):
 
-            self.set_query_fiields(args)
+            self.set_query_fields(args)
 
             schema = UserSchema(many=False)
             result = session.query(*self.fields).filter_by(id=id).first()
@@ -101,28 +101,13 @@ class UserRepository(RepositoryBase):
                         status = data['status']
                     )
                     
-                    # TODO: implement the following if block below as a single method
-
-                    if ('role_id' in data):
-                        role = session.query(Role.id).filter_by(id=int(data['role_id'])).first()
-                        if (role):
-                            user.role_id = role.id
-                        else:
-                            return ErrorHandler(400, 'Cannot Rind Role :' + str( data['role_id'])).response
-
-                    if ('avatar_id' in data):
-                        avatar = session.query(Media.id).filter_by(id=int(data['avatar_id'])).first()
-                        if (avatar):
-                            user.avatar_id = avatar.id
-                        else:
-                            return ErrorHandler(400, 'Cannot find Media :' + str( data['avatar_id'])).response
-
-                    if ('page_id' in data):
-                        post = session.query(Post.id).filter_by(id=int(data['page_id'])).first()
-                        if (post):
-                            user.page_id = post.id
-                        else:
-                            return ErrorHandler(400, 'Cannot find Post :' + str( data['page_id'])).response
+                    # add forgein elements
+                    try:
+                        user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
+                        user.avatar_id = self.get_existing_foreing_id(data, 'avatar_id', Media, session)
+                        user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
+                    except Exception as e:
+                        return ErrorHandler(400, e).response
 
                     session.add(user)
                     session.commit()
@@ -160,26 +145,13 @@ class UserRepository(RepositoryBase):
                         user.email = data['email']
                         user.status = data['status']
 
-                        if ('role_id' in data):
-                            role = session.query(Role.id).filter_by(id=int(data['role_id'])).first()
-                            if (role):
-                                user.role_id = role.id
-                            else:
-                                return ErrorHandler(400, 'Cannot find Role :' + str( data['role_id'])).response
-
-                        if ('avatar_id' in data):
-                            avatar = session.query(Media.id).filter_by(id=int(data['avatar_id'])).first()
-                            if (avatar):
-                                user.avatar_id = avatar.id
-                            else:
-                                return ErrorHandler(400, 'Cannot find Media :' + str( data['avatar_id'])).response
-
-                        if ('page_id' in data):
-                            post = session.query(Post.id).filter_by(id=int(data['page_id'])).first()
-                            if (post):
-                                user.page_id = post.id
-                            else:
-                                return ErrorHandler(400, 'Cannot find Post :' + str( data['page_id'])).response
+                        # add forgein elements
+                        try:
+                            user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
+                            user.avatar_id = self.get_existing_foreing_id(data, 'avatar_id', Media, session)
+                            user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
+                        except Exception as e:
+                            return ErrorHandler(400, e).response
 
                         session.commit()
 
