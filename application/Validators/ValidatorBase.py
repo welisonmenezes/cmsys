@@ -1,4 +1,5 @@
 import base64
+from Utils import Helper
 
 class ValidatorBase():
 
@@ -59,9 +60,35 @@ class ValidatorBase():
     def is_file(self, key, config):
         if ('is_file' in config and key in self.request):
             try:
-                return base64.b64encode(base64.b64decode(self.request[key])) == self.request[key]
+                type_and_data = Helper.get_file_type_and_data(self.request[key])
+                file_data = type_and_data[1]
+                file_type = type_and_data[0]
+                return base64.b64encode(base64.b64decode(file_data)) == file_data
             except Exception:
-                self.handle_validation_error('Invalid base64 data.')
+                self.handle_validation_error('Invalid file base64 data.')
+
+
+    def max_file_size(self, key, config):
+        if ('max_file_size' in config and key in self.request):
+            if (int(Helper.get_base64_size(self.request[key])) > int(5017969)): #5017969
+                self.handle_validation_error('The file size cannot exceed 5 MB.')
+
+
+    def valid_file_types(self, key, config):
+        if ('valid_file_types' in config and key in self.request):
+            try:
+                file_type_data = Helper.get_file_type_and_data(self.request[key])
+                file_type = file_type_data[0]
+                valid_types = [
+                    'image/jpeg', 'image/gif', 'image/png', 
+                    'video/mp4', 'audio/mpeg', 
+                    'application/zip', 'application/gzip', 'application/x-rar-compressed', 'application/x-tar',
+                    'application/pdf', 'application/octet-stream'
+                ]
+                if (file_type not in valid_types):
+                    self.handle_validation_error('Invalid file type.')
+            except Exception as e:
+                self.handle_validation_error(str(e))  
 
     
     def is_valid(self, *args, **kwargs):
@@ -78,6 +105,8 @@ class ValidatorBase():
                 self.is_boolean(key, config)
                 self.is_unique(key, config, kwargs)
                 self.is_file(key, config)
+                self.max_file_size(key, config)
+                self.valid_file_types(key, config)
 
         return not self.has_error
 

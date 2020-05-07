@@ -19,16 +19,12 @@ class MediaValidator(ValidatorBase):
                 'key_required': True,
                 'max_length': 255
             },
-            'type': {
-                'key_required': True,
-                'field_required': True,
-                'max_length': 100,
-                'min_length': 1
-            },
             'file': {
                 'key_required': True,
                 'field_required': True,
-                'is_file': True
+                'is_file': True,
+                'max_file_size': True,
+                'valid_file_types': True
             },
             'origin': {
                 'key_required': True,
