@@ -11,6 +11,10 @@ class MediaController(ControllerBase):
     def get(self, id=None):
         self.parser.add_argument('download_file')
         self.parser.add_argument('return_file_data')
+        self.parser.add_argument('s')
+        self.parser.add_argument('type')
+        self.parser.add_argument('origin')
+        self.parser.add_argument('user_id')
         self.args = self.parser.parse_args()
 
         

@@ -8,7 +8,6 @@ class VariableRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            # filter params
             fb = FilterBuilder(Variable, args)
             filter = fb.get_filter()
             order_by = fb.get_order_by()

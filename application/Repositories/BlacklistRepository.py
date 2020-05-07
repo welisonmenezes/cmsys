@@ -7,7 +7,6 @@ class BlacklistRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            # filter params
             fb = FilterBuilder(Blacklist, args)
             fb.set_equals_filter('type')
             fb.set_equals_filter('target')

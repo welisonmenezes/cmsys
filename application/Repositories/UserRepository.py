@@ -27,7 +27,6 @@ class UserRepository(RepositoryBase):
 
     def get(self, args):
         def fn(session):
-            # filter params
             fb = FilterBuilder(User, args)
             fb.set_like_filter('email')
             fb.set_equals_filter('status')

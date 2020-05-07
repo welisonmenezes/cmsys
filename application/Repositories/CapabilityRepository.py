@@ -22,7 +22,6 @@ class CapabilityRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            # filter params
             fb = FilterBuilder(Capability, args)
             fb.set_equals_filter('type')
             fb.set_equals_filter('target_id')

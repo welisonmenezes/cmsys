@@ -19,7 +19,6 @@ class RoleRepository(RepositoryBase):
     
     def get(self, args):
         def fn(session):
-            # filter params
             fb = FilterBuilder(Role, args)
             fb.set_equals_filter('can_access_admin')
             fb.set_like_filter('name')
