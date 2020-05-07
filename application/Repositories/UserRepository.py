@@ -178,9 +178,13 @@ class UserRepository(RepositoryBase):
             if (user):
 
                 # TODO: check if user has post (dont allow to delete)
-                # TODO: chekc if user has media (dont allow to delete)
+                # TODO: enable to delete user by parameter 'admin_new_owner' to delegate to admin his medias
                 # TODO: check if user has social (delete social as well)
                 # TODO: check if user has comments (delete comments as well)
+
+                media = session.query(Media.id).filter_by(user_id=user.id).first()
+                if (media):
+                    return ErrorHandler(406, 'You cannot delete this User because it has related Media.').response
 
                 session.delete(user)
                 session.commit()

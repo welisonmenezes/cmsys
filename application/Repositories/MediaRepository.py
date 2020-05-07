@@ -1,4 +1,4 @@
-from Models import Media, MediaSchema
+from Models import Media, MediaSchema, User
 from Validators import MediaValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 from .RepositoryBase import RepositoryBase
@@ -198,7 +198,11 @@ class MediaRepository(RepositoryBase):
 
             if (media):
 
-                # TODO: check if media can be deleted (if user has a file as avatar cannot delete)
+                # TODO: check if media can be deleted (if any post is related to the media, it cannot be deleted)
+
+                user = session.query(User.id).filter_by(avatar_id=media.id).first()
+                if (user):
+                    return ErrorHandler(406, 'You cannot delete this File because it may have a related User.').response
 
                 session.delete(media)
                 session.commit()
