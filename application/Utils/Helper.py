@@ -30,7 +30,16 @@ class Helper():
 
     @staticmethod
     def get_extension_by_type(type):
-        mime_types = {
+        mime_types = Helper.get_valid_file_types()
+        try:
+            return mime_types[type]
+        except Exception:
+            raise Exception('There is no compatible extension corresponding to the type: ' + type)
+
+
+    @staticmethod
+    def get_valid_file_types():
+        return {
             'text/plain': 'txt',
             'image/png': 'png',
             'image/jpeg': 'jpeg',
@@ -58,8 +67,9 @@ class Helper():
             'text/css': 'css',
             'text/csv': 'csv'
         }
-        try:
-            return mime_types[type]
-        except Exception:
-            raise Exception('There is no compatible extension corresponding to the type: ' + type)
 
+
+    @staticmethod
+    def get_valid_mimetypes():
+        mimitypes = Helper.get_valid_file_types()
+        return mimitypes.keys()

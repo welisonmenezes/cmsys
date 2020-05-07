@@ -11,6 +11,9 @@ class FilterBuilder():
         self.limit = 10
 
 
+    # TODO: implement functionality to filter data between two dates
+
+
     def set_equals_filter(self, key, *args, **kwargs):
         if (self.args[key]):
             if ('joined' in kwargs and 'joined_key' in kwargs):

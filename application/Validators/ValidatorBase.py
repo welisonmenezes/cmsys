@@ -86,13 +86,7 @@ class ValidatorBase():
             try:
                 file_type_data = Helper.get_file_type_and_data(self.request[key])
                 file_type = file_type_data[0]
-                valid_types = [
-                    'image/jpeg', 'image/gif', 'image/png', 'video/mp4', 'audio/mpeg', 
-                    'application/zip', 'application/gzip', 'application/x-rar-compressed', 'application/x-tar',
-                    'application/pdf', 'application/octet-stream', 'application/msword',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    'text/javascript', 'text/html', 'text/json', 'text/css', 'text/csv'
-                ]
+                valid_types = Helper.get_valid_mimetypes()
                 if (file_type not in valid_types):
                     self.handle_validation_error('Invalid file type.')
             except Exception as e:
