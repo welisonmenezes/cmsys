@@ -12,3 +12,6 @@ class ControllerBase(Resource):
         self.parser.add_argument('order')
         self.parser.add_argument('order_by')
         self.parser.add_argument('date_modifier')
+
+    
+    # TODO: get, post, put and delete methods to be overloaded by your children

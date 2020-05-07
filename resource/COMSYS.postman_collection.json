@@ -227,7 +227,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10&get_roles=1",
+							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10&get_children=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -250,7 +250,7 @@
 									"value": "10"
 								},
 								{
-									"key": "get_roles",
+									"key": "get_children",
 									"value": "1"
 								}
 							]
@@ -325,7 +325,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability/1",
+							"raw": "http://127.0.0.1:5000/api/capability/23?get_children=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -337,7 +337,13 @@
 							"path": [
 								"api",
 								"capability",
-								"1"
+								"23"
+							],
+							"query": [
+								{
+									"key": "get_children",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -444,6 +450,226 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "Media",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=id&order=asc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"media"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=id&order=desc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"media"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/media/8?get_preview=0&get_file=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"media",
+								"8"
+							],
+							"query": [
+								{
+									"key": "get_preview",
+									"value": "0"
+								},
+								{
+									"key": "get_file",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"docx example 19\",\n\t\"description\": \"legal fera\",\n\t\"file\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\",\n\t\"origin\": \"origin-test\",\n\t\"user_id\": 2\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/media",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"media"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"type edited\",\n\t\"value\": \"value edited\",\n\t\"target\": \"target edited\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/blacklist/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blacklist",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Role",
 			"item": [
 				{
@@ -452,7 +678,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?page=1&limit=10&get_capabilities=0",
+							"raw": "http://127.0.0.1:5000/api/role?page=1&limit=10&get_children=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -475,8 +701,8 @@
 									"value": "10"
 								},
 								{
-									"key": "get_capabilities",
-									"value": "0"
+									"key": "get_children",
+									"value": "1"
 								}
 							]
 						}
@@ -546,7 +772,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role/8",
+							"raw": "http://127.0.0.1:5000/api/role/8?get_children=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -559,6 +785,12 @@
 								"api",
 								"role",
 								"8"
+							],
+							"query": [
+								{
+									"key": "get_children",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -673,7 +905,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&get_children=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -694,6 +926,10 @@
 								{
 									"key": "limit",
 									"value": "10"
+								},
+								{
+									"key": "get_children",
+									"value": "1"
 								}
 							]
 						}
@@ -706,7 +942,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=id&order=desc",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&name=&email=&status=&role_id=&registered=2020-05-05T11:11:11&date_modifier=&get_children=0",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -730,11 +966,39 @@
 								},
 								{
 									"key": "order_by",
-									"value": "id"
+									"value": "registered"
 								},
 								{
 									"key": "order",
-									"value": "desc"
+									"value": "asc"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "email",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "role_id",
+									"value": ""
+								},
+								{
+									"key": "registered",
+									"value": "2020-05-05T11:11:11"
+								},
+								{
+									"key": "date_modifier",
+									"value": ""
+								},
+								{
+									"key": "get_children",
+									"value": "0"
 								}
 							]
 						}
@@ -747,7 +1011,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/2",
+							"raw": "http://127.0.0.1:5000/api/user/2?get_children=0",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -760,6 +1024,12 @@
 								"api",
 								"user",
 								"2"
+							],
+							"query": [
+								{
+									"key": "get_children",
+									"value": "0"
+								}
 							]
 						}
 					},
@@ -778,7 +1048,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"user-4\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Welison\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 0,\n\t\"page_id\": 0\n}"
+							"raw": "{\n\t\"login\": \"user-10\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Welison\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 1,\n\t\"page_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user",
@@ -811,10 +1081,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"user-edited\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Welison\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 0,\n\t\"page_id\": 0\n}"
+							"raw": "{\n\t\"login\": \"user-9\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 0,\n\t\"page_id\": 0\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/2",
+							"raw": "http://127.0.0.1:5000/api/user/14",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -826,7 +1096,7 @@
 							"path": [
 								"api",
 								"user",
-								"2"
+								"14"
 							]
 						}
 					},

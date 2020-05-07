@@ -17,8 +17,6 @@ class CapabilitySchema(ma.Schema):
 
 
 class MediaSchema(ma.Schema):
-    #capabilities = fields.Nested('CapabilitySchema', many=True, exclude=('roles',))
-    #file = BytesField(required=True)
     class Meta:
         fields = ('id', 'name', 'description', 'type', 'origin', 'user_id')
 

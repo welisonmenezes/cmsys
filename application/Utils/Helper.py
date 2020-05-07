@@ -50,10 +50,16 @@ class Helper():
             'video/quicktime': 'qt',
             'video/quicktime': 'mov',
             'application/octet-stream': 'docx',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
             'application/msword': 'doc',
             'application/rtf': 'rtf',
             'application/vnd.ms-excel': 'xls',
-            'application/vnd.ms-powerpoint': 'ppt'
+            'application/vnd.ms-powerpoint': 'ppt',
+            'text/javascript': 'js',
+            'application/json': 'json',
+            'text/html': 'html',
+            'text/css': 'css',
+            'text/csv': 'csv'
         }
         try:
             return mime_types[type]

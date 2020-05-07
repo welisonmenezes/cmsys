@@ -11,6 +11,9 @@ class MediaController(ControllerBase):
     def get(self, id=None):
         # self.parser.add_argument('value')
         # self.parser.add_argument('type')
+
+        # TODO: implement a file(pdf/image) preview by file name or id
+
         self.parser.add_argument('get_preview')
         self.parser.add_argument('get_file')
         self.args = self.parser.parse_args()
