@@ -21,7 +21,7 @@ class MediaValidator(ValidatorBase):
             },
             'file': {
                 'key_required': True,
-                'field_required': True,
+                'field_required_only_post': True,
                 'is_file': True,
                 'max_file_size': True,
                 'valid_file_types': True

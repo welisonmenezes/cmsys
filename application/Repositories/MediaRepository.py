@@ -56,7 +56,6 @@ class MediaRepository(RepositoryBase):
         return self.response(fn, False)
 
 
-
     def get_file(self, id):
         def fn(session):
             result = session.query(Media).filter_by(id=id).first()
@@ -109,19 +108,16 @@ class MediaRepository(RepositoryBase):
 
                 if (validator.is_valid()):
 
-                    # get file details from request
                     try:
-                        type_and_data = Helper.get_file_type_and_data(data['file'])
-                        file_type = type_and_data[0]
-                        file_data = base64.b64decode(type_and_data[1])
-                    except:
-                        return ErrorHandler(400, 'Cannot get file details. Please, check if it is a valid file.').response
+                        file_details = self.get_file_details_from_request(data)
+                    except Exception as e:
+                        return ErrorHandler(400, e).response
 
                     media = Media(
                         name = data['name'],
                         description = data['description'],
-                        type = file_type,
-                        file = file_data,
+                        type = file_details['type'],
+                        file = file_details['data'],
                         origin = data['origin'],
                         user_id = data['user_id']
                     )
@@ -151,17 +147,23 @@ class MediaRepository(RepositoryBase):
 
                 if (validator.is_valid(id=id)):
 
-                    # TODO: edit media
-
                     media = session.query(Media).filter_by(id=id).first()
 
                     if (Media):
                         media.name = data['name']
                         media.description = data['description']
-                        media.type = data['type']
-                        media.file = data['file']
                         media.origin = data['origin']
                         media.user_id = data['user_id']
+
+                        if (data['file'] and data['file'] != ''):
+                            try:
+                                file_details = self.get_file_details_from_request(data)
+                            except Exception as e:
+                                return ErrorHandler(400, e).response
+
+                            media.type = file_details['type']
+                            media.file = file_details['data']
+
                         session.commit()
 
                         return {
@@ -178,6 +180,18 @@ class MediaRepository(RepositoryBase):
                 return ErrorHandler(400, 'No data send.').response
 
         return self.response(fn, True)
+
+
+    def get_file_details_from_request(self, data):
+        try:
+            type_and_data = Helper.get_file_type_and_data(data['file'])
+            file_details = {
+                'type': type_and_data[0],
+                'data': base64.b64decode(type_and_data[1])
+            }
+            return file_details
+        except:
+            raise Exception('Cannot get file details. Please, check if it is a valid file.')
 
 
     def delete(self, id):

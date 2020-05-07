@@ -15,6 +15,13 @@ class ValidatorBase():
                 self.complete_key_list = False
 
     
+    def is_empty_on_create(self, key, config, extra_args):
+        if ('field_required_only_post' in config and config['field_required_only_post'] and key in self.request):
+            if ('id' not in extra_args):
+                if (not self.request[key] and self.request[key] == ''):
+                    self.handle_validation_error('The field \'' + key + '\' cannot be empty.')
+
+    
     def is_empty(self, key, config):
         if ('field_required' in config and config['field_required'] and key in self.request):
             if (not self.request[key] and self.request[key] == ''):
@@ -58,7 +65,7 @@ class ValidatorBase():
 
     
     def is_file(self, key, config):
-        if ('is_file' in config and key in self.request):
+        if ('is_file' in config and key in self.request and self.request[key] != ''):
             try:
                 type_and_data = Helper.get_file_type_and_data(self.request[key])
                 file_data = type_and_data[1]
@@ -69,13 +76,13 @@ class ValidatorBase():
 
 
     def max_file_size(self, key, config):
-        if ('max_file_size' in config and key in self.request):
+        if ('max_file_size' in config and key in self.request and self.request[key] != ''):
             if (int(Helper.get_base64_size(self.request[key])) > int(5017969)): #5017969
                 self.handle_validation_error('The file size cannot exceed 5 MB.')
 
 
     def valid_file_types(self, key, config):
-        if ('valid_file_types' in config and key in self.request):
+        if ('valid_file_types' in config and key in self.request and self.request[key] != ''):
             try:
                 file_type_data = Helper.get_file_type_and_data(self.request[key])
                 file_type = file_type_data[0]
@@ -100,6 +107,7 @@ class ValidatorBase():
             self.has_key(key, config)
             if (self.complete_key_list):
                 self.is_empty(key, config)
+                self.is_empty_on_create(key, config, kwargs)
                 self.max_length(key, config)
                 self.min_length(key, config)
                 self.is_integer(key, config)
