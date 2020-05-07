@@ -1,8 +1,5 @@
 import datetime
-#import filetype
 import base64
-#import magic
-import mimetypes
 
 class Helper():
 

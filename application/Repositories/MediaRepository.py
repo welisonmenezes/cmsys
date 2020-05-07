@@ -1,11 +1,9 @@
 from Models import Media, MediaSchema
 from Validators import MediaValidator
-from Utils import Paginate, ErrorHandler, Checker, FilterBuilder, Helper
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 from .RepositoryBase import RepositoryBase
 import base64
 from flask import make_response
-import filetype
-from flask import send_file
 
 class MediaRepository(RepositoryBase):
     
