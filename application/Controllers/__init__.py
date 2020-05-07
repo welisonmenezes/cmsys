@@ -2,6 +2,7 @@ from flask import jsonify
 from .ControllerBase import *
 from .BlacklistController import BlacklistController
 from .CapabilityController import CapabilityController
+from .ImageController import ImageController
 from .MediaController import MediaController
 from .RoleController import RoleController
 from .UserController import UserController
@@ -44,6 +45,7 @@ def start_controllers(app, api):
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
     api.add_resource(MediaController, '/media', '/media/<int:id>')
+    api.add_resource(ImageController, '/image/<int:id>')
     api.add_resource(RoleController, '/role', '/role/<int:id>')
     api.add_resource(UserController, '/user', '/user/<int:id>')
     api.add_resource(VariableController, '/variable', '/variable/<int:id>')
