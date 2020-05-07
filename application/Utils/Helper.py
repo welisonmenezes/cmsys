@@ -39,6 +39,9 @@ class Helper():
 
     @staticmethod
     def get_valid_file_types():
+
+        # TODO: get list of valid file type from config file
+
         return {
             'text/plain': 'txt',
             'image/png': 'png',

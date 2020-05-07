@@ -1,6 +1,7 @@
 from flask import  request
 from flask_restful import Resource
 from flask_restful import reqparse
+from Utils import ErrorHandler
 
 class ControllerBase(Resource):
 
@@ -14,4 +15,17 @@ class ControllerBase(Resource):
         self.parser.add_argument('date_modifier')
 
     
-    # TODO: get, post, put and delete methods to be overloaded by your children
+    def get(self, id=None):
+        return ErrorHandler(405, 'This method must be implemented by a child class.').response
+
+
+    def post(self):
+        return self.repo.create(self.request)
+
+
+    def put(self, id=None):
+        return self.repo.update(id, self.request)
+
+
+    def delete(self, id=None):
+        return self.repo.delete(id)

@@ -16,15 +16,3 @@ class VariableController(ControllerBase):
             return self.repo.get_by_id(id)
         else:
             return self.repo.get(self.args)
-
-    
-    def post(self):
-        return self.repo.create(self.request)
-
-
-    def put(self, id=None):
-        return self.repo.update(id, self.request)
-
-
-    def delete(self, id=None):
-        return self.repo.delete(id)
