@@ -42,3 +42,9 @@ class Helper():
     def get_valid_mimetypes():
         mimitypes = app_config['VALID_MIMETYPES']
         return mimitypes.keys()
+
+
+    @staticmethod
+    def get_valid_extensions():
+        extensions = app_config['VALID_MIMETYPES']
+        return extensions.values()

@@ -4,7 +4,6 @@ from app import app
 
 ma = Marshmallow(app)
 
-
 class BlacklistSchema(ma.Schema):
     class Meta:
         fields = ('id', 'type', 'value', 'target')
@@ -18,7 +17,7 @@ class CapabilitySchema(ma.Schema):
 
 class MediaSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'description', 'type', 'origin', 'created', 'user_id')
+        fields = ('id', 'name', 'description', 'type', 'extension', 'origin', 'created', 'user_id')
 
 
 class RoleSchema(ma.Schema):

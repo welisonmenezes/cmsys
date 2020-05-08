@@ -94,16 +94,14 @@ class MediaRepository(RepositoryBase):
         saved_file = str(base64.b64encode(result.file))
         saved_file = saved_file[2:]
         imgdata = base64.b64decode(saved_file)
-        file_ext = Helper.get_extension_by_type(result.type)
         response = make_response(imgdata)
         response.headers.set('Content-Type', result.type)
         if (not is_preview):
-            response.headers.set('Content-Disposition', 'attachment; filename=' + result.name + '.' + file_ext)
+            response.headers.set('Content-Disposition', 'attachment; filename=' + result.name + '.' + result.extension)
         return response
 
     
     def image_not_found_response(self):
-
         notFoundImage = app_config['NOT_FOUND_IMAGE']
         imgdata = base64.b64decode(notFoundImage)
         response = make_response(imgdata)
@@ -129,6 +127,7 @@ class MediaRepository(RepositoryBase):
                         name = data['name'],
                         description = data['description'],
                         type = file_details['type'],
+                        extension = data['extension'],
                         file = file_details['data'],
                         origin = data['origin'],
                         user_id = data['user_id']
@@ -174,6 +173,7 @@ class MediaRepository(RepositoryBase):
                                 return ErrorHandler(400, e).response
 
                             media.type = file_details['type']
+                            media.extension = data['extension']
                             media.file = file_details['data']
 
                         session.commit()

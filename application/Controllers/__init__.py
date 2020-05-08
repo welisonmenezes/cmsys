@@ -8,7 +8,6 @@ from .RoleController import *
 from .UserController import *
 from .VariableController import *
 
-
 def start_controllers(app, api):
 
     # Error 404 handler
@@ -41,7 +40,6 @@ def start_controllers(app, api):
             'error': 500,
             'message': 'An internal error has occurred.'
         }), 500
-
 
     # resources
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')

@@ -6,8 +6,7 @@ class MediaController(ControllerBase):
     def __init__(self):
         self.repo = MediaRepository()
         super(MediaController, self).__init__()
-    
-    # TODO: add column to media table to save the file extension
+
 
     def get(self, id=None):
         self.parser.add_argument('download_file')
@@ -18,7 +17,6 @@ class MediaController(ControllerBase):
         self.parser.add_argument('created')
         self.parser.add_argument('user_id')
         self.args = self.parser.parse_args()
-
         
         if (id and self.args['download_file'] == '1'):
             return self.repo.get_file(id)

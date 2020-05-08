@@ -32,13 +32,13 @@ class ValidatorBase():
     def max_length(self, key, config):
         if ('max_length' in config and isinstance(config['max_length'], int) and key in self.request):
             if (len(str(self.request[key])) > config['max_length']):
-                self.handle_validation_error('The field \'' + key + '\' length cannot be greater than ' + str(config['max_length'] + '.'))
+                self.handle_validation_error('The field \'' + key + '\' length cannot be greater than ' + str(config['max_length']) + '.')
 
 
     def min_length(self, key, config):
         if ('min_length' in config and isinstance(config['min_length'], int) and key in self.request):
             if (len(str(self.request[key])) < config['min_length']):
-                self.handle_validation_error('The field \'' + key + '\' length cannot be less than ' + str(config['min_length'] + '.'))
+                self.handle_validation_error('The field \'' + key + '\' length cannot be less than ' + str(config['min_length']) + '.')
 
 
     def is_integer(self, key, config):
@@ -82,8 +82,8 @@ class ValidatorBase():
                 self.handle_validation_error('The file size cannot exceed 5 MB.')
 
 
-    def valid_file_types(self, key, config):
-        if ('valid_file_types' in config and key in self.request and self.request[key] != ''):
+    def valid_file_type(self, key, config):
+        if ('valid_file_type' in config and key in self.request and self.request[key] != ''):
             try:
                 file_type_data = Helper.get_file_type_and_data(self.request[key])
                 file_type = file_type_data[0]
@@ -91,7 +91,15 @@ class ValidatorBase():
                 if (file_type not in valid_types):
                     self.handle_validation_error('Invalid file type.')
             except Exception as e:
-                self.handle_validation_error(str(e))  
+                self.handle_validation_error(str(e))
+
+
+    def valid_file_extension(self, key, config):
+        if ('valid_file_extension' in config and key in self.request and self.request[key] != ''): 
+            extensions = Helper.get_valid_extensions()
+            print(self.request[key])
+            if (self.request[key] not in extensions):
+                self.handle_validation_error('Invalid file extension.')
 
     
     def is_valid(self, *args, **kwargs):
@@ -110,7 +118,8 @@ class ValidatorBase():
                 self.is_unique(key, config, kwargs)
                 self.is_file(key, config)
                 self.max_file_size(key, config)
-                self.valid_file_types(key, config)
+                self.valid_file_type(key, config)
+                self.valid_file_extension(key, config)
 
         return not self.has_error
 
