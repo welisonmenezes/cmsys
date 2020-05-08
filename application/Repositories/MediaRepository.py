@@ -1,11 +1,11 @@
+from flask import make_response
 from sqlalchemy import or_
+import base64
+from app import app_config
+from .RepositoryBase import RepositoryBase
 from Models import Media, MediaSchema, User
 from Validators import MediaValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
-from .RepositoryBase import RepositoryBase
-import base64
-from flask import make_response
-from app import app_config
 
 class MediaRepository(RepositoryBase):
     

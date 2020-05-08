@@ -1,6 +1,5 @@
 from flask import  request
-from flask_restful import Resource
-from flask_restful import reqparse
+from flask_restful import Resource, reqparse
 from Utils import ErrorHandler
 
 class ControllerBase(Resource):

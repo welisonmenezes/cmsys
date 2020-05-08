@@ -1,8 +1,8 @@
 from sqlalchemy import or_
+from .RepositoryBase import RepositoryBase
 from Models import Variable, VariableSchema
 from Validators import VariableValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
-from .RepositoryBase import RepositoryBase
 
 class VariableRepository(RepositoryBase):
     

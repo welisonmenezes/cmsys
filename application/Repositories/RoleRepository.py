@@ -1,7 +1,7 @@
+from .RepositoryBase import RepositoryBase
 from Models import Role, RoleSchema, Capability
 from Validators import RoleValidator, CapabilityValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
-from .RepositoryBase import RepositoryBase
 
 class RoleRepository(RepositoryBase):
 

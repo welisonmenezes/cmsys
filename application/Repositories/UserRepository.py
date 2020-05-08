@@ -1,8 +1,8 @@
 from sqlalchemy import or_
+from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
-from .RepositoryBase import RepositoryBase
 
 class UserRepository(RepositoryBase):
 

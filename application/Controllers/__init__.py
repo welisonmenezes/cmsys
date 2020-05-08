@@ -1,12 +1,12 @@
 from flask import jsonify
 from .ControllerBase import *
-from .BlacklistController import BlacklistController
-from .CapabilityController import CapabilityController
-from .ImageController import ImageController
-from .MediaController import MediaController
-from .RoleController import RoleController
-from .UserController import UserController
-from .VariableController import VariableController
+from .BlacklistController import *
+from .CapabilityController import *
+from .ImageController import *
+from .MediaController import *
+from .RoleController import *
+from .UserController import *
+from .VariableController import *
 
 
 def start_controllers(app, api):
