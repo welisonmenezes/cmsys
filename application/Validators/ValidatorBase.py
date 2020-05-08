@@ -4,6 +4,8 @@ from Utils import Helper
 
 class ValidatorBase():
 
+    # TODO: implement validation to specif given list of valid values
+
     def handle_validation_error(self, message):
         self.errors.append({ 'message': message })
         self.has_error = True

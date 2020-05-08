@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Social, SocialSchema
+from Models import Social, SocialSchema, Configuration, User
 from Validators import SocialValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
@@ -75,13 +75,27 @@ class SocialRepository(RepositoryBase):
                         url = data['url'],
                         target = data['target'],
                         description = data['description'],
-                        origin = data['origin'],
-                        #configuration_id = data['configuration_id'],
-                        #user_id = data['user_id']
+                        origin = data['origin']
                     )
 
-                    # TODO: implement validations to add a valid configuration (check origin)
-                    # TODO: implement validations to add a valid user (check origin)
+                    # TODO: implement add foreign element as a method to simplify the use
+
+                    # add forgein elements
+                    try:
+                        if (social.origin == 'configuration'):
+                            if (not 'configuration_id' in data):
+                                return ErrorHandler(400, 'If the origin field is configuration the field configuration_id is required').response
+
+                            social.configuration_id = self.get_existing_foreing_id(data, 'configuration_id', Configuration, session)
+                            
+                        elif (social.origin == 'user'):
+                            if (not 'user_id' in data):
+                                return ErrorHandler(400, 'If the origin field is user the field user_id is required').response
+
+                            social.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
+
+                    except Exception as e:
+                        return ErrorHandler(400, e).response
 
                     session.add(social)
                     session.commit()
@@ -116,11 +130,23 @@ class SocialRepository(RepositoryBase):
                         social.target = data['target']
                         social.origin = data['origin']
                         social.description = data['description']
-                        #social.configuration_id = data['configuration_id']
-                        #social.user_id = data['user_id']
 
-                        # TODO: implement validations to edit configuration (check origin)
-                        # TODO: implement validations to edit user (check origin)
+                        # add forgein elements
+                        try:
+                            if (social.origin == 'configuration'):
+                                if (not 'configuration_id' in data):
+                                    return ErrorHandler(400, 'If the origin field is configuration the field configuration_id is required').response
+
+                                social.configuration_id = self.get_existing_foreing_id(data, 'configuration_id', Configuration, session)
+                                
+                            elif (social.origin == 'user'):
+                                if (not 'user_id' in data):
+                                    return ErrorHandler(400, 'If the origin field is user the field user_id is required').response
+
+                                social.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
+
+                        except Exception as e:
+                            return ErrorHandler(400, e).response
 
                         session.commit()
 
