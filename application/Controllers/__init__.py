@@ -16,7 +16,7 @@ def start_controllers(app, api):
     def error_404(path):
         return jsonify({
             'error': 404, 
-            'message': 'The requested resource does not exist'
+            'message': 'The requested resource does not exist.'
         }), 404
 
     # Erro 405 handler
@@ -30,14 +30,16 @@ def start_controllers(app, api):
     # Api root handler
     @app.route('/api/', defaults={'path': ''})
     def index(path):
-        return jsonify({'message': 'Wellcome to cmsys api v.1.0.0'}), 200
+        return jsonify({
+            'message': 'Wellcome to cmsys api v.1.0.0.'
+        }), 200
 
     # Erro 500 handler
     @app.errorhandler(500)
     def error_500(error):
         return jsonify({
             'error': 500,
-            'message': 'An internal error has occurred'
+            'message': 'An internal error has occurred.'
         }), 500
 
 

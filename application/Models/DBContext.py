@@ -175,6 +175,7 @@ class Media(Base):
     type = Column(String(100), nullable=False)
     file = Column(LargeBinary, nullable=False)
     origin = Column(String(50), nullable=False) # where came from (post, user avatar, configuration, etc...)
+    created = Column(DateTime, default=now, nullable=False)
     # foreignKeys
     user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     # relationships

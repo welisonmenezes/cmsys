@@ -18,7 +18,7 @@ class CapabilitySchema(ma.Schema):
 
 class MediaSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'description', 'type', 'origin', 'user_id')
+        fields = ('id', 'name', 'description', 'type', 'origin', 'created', 'user_id')
 
 
 class RoleSchema(ma.Schema):

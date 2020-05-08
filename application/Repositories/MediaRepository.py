@@ -15,6 +15,18 @@ class MediaRepository(RepositoryBase):
             fb.set_equals_filter('type')
             fb.set_equals_filter('origin')
             fb.set_equals_filter('user_id')
+
+            try:
+                fb.set_date_filter('created', date_modifier=args['date_modifier'])
+                fb.set_between_dates_filter(
+                    'created',
+                    compare_date_time_one=args['compare_date_time_one'],
+                    compare_date_time_two=args['compare_date_time_two'],
+                    not_between=args['not_between']
+                )
+            except Exception as e:
+                return ErrorHandler(400, str(e)).response
+
             filter = fb.get_filter()
             order_by = fb.get_order_by()
             page = fb.get_page()
