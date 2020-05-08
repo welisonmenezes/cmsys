@@ -1,5 +1,6 @@
 import datetime
 import base64
+from app import app_config
 
 class Helper():
 
@@ -30,7 +31,7 @@ class Helper():
 
     @staticmethod
     def get_extension_by_type(type):
-        mime_types = Helper.get_valid_file_types()
+        mime_types = app_config['VALID_MIMETYPES']
         try:
             return mime_types[type]
         except Exception:
@@ -38,41 +39,6 @@ class Helper():
 
 
     @staticmethod
-    def get_valid_file_types():
-
-        # TODO: get list of valid file type from config file
-
-        return {
-            'text/plain': 'txt',
-            'image/png': 'png',
-            'image/jpeg': 'jpeg',
-            'image/jpg': 'jpg',
-            'image/gif': 'gif',
-            'image/bmp': 'bmp',
-            'image/vnd.microsoft.icon': 'ico',
-            'image/svg+xml': 'svg',
-            'image/svg+xml': 'svgx',
-            'application/zip': 'zip',
-            'application/x-rar-compressed': 'rar',
-            'audio/mpeg': 'mp3',
-            'audio/ogg': 'ogg',
-            'video/quicktime': 'qt',
-            'video/quicktime': 'mov',
-            'application/octet-stream': 'docx',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
-            'application/msword': 'doc',
-            'application/rtf': 'rtf',
-            'application/vnd.ms-excel': 'xls',
-            'application/vnd.ms-powerpoint': 'ppt',
-            'text/javascript': 'js',
-            'application/json': 'json',
-            'text/html': 'html',
-            'text/css': 'css',
-            'text/csv': 'csv'
-        }
-
-
-    @staticmethod
     def get_valid_mimetypes():
-        mimitypes = Helper.get_valid_file_types()
+        mimitypes = app_config['VALID_MIMETYPES']
         return mimitypes.keys()

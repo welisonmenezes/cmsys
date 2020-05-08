@@ -1,5 +1,6 @@
 import base64
 from Utils import Helper
+from app import app_config
 
 class ValidatorBase():
 
@@ -80,7 +81,7 @@ class ValidatorBase():
 
             # TODO: get max file size from config file
 
-            if (int(Helper.get_base64_size(self.request[key])) > int(5017969)): #5017969
+            if (int(Helper.get_base64_size(self.request[key])) > int(app_config['MAX_UPLOAD_SIZE'])):
                 self.handle_validation_error('The file size cannot exceed 5 MB.')
 
 

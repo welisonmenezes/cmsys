@@ -33,9 +33,6 @@ class UserRepository(RepositoryBase):
             fb.set_equals_filter('role_id')
 
             self.set_query_fields(args)
-            
-            # TODO: implement get_avatar filter
-            # TODO: implement get_page filter
 
             try:
                 fb.set_date_filter('registered', date_modifier=args['date_modifier'])
