@@ -47,7 +47,7 @@ class MediaRepository(RepositoryBase):
             limit = fb.get_limit()
 
             if (args['s']):
-                filter += (or_(Media.name.like('%'+args['s']+'%'), Meida.description.like('%'+args['s']+'%')),)
+                filter += (or_(Media.name.like('%'+args['s']+'%'), Media.description.like('%'+args['s']+'%')),)
 
             self.set_query_fields(args)
 

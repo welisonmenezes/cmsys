@@ -499,7 +499,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=created&order=desc&type=&origin=&user_id=&created=&date_modifier=&compare_date_time_one=2020-05-02T00:00:00&compare_date_time_two=2020-05-05T00:00:00&not_between=0",
+							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=created&order=desc&type=&origin=&user_id=&created=&date_modifier=&compare_date_time_one=2020-05-02T00:00:00&compare_date_time_two=2020-05-05T00:00:00&not_between=0&s=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -560,6 +560,10 @@
 								{
 									"key": "not_between",
 									"value": "0"
+								},
+								{
+									"key": "s",
+									"value": ""
 								}
 							]
 						}
@@ -771,7 +775,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=1&page=1&limit=10&name=&get_capabilities=0&capability_description=test-1&order_by=id&order=asc",
+							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=&page=1&limit=10&name=&get_children=1&capability_description=add-by-role&order_by=id&order=asc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -787,7 +791,7 @@
 							"query": [
 								{
 									"key": "can_access_admin",
-									"value": "1"
+									"value": ""
 								},
 								{
 									"key": "page",
@@ -802,12 +806,12 @@
 									"value": ""
 								},
 								{
-									"key": "get_capabilities",
-									"value": "0"
+									"key": "get_children",
+									"value": "1"
 								},
 								{
 									"key": "capability_description",
-									"value": "test-1"
+									"value": "add-by-role"
 								},
 								{
 									"key": "order_by",
@@ -998,7 +1002,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&name=&email=&status=&role_id=&registered=&date_modifier=equal&get_children=0&compare_date_time_one=2020-05-06T00:00:00&compare_date_time_two=2020-05-08T00:00:00&not_between=1",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&name=&email=gi&status=&role_id=&registered=&date_modifier=equal&get_children=0&compare_date_time_one=2020-05-06T00:00:00&compare_date_time_two=2020-05-08T00:00:00&not_between=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1034,7 +1038,7 @@
 								},
 								{
 									"key": "email",
-									"value": ""
+									"value": "gi"
 								},
 								{
 									"key": "status",

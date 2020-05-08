@@ -11,23 +11,21 @@ class FilterBuilder():
         self.limit = 10
 
 
-    # TODO: simplify getattr of table and joined table by to assign its to a variable
+    def get_context_attr(self, key, kwa):
+        if ('joined' in kwa and 'joined_key' in kwa):
+            return getattr(kwa['joined'], kwa['joined_key'])
+        else:
+            return getattr(self.context, key)
 
 
     def set_equals_filter(self, key, *args, **kwargs):
         if (self.args[key]):
-            if ('joined' in kwargs and 'joined_key' in kwargs):
-                self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) == self.args[key],)
-            else:
-                self.filter += (getattr(self.context, key) == self.args[key],)
+            self.filter += (self.get_context_attr(key, kwargs) == self.args[key], )
 
     
     def set_like_filter(self, key, *args, **kwargs):
         if (self.args[key]):
-            if ('joined' in kwargs and 'joined_key' in kwargs):
-                self.filter += (getattr(kwargs['joined'], kwargs['joined_key']).like('%' + self.args[key] + '%'),)
-            else:
-                self.filter += (getattr(self.context, key).like('%' + self.args[key] + '%'),)
+            self.filter += (self.get_context_attr(key, kwargs).like('%' + self.args[key] + '%'), )
 
     
     def set_date_filter(self, key, *args, **kwargs):
@@ -39,36 +37,21 @@ class FilterBuilder():
                 if ('date_modifier' in kwargs and kwargs['date_modifier']):
                         date_modifier = kwargs['date_modifier']
 
-                if ('joined' in kwargs and 'joined_key' in kwargs):
-                    if (date_modifier == 'greater'):
-                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) > date_time,)
-                    elif (date_modifier == 'less'):
-                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) < date_time,)
-                    elif (date_modifier == 'greater_or_equal'):
-                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) >= date_time,)
-                    elif (date_modifier == 'less_or_equla'):
-                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) <= date_time,)
-                    elif (date_modifier == 'equal'):
-                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) == date_time,)
-                    elif (date_modifier == 'different'):
-                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']) != date_time,)
-                    else:
-                        raise Exception('The parameter \'date_modifier\' must be one of these: [greater, less, greater_or_equal, less_or_equal, equal or different]')
+                if (date_modifier == 'greater'):
+                    self.filter += (self.get_context_attr(key, kwargs) > date_time,)
+                elif (date_modifier == 'less'):
+                    self.filter += (self.get_context_attr(key, kwargs) < date_time,)
+                elif (date_modifier == 'greater_or_equal'):
+                    self.filter += (self.get_context_attr(key, kwargs) >= date_time,)
+                elif (date_modifier == 'less_or_equal'):
+                    self.filter += (self.get_context_attr(key, kwargs) <= date_time,)
+                elif (date_modifier == 'equal'):
+                    self.filter += (self.get_context_attr(key, kwargs) == date_time,)
+                elif (date_modifier == 'different'):
+                    self.filter += (self.get_context_attr(key, kwargs) != date_time,)
                 else:
-                    if (date_modifier == 'greater'):
-                        self.filter += (getattr(self.context, key) > date_time,)
-                    elif (date_modifier == 'less'):
-                        self.filter += (getattr(self.context, key) < date_time,)
-                    elif (date_modifier == 'greater_or_equal'):
-                        self.filter += (getattr(self.context, key) >= date_time,)
-                    elif (date_modifier == 'less_or_equal'):
-                        self.filter += (getattr(self.context, key) <= date_time,)
-                    elif (date_modifier == 'equal'):
-                        self.filter += (getattr(self.context, key) == date_time,)
-                    elif (date_modifier == 'different'):
-                        self.filter += (getattr(self.context, key) != date_time,)
-                    else:
-                        raise Exception('The parameter \'date_modifier\' must be one of these: [greater, less, greater_or_equal, less_or_equal, equal or different]')
+                    raise Exception('The parameter \'date_modifier\' must be one of these: [greater, less, greater_or_equal, less_or_equal, equal or different]')
+
             except Exception as e:
                 raise Exception(str(e))
 
@@ -80,16 +63,10 @@ class FilterBuilder():
                 date_time_one = Helper.get_date_from_string(kwargs['compare_date_time_one'])
                 date_time_two = Helper.get_date_from_string(kwargs['compare_date_time_two'])
 
-                if ('joined' in kwargs and 'joined_key' in kwargs):
-                    if ('not_between' in kwargs and kwargs['not_between'] == '1'):
-                        self.filter += (not_(getattr(kwargs['joined'], kwargs['joined_key']).between(date_time_one, date_time_two)),)
-                    else:
-                        self.filter += (getattr(kwargs['joined'], kwargs['joined_key']).between(date_time_one, date_time_two),)
+                if ('not_between' in kwargs and kwargs['not_between'] == '1'):
+                    self.filter += (not_(self.get_context_attr(key, kwargs).between(date_time_one, date_time_two)),)
                 else:
-                    if ('not_between' in kwargs and kwargs['not_between'] == '1'):
-                        self.filter += (not_(getattr(self.context, key).between(date_time_one, date_time_two)),)
-                    else:
-                        self.filter += (getattr(self.context, key).between(date_time_one, date_time_two),)
+                    self.filter += (self.get_context_attr(key, kwargs).between(date_time_one, date_time_two),)
 
         except Exception as e:
             raise Exception(str(e))
