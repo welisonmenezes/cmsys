@@ -12,6 +12,9 @@ class ControllerBase(Resource):
         self.parser.add_argument('order')
         self.parser.add_argument('order_by')
         self.parser.add_argument('date_modifier')
+        self.parser.add_argument('compare_date_time_one')
+        self.parser.add_argument('compare_date_time_two')
+        self.parser.add_argument('not_between')
 
     
     def get(self, id=None):

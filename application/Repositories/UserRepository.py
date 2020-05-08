@@ -36,8 +36,14 @@ class UserRepository(RepositoryBase):
 
             try:
                 fb.set_date_filter('registered', date_modifier=args['date_modifier'])
+                fb.set_between_dates_filter(
+                    'registered',
+                    compare_date_time_one=args['compare_date_time_one'],
+                    compare_date_time_two=args['compare_date_time_two'],
+                    not_between=args['not_between']
+                )
             except Exception as e:
-                return ErrorHandler(400, e).response
+                return ErrorHandler(400, str(e)).response
 
             filter = fb.get_filter()
             order_by = fb.get_order_by()
