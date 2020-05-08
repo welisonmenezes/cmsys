@@ -8,6 +8,20 @@ from Validators import MediaValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class MediaRepository(RepositoryBase):
+
+    def set_query_fields(self, args):
+        if (args['return_file_data'] and args['return_file_data'] == '1'):
+            self.fields = [Media]
+        else:
+            self.fields = [
+                Media.id,
+                Media.name,
+                Media.description,
+                Media.type,
+                Media.extension, 
+                Media.origin,
+                Media.created
+            ]
     
     def get(self, args):
         def fn(session):
@@ -35,7 +49,9 @@ class MediaRepository(RepositoryBase):
             if (args['s']):
                 filter += (or_(Media.name.like('%'+args['s']+'%'), Meida.description.like('%'+args['s']+'%')),)
 
-            query = session.query(Media).filter(*filter).order_by(*order_by)
+            self.set_query_fields(args)
+
+            query = session.query(*self.fields).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = MediaSchema(many=True)
             data = schema.dump(result.items)
@@ -50,8 +66,10 @@ class MediaRepository(RepositoryBase):
 
     def get_by_id(self, id, args):
         def fn(session):
+            self.set_query_fields(args)
+
             schema = MediaSchema(many=False)
-            result = session.query(Media).filter_by(id=id).first()
+            result = session.query(*self.fields).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):
@@ -67,6 +85,7 @@ class MediaRepository(RepositoryBase):
         return self.response(fn, False)
 
 
+    # download file (run when download_file == 1)
     def get_file(self, id):
         def fn(session):
             result = session.query(Media).filter_by(id=id).first()
@@ -78,6 +97,7 @@ class MediaRepository(RepositoryBase):
         return self.response(fn, False)
 
 
+    # show image preview (run from ImageController)
     def get_image_preview(self, id):
         def fn(session):
             result = session.query(Media).filter_by(id=id).first()
