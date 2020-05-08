@@ -9,9 +9,9 @@ class SocialController(ControllerBase):
         
 
     def get(self, id=None):
-        # self.parser.add_argument('value')
-        # self.parser.add_argument('type')
-        # self.parser.add_argument('target')
+        self.parser.add_argument('name')
+        self.parser.add_argument('origin')
+        self.parser.add_argument('user_id')
         self.args = self.parser.parse_args()
 
         if id:

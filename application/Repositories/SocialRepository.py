@@ -4,19 +4,34 @@ from Validators import SocialValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class SocialRepository(RepositoryBase):
+
+    def set_query_fields(self, args):
+        self.fields = [
+            Social.id,
+            Social.name,
+            Social.url,
+            Social.target,
+            Social.description,
+            Social.origin,
+            Social.configuration_id,
+            Social.user_id
+        ]
+
     
     def get(self, args):
         def fn(session):
             fb = FilterBuilder(Social, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_like_filter('name')
+            fb.set_equals_filter('origin')
+            fb.set_equals_filter('user_id')
             filter = fb.get_filter()
             order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
 
-            query = session.query(Social).filter(*filter).order_by(*order_by)
+            self.set_query_fields(args)
+
+            query = session.query(*self.fields).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = SocialSchema(many=True)
             data = schema.dump(result.items)
@@ -31,8 +46,10 @@ class SocialRepository(RepositoryBase):
 
     def get_by_id(self, id):
         def fn(session):
+            self.set_query_fields(args)
+
             schema = SocialSchema(many=False)
-            result = session.query(Social).filter_by(id=id).first()
+            result = session.query(*self.fields).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):
@@ -62,6 +79,10 @@ class SocialRepository(RepositoryBase):
                         #configuration_id = data['configuration_id'],
                         #user_id = data['user_id']
                     )
+
+                    # TODO: implement validations to add a valid configuration (check origin)
+                    # TODO: implement validations to add a valid user (check origin)
+
                     session.add(social)
                     session.commit()
                     last_id = social.id
@@ -97,6 +118,10 @@ class SocialRepository(RepositoryBase):
                         social.description = data['description']
                         #social.configuration_id = data['configuration_id']
                         #social.user_id = data['user_id']
+
+                        # TODO: implement validations to edit configuration (check origin)
+                        # TODO: implement validations to edit user (check origin)
+
                         session.commit()
 
                         return {
