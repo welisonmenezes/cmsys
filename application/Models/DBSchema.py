@@ -26,6 +26,12 @@ class RoleSchema(ma.Schema):
         fields = ('id', 'name', 'description', 'can_access_admin', 'capabilities')
 
 
+class SocialSchema(ma.Schema):
+    #capabilities = fields.Nested('CapabilitySchema', many=True, exclude=('roles',))
+    class Meta:
+        fields = ('id', 'name', 'url', 'target', 'description', 'origin', 'configuration_id', 'user_id')
+
+
 class UserSchema(ma.Schema):
     role = fields.Nested('RoleSchema', many=False, exclude=('capabilities',))
     class Meta:

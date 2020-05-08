@@ -305,8 +305,8 @@ class Social(Base):
     description = Column(String(255), nullable=True)
     origin = Column(String(50), nullable=False)
     # foreignKeys
-    configuration_id = Column(Integer, ForeignKey('Configuration.id'), nullable=False)
-    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
+    configuration_id = Column(Integer, ForeignKey('Configuration.id'), nullable=True)
+    user_id = Column(Integer, ForeignKey('User.id'), nullable=True)
     # relationships
     configuration = relationship('Configuration', back_populates='socials', foreign_keys='Social.configuration_id')
     user = relationship('User', back_populates='socials', foreign_keys='Social.user_id')
