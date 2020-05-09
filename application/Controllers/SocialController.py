@@ -14,7 +14,4 @@ class SocialController(ControllerBase):
         self.parser.add_argument('user_id')
         self.args = self.parser.parse_args()
 
-        if id:
-            return self.repo.get_by_id(id)
-        else:
-            return self.repo.get(self.args)
+        return self.repo.get_by_id(id) if id else self.repo.get(self.args)

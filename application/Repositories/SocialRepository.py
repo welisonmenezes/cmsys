@@ -5,19 +5,6 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class SocialRepository(RepositoryBase):
 
-    def set_query_fields(self, args):
-        self.fields = [
-            Social.id,
-            Social.name,
-            Social.url,
-            Social.target,
-            Social.description,
-            Social.origin,
-            Social.configuration_id,
-            Social.user_id
-        ]
-
-    
     def get(self, args):
         def fn(session):
             fb = FilterBuilder(Social, args)
@@ -29,9 +16,7 @@ class SocialRepository(RepositoryBase):
             page = fb.get_page()
             limit = fb.get_limit()
 
-            self.set_query_fields(args)
-
-            query = session.query(*self.fields).filter(*filter).order_by(*order_by)
+            query = session.query(Social).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
             schema = SocialSchema(many=True)
             data = schema.dump(result.items)
@@ -46,10 +31,8 @@ class SocialRepository(RepositoryBase):
 
     def get_by_id(self, id):
         def fn(session):
-            self.set_query_fields(args)
-
             schema = SocialSchema(many=False)
-            result = session.query(*self.fields).filter_by(id=id).first()
+            result = session.query(Social).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):

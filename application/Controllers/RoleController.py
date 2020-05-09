@@ -15,8 +15,5 @@ class RoleController(ControllerBase):
         self.parser.add_argument('can_access_admin')
         self.parser.add_argument('capability_description')
         self.args = self.parser.parse_args()
-        
-        if id:
-            return self.repo.get_by_id(id, self.args)
-        else:
-            return self.repo.get(self.args)
+
+        return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
