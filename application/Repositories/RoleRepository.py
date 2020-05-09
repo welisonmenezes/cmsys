@@ -5,16 +5,13 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class RoleRepository(RepositoryBase):
 
-    def set_query_fields(self, args):
-        if (args['get_children'] and args['get_children'] == '1'):
-            self.fields = [Role]
-        else:
-            self.fields = [
-                Role.id,
-                Role.name,
-                Role.description,
-                Role.can_access_admin
-            ]
+    def get_exclude_fields(self, args):
+        exclude_fields = ()
+
+        if (args['get_capabilities'] != '1'):
+            exclude_fields += ('capabilities',)
+
+        return exclude_fields
 
     
     def get(self, args):
@@ -31,12 +28,10 @@ class RoleRepository(RepositoryBase):
 
             if (args['capability_description'] and args['capability_description'] != ''):
                 self.joins.append(Role.capabilities)
-
-            self.set_query_fields(args)
             
-            query = session.query(*self.fields).join(*self.joins).filter(*filter).order_by(*order_by)
+            query = session.query(Role).join(*self.joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
-            schema = RoleSchema(many=True)
+            schema = RoleSchema(many=True, exclude=self.get_exclude_fields(args))
             data = schema.dump(result.items)
 
             return {
@@ -49,10 +44,8 @@ class RoleRepository(RepositoryBase):
 
     def get_by_id(self, id, args):
         def fn(session):
-            self.set_query_fields(args)
-
-            schema = RoleSchema(many=False)
-            result = session.query(*self.fields).filter_by(id=id).first()
+            schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args))
+            result = session.query(Role).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):

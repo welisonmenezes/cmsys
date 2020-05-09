@@ -9,7 +9,7 @@ class RoleController(ControllerBase):
 
     
     def get(self, id=None):
-        self.parser.add_argument('get_children')
+        self.parser.add_argument('get_capabilities')
         self.parser.add_argument('name')
         self.parser.add_argument('description')
         self.parser.add_argument('can_access_admin')

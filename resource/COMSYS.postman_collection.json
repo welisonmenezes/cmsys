@@ -227,7 +227,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10&get_children=1",
+							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10&get_roles=0",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -250,8 +250,8 @@
 									"value": "10"
 								},
 								{
-									"key": "get_children",
-									"value": "1"
+									"key": "get_roles",
+									"value": "0"
 								}
 							]
 						}
@@ -325,7 +325,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability/23?get_children=1",
+							"raw": "http://127.0.0.1:5000/api/capability/23?get_roles=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -341,7 +341,7 @@
 							],
 							"query": [
 								{
-									"key": "get_children",
+									"key": "get_roles",
 									"value": "1"
 								}
 							]
@@ -738,7 +738,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?page=1&limit=10&get_children=1",
+							"raw": "http://127.0.0.1:5000/api/role?page=1&limit=10&get_capabilities=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -761,8 +761,8 @@
 									"value": "10"
 								},
 								{
-									"key": "get_children",
-									"value": "1"
+									"key": "get_capabilities",
+									"value": ""
 								}
 							]
 						}
@@ -775,7 +775,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=&page=1&limit=10&name=&get_children=1&capability_description=add-by-role&order_by=id&order=asc",
+							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=&page=1&limit=10&name=&get_capabilities=1&capability_description=add-by-role&order_by=id&order=asc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -806,7 +806,7 @@
 									"value": ""
 								},
 								{
-									"key": "get_children",
+									"key": "get_capabilities",
 									"value": "1"
 								},
 								{
@@ -832,7 +832,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role/8?get_children=1",
+							"raw": "http://127.0.0.1:5000/api/role/8?get_capabilities=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -848,8 +848,8 @@
 							],
 							"query": [
 								{
-									"key": "get_children",
-									"value": "1"
+									"key": "get_capabilities",
+									"value": ""
 								}
 							]
 						}
@@ -998,7 +998,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/social?page=1&limit=10&order_by=id&order=desc",
+							"raw": "http://127.0.0.1:5000/api/social?page=1&limit=10&order_by=id&order=desc&name=&origin=&user_id=2",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1027,6 +1027,18 @@
 								{
 									"key": "order",
 									"value": "desc"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "origin",
+									"value": ""
+								},
+								{
+									"key": "user_id",
+									"value": "2"
 								}
 							]
 						}
@@ -1070,7 +1082,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"name-test-3\",\n\t\"url\": \"url-test\",\n\t\"target\": \"target-test\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"origin-test\",\n\t\"xconfiguration_id\": \"\",\n\t\"xuser_id\": \"\"\n}"
+							"raw": "{\n\t\"name\": \"name-test-3\",\n\t\"url\": \"url-test\",\n\t\"target\": \"target-test\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"configuration\",\n\t\"configuration_id\": 2,\n\t\"user_id\": 16\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/social",
@@ -1103,10 +1115,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"name-test-3 edited\",\n\t\"url\": \"url-test\",\n\t\"target\": \"target-test\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"origin-test\",\n\t\"xconfiguration_id\": \"\",\n\t\"xuser_id\": \"\"\n}"
+							"raw": "{\n\t\"name\": \"name-test-3 edited\",\n\t\"url\": \"url-test\",\n\t\"target\": \"target-test\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"configuration\",\n\t\"configuration_id\": 2,\n\t\"xuser_id\": 2\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/social/3",
+							"raw": "http://127.0.0.1:5000/api/social/1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1118,7 +1130,7 @@
 							"path": [
 								"api",
 								"social",
-								"3"
+								"1"
 							]
 						}
 					},
@@ -1166,7 +1178,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&get_children=1",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&get_role=&get_socials=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1189,8 +1201,12 @@
 									"value": "10"
 								},
 								{
-									"key": "get_children",
-									"value": "1"
+									"key": "get_role",
+									"value": ""
+								},
+								{
+									"key": "get_socials",
+									"value": ""
 								}
 							]
 						}
@@ -1203,7 +1219,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&name=&email=gi&status=&role_id=&registered=&date_modifier=equal&get_children=0&compare_date_time_one=2020-05-06T00:00:00&compare_date_time_two=2020-05-08T00:00:00&not_between=1",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&name=&email=gi&status=&role_id=&registered=&date_modifier=equal&get_role=&get_socials=&compare_date_time_one=2020-05-06T00:00:00&compare_date_time_two=2020-05-08T00:00:00&not_between=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1258,8 +1274,12 @@
 									"value": "equal"
 								},
 								{
-									"key": "get_children",
-									"value": "0"
+									"key": "get_role",
+									"value": ""
+								},
+								{
+									"key": "get_socials",
+									"value": ""
 								},
 								{
 									"key": "compare_date_time_one",
@@ -1284,7 +1304,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/2?get_children=0",
+							"raw": "http://127.0.0.1:5000/api/user/2?get_role=&get_socials=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1300,8 +1320,12 @@
 							],
 							"query": [
 								{
-									"key": "get_children",
-									"value": "0"
+									"key": "get_role",
+									"value": ""
+								},
+								{
+									"key": "get_socials",
+									"value": "1"
 								}
 							]
 						}
@@ -1321,7 +1345,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"fefe\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Marcelion\",\n\t\"email\": \"fe@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 1,\n\t\"page_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"fefexx\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Marcelion\",\n\t\"email\": \"fe@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 1,\n\t\"page_id\": 4\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user",
@@ -1354,7 +1378,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"user-9\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 0,\n\t\"page_id\": 0\n}"
+							"raw": "{\n\t\"login\": \"user-9\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 13,\n\t\"page_id\": 0\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user/14",
