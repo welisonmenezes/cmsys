@@ -5,19 +5,13 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class CapabilityRepository(RepositoryBase):
 
-    def set_query_fields(self, args):
-        if (args['get_children'] and args['get_children'] == '1'):
-            self.fields = [Capability]
-        else:
-            self.fields = [
-                Capability.id,
-                Capability.description,
-                Capability.type,
-                Capability.target_id, 
-                Capability.can_write,
-                Capability.can_read,
-                Capability.can_delete
-            ]
+    def get_exclude_fields(self, args):
+        exclude_fields = ()
+
+        if (args['get_roles'] != '1'):
+            exclude_fields += ('roles',)
+
+        return exclude_fields
 
     
     def get(self, args):
@@ -33,12 +27,10 @@ class CapabilityRepository(RepositoryBase):
             order_by = fb.get_order_by()
             page = fb.get_page()
             limit = fb.get_limit()
-
-            self.set_query_fields(args)
             
-            query = session.query(*self.fields).join(*self.joins).filter(*filter).order_by(*order_by)
+            query = session.query(Capability).join(*self.joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
-            schema = CapabilitySchema(many=True)
+            schema = CapabilitySchema(many=True, exclude=self.get_exclude_fields(args))
             data = schema.dump(result.items)
 
             return {
@@ -51,10 +43,8 @@ class CapabilityRepository(RepositoryBase):
 
     def get_by_id(self, id, args):
         def fn(session):
-            self.set_query_fields(args)
-
-            schema = CapabilitySchema(many=False)
-            result = session.query(*self.fields).filter_by(id=id).first()
+            schema = CapabilitySchema(many=False, exclude=self.get_exclude_fields(args))
+            result = session.query(Capability).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):

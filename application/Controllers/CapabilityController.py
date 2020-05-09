@@ -9,7 +9,7 @@ class CapabilityController(ControllerBase):
 
     
     def get(self, id=None):
-        self.parser.add_argument('get_children')
+        self.parser.add_argument('get_roles')
         self.parser.add_argument('description')
         self.parser.add_argument('type')
         self.parser.add_argument('target_id')
