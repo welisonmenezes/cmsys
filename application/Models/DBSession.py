@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-Engine = create_engine('mysql+pymysql://root:@localhost/cmsys',  pool_recycle=3600, echo=True)
+Engine = create_engine('mysql+pymysql://root:@localhost/cmsys',  pool_recycle=3600, echo=False)
 Session = scoped_session(sessionmaker(bind=Engine))
