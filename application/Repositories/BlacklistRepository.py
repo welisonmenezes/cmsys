@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Blacklist, BlacklistSchema
 from Validators import BlacklistValidator
-from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder
 
 class BlacklistRepository(RepositoryBase):
     

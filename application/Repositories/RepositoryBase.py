@@ -43,9 +43,6 @@ class RepositoryBase():
                 element = session.query(getattr(context, 'id')).filter_by(id=int(data[key])).first()
                 
             if (element):
-                if (get_all_filelds):
-                    return element
-                else:
-                    return element.id
+                return element if get_all_filelds else element.id
             else:
                 raise Exception('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))

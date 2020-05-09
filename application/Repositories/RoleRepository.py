@@ -155,7 +155,7 @@ class RoleRepository(RepositoryBase):
     def add_capability(self, role, data, session):
         if ('capabilities' in data and isinstance(data['capabilities'], list)):
             for capability in data['capabilities']:
-                if ('id' in capability and Checker.can_be_integer(capability['id'])):
+                if ('id' in capability and Checker().can_be_integer(capability['id'])):
                     registered_capability = session.query(Capability).filter_by(id=int(capability['id'])).first()
                     if (registered_capability):
                         role.capabilities.append(registered_capability)
@@ -191,7 +191,7 @@ class RoleRepository(RepositoryBase):
 
         if ('capabilities' in data and isinstance(data['capabilities'], list)):
             for capability in data['capabilities']:
-                if ('id' in capability and Checker.can_be_integer(capability['id'])):
+                if ('id' in capability and Checker().can_be_integer(capability['id'])):
                     new_old_capabilities.append(capability['id'])
 
         capabilities_to_delete = list(set(old_capabilities) - set(new_old_capabilities))

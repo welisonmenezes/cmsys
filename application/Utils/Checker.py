@@ -1,9 +1,10 @@
 from app import app_config
+from Decorators import SingletonDecorator
 
+@SingletonDecorator
 class Checker():
 
-    @staticmethod
-    def can_be_integer(element):
+    def can_be_integer(self, element):
         try:
             int(element)
             return True
@@ -11,10 +12,6 @@ class Checker():
             return False
 
 
-    @staticmethod
-    def is_image_type(mimetype):
+    def is_image_type(self, mimetype):
         image_types = app_config['IMAGE_MIMETYPES'].keys()
-        if (mimetype in image_types):
-            return True
-        else:
-            return False
+        return True if mimetype in image_types else False

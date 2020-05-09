@@ -77,13 +77,13 @@ class FilterBuilder():
 
 
     def get_page(self):
-        if (self.args['page'] and Checker.can_be_integer(self.args['page'])):
+        if (self.args['page'] and Checker().can_be_integer(self.args['page'])):
             self.page = int(self.args['page'])
         return self.page
 
 
     def get_limit(self):
-        if (self.args['limit'] and Checker.can_be_integer(self.args['limit'])):
+        if (self.args['limit'] and Checker().can_be_integer(self.args['limit'])):
             self.limit = int(self.args['limit'])
         return self.limit
 

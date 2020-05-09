@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Capability, CapabilitySchema
 from Validators import CapabilityValidator
-from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder
 
 class CapabilityRepository(RepositoryBase):
 

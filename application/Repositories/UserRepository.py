@@ -187,7 +187,7 @@ class UserRepository(RepositoryBase):
             user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
 
             image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
-            if (Checker.is_image_type(image.type)):
+            if (Checker().is_image_type(image.type)):
                 user.avatar_id = image.id
             else:
                 return ErrorHandler(400, 'The user avatar must be an image file.').response
