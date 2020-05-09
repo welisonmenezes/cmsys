@@ -19,17 +19,17 @@ class RepositoryBase():
         except SQLAlchemyError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler(500, e).response
+            return ErrorHandler().get_error().get_error(500, e)
 
         except AttributeError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler(400, e).response
+            return ErrorHandler.get_error(400, e)
 
         except HTTPException as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler(500, e).response
+            return ErrorHandler.get_error(500, e)
             
         finally:
             session.close()

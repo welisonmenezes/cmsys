@@ -33,7 +33,7 @@ class MediaRepository(RepositoryBase):
                     not_between=args['not_between']
                 )
             except Exception as e:
-                return ErrorHandler(400, str(e)).response
+                return ErrorHandler().get_error(400, str(e))
 
             filter = fb.get_filter()
             order_by = fb.get_order_by()
@@ -70,7 +70,7 @@ class MediaRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler(404, 'No Media found.').response
+                return ErrorHandler().get_error(404, 'No Media found.')
 
         return self.response(fn, False)
 
@@ -82,7 +82,7 @@ class MediaRepository(RepositoryBase):
             if (result):
                 return self.file_response(result, False)
             else:
-                return ErrorHandler(404, 'Culd not load this file.').response
+                return ErrorHandler().get_error(404, 'Culd not load this file.')
 
         return self.response(fn, False)
 
@@ -131,7 +131,7 @@ class MediaRepository(RepositoryBase):
                     try:
                         file_details = self.get_file_details_from_request(data)
                     except Exception as e:
-                        return ErrorHandler(400, e).response
+                        return ErrorHandler().get_error(400, e)
 
                     media = Media(
                         name = data['name'],
@@ -151,10 +151,10 @@ class MediaRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -180,7 +180,7 @@ class MediaRepository(RepositoryBase):
                             try:
                                 file_details = self.get_file_details_from_request(data)
                             except Exception as e:
-                                return ErrorHandler(400, e).response
+                                return ErrorHandler().get_error(400, e)
 
                             media.type = file_details['type']
                             media.extension = data['extension']
@@ -193,13 +193,13 @@ class MediaRepository(RepositoryBase):
                             'id': media.id
                         }, 200
                     else:
-                        return ErrorHandler(404, 'No Media found.').response
+                        return ErrorHandler().get_error(404, 'No Media found.')
 
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -226,7 +226,7 @@ class MediaRepository(RepositoryBase):
 
                 user = session.query(User.id).filter_by(avatar_id=media.id).first()
                 if (user):
-                    return ErrorHandler(406, 'You cannot delete this File because it may have a related User.').response
+                    return ErrorHandler().get_error(406, 'You cannot delete this File because it may have a related User.')
 
                 session.delete(media)
                 session.commit()
@@ -236,6 +236,6 @@ class MediaRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return ErrorHandler(404, 'No Media found.').response
+                return ErrorHandler().get_error(404, 'No Media found.')
 
         return self.response(fn, True)

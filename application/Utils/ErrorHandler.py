@@ -1,8 +1,10 @@
 from app import app
+from Decorators import SingletonDecorator
 
+@SingletonDecorator
 class ErrorHandler(object):
 
-    def __init__(self, error_code, error_message):
+    def get_error(self, error_code, error_message):
         if (type(error_message) == list or type(error_message) == str):
             error = error_message
         else:
@@ -13,7 +15,7 @@ class ErrorHandler(object):
         else:
             app.logger.info(str(error))
 
-        self.response = {
+        return {
             'error': error_code,
             'message': error
         }, error_code

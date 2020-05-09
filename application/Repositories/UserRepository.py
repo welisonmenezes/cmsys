@@ -34,7 +34,7 @@ class UserRepository(RepositoryBase):
                     not_between=args['not_between']
                 )
             except Exception as e:
-                return ErrorHandler(400, str(e)).response
+                return ErrorHandler().get_error(400, str(e))
 
             filter = fb.get_filter()
             order_by = fb.get_order_by()
@@ -68,7 +68,7 @@ class UserRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler(404, 'No User found.').response
+                return ErrorHandler().get_error(404, 'No User found.')
 
         return self.response(fn, False)
 
@@ -104,10 +104,10 @@ class UserRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -142,13 +142,13 @@ class UserRepository(RepositoryBase):
                             'id': user.id
                         }, 200
                     else:
-                        return ErrorHandler(404, 'No User found.').response
+                        return ErrorHandler().get_error(404, 'No User found.')
 
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -166,7 +166,7 @@ class UserRepository(RepositoryBase):
 
                 media = session.query(Media.id).filter_by(user_id=user.id).first()
                 if (media):
-                    return ErrorHandler(406, 'You cannot delete this User because it has related Media.').response
+                    return ErrorHandler().get_error(406, 'You cannot delete this User because it has related Media.')
 
                 session.delete(user)
                 session.commit()
@@ -176,7 +176,7 @@ class UserRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return ErrorHandler(404, 'No User found.').response
+                return ErrorHandler().get_error(404, 'No User found.')
 
         return self.response(fn, True)
 
@@ -190,9 +190,9 @@ class UserRepository(RepositoryBase):
             if (Checker().is_image_type(image.type)):
                 user.avatar_id = image.id
             else:
-                return ErrorHandler(400, 'The user avatar must be an image file.').response
+                return ErrorHandler().get_error(400, 'The user avatar must be an image file.')
 
             return True
 
         except Exception as e:
-            return ErrorHandler(400, e).response
+            return ErrorHandler().get_error(400, e)

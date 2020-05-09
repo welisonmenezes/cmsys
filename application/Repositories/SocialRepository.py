@@ -40,7 +40,7 @@ class SocialRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler(404, 'No Social found.').response
+                return ErrorHandler().get_error(404, 'No Social found.')
 
         return self.response(fn, False)
 
@@ -74,10 +74,10 @@ class SocialRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -110,13 +110,13 @@ class SocialRepository(RepositoryBase):
                             'id': social.id
                         }, 200
                     else:
-                        return ErrorHandler(404, 'No Social found.').response
+                        return ErrorHandler().get_error(404, 'No Social found.')
 
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -134,7 +134,7 @@ class SocialRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return ErrorHandler(404, 'No Social found.').response
+                return ErrorHandler().get_error(404, 'No Social found.')
 
         return self.response(fn, True)
 
@@ -143,17 +143,17 @@ class SocialRepository(RepositoryBase):
         try:
             if (social.origin == 'configuration'):
                 if (not 'configuration_id' in data):
-                    return ErrorHandler(400, 'If the origin field is configuration the field configuration_id is required').response
+                    return ErrorHandler().get_error(400, 'If the origin field is configuration the field configuration_id is required')
 
                 social.configuration_id = self.get_existing_foreing_id(data, 'configuration_id', Configuration, session)
                 
             elif (social.origin == 'user'):
                 if (not 'user_id' in data):
-                    return ErrorHandler(400, 'If the origin field is user the field user_id is required').response
+                    return ErrorHandler().get_error(400, 'If the origin field is user the field user_id is required')
 
                 social.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
 
             return True
 
         except Exception as e:
-            return ErrorHandler(400, e).response
+            return ErrorHandler().get_error(400, e)

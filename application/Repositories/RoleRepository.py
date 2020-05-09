@@ -53,7 +53,7 @@ class RoleRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler(404, 'No Role found.').response
+                return ErrorHandler().get_error(404, 'No Role found.')
 
         return self.response(fn, False)
 
@@ -85,10 +85,10 @@ class RoleRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -123,13 +123,13 @@ class RoleRepository(RepositoryBase):
                             'id': role.id
                         }, 200
                     else:
-                        return ErrorHandler(404, 'No Role found.').response
+                        return ErrorHandler().get_error(404, 'No Role found.')
 
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -147,7 +147,7 @@ class RoleRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return ErrorHandler(404, 'No Role found.').response
+                return ErrorHandler().get_error(404, 'No Role found.')
 
         return self.response(fn, True)
 
@@ -160,7 +160,7 @@ class RoleRepository(RepositoryBase):
                     if (registered_capability):
                         role.capabilities.append(registered_capability)
                     else:
-                        return ErrorHandler(400, 'Capability ' + str(capability['id']) + ' does not exists.').response
+                        return ErrorHandler().get_error(400, 'Capability ' + str(capability['id']) + ' does not exists.')
                 else:
                     capability_validator = CapabilityValidator(capability)
                     if (capability_validator.is_valid()):
@@ -177,7 +177,7 @@ class RoleRepository(RepositoryBase):
                         capability_validator.get_errors().insert(0, {
                             'message': 'Check if all Capability object is configured correctly.'
                         })
-                        return ErrorHandler(400, capability_validator.get_errors()).response
+                        return ErrorHandler().get_error(400, capability_validator.get_errors())
         return True
 
 

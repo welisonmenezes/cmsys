@@ -15,8 +15,8 @@ class ImageController(ControllerBase):
 
     
     def put(self, id=None):
-        return ErrorHandler(405, 'Method not allowed.').response
+        return ErrorHandler().get_error(405, 'Method not allowed.')
 
 
     def delete(self, id=None):
-        return ErrorHandler(405, 'Method not allowed.').response
+        return ErrorHandler().get_error(405, 'Method not allowed.')

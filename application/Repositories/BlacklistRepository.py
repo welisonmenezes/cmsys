@@ -40,7 +40,7 @@ class BlacklistRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler(404, 'No Blacklist found.').response
+                return ErrorHandler().get_error(404, 'No Blacklist found.')
 
         return self.response(fn, False)
 
@@ -67,10 +67,10 @@ class BlacklistRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -96,13 +96,13 @@ class BlacklistRepository(RepositoryBase):
                             'id': blacklist.id
                         }, 200
                     else:
-                        return ErrorHandler(404, 'No Blacklist found.').response
+                        return ErrorHandler().get_error(404, 'No Blacklist found.')
 
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -120,6 +120,6 @@ class BlacklistRepository(RepositoryBase):
                     'id': id
                 }, 200
             else:
-                return ErrorHandler(404, 'No Blacklist found.').response
+                return ErrorHandler().get_error(404, 'No Blacklist found.')
 
         return self.response(fn, True)

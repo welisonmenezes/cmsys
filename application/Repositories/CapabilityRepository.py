@@ -52,7 +52,7 @@ class CapabilityRepository(RepositoryBase):
                     'data': data
                 }, 200
             else:
-                return ErrorHandler(404, 'No Capability found.').response
+                return ErrorHandler().get_error(404, 'No Capability found.')
 
         return self.response(fn, False)
 
@@ -82,10 +82,10 @@ class CapabilityRepository(RepositoryBase):
                         'id': last_id
                     }, 200
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -114,13 +114,13 @@ class CapabilityRepository(RepositoryBase):
                             'id': capability.id
                         }, 200
                     else:
-                        return ErrorHandler(404, 'No Capability found.').response
+                        return ErrorHandler().get_error(404, 'No Capability found.')
 
                 else:
-                    return ErrorHandler(400, validator.get_errors()).response
+                    return ErrorHandler().get_error(400, validator.get_errors())
 
             else:
-                return ErrorHandler(400, 'No data send.').response
+                return ErrorHandler().get_error(400, 'No data send.')
 
         return self.response(fn, True)
 
@@ -141,9 +141,9 @@ class CapabilityRepository(RepositoryBase):
                     }, 200
 
                 else:
-                    return ErrorHandler(406, 'You cannot delete this Capability because it has related Role.').response
+                    return ErrorHandler().get_error(406, 'You cannot delete this Capability because it has related Role.')
 
             else:
-                return ErrorHandler(404, 'No Capability found.').response
+                return ErrorHandler().get_error(404, 'No Capability found.')
 
         return self.response(fn, True)
