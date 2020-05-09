@@ -35,10 +35,17 @@ class RepositoryBase():
             session.close()
 
     
-    def get_existing_foreing_id(self, data, key, context, session):
+    def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):
         if (key in data):
-            element = session.query(getattr(context, 'id')).filter_by(id=int(data[key])).first()
+            if (get_all_filelds):
+                element = session.query(context).filter_by(id=int(data[key])).first()
+            else:
+                element = session.query(getattr(context, 'id')).filter_by(id=int(data[key])).first()
+                
             if (element):
-                return element.id
+                if (get_all_filelds):
+                    return element
+                else:
+                    return element.id
             else:
                 raise Exception('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))

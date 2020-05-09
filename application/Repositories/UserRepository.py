@@ -6,8 +6,6 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class UserRepository(RepositoryBase):
 
-    # TODO: only allow user add avatar_id it medias is an image
-
     def get_exclude_fields(self, args):
         exclude_fields = ()
 
@@ -186,8 +184,14 @@ class UserRepository(RepositoryBase):
     def add_foreign_keys(self, user, data, session):
         try:
             user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
-            user.avatar_id = self.get_existing_foreing_id(data, 'avatar_id', Media, session)
             user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
+
+            image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
+            if (Checker.is_image_type(image.type)):
+                user.avatar_id = image.id
+            else:
+                return ErrorHandler(400, 'The user avatar must be an image file.').response
+
             return True
 
         except Exception as e:
