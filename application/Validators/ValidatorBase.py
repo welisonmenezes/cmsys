@@ -4,8 +4,6 @@ from Utils import Helper
 
 class ValidatorBase():
 
-    # TODO: implement validation to specif given list of valid values
-
     def handle_validation_error(self, message):
         self.errors.append({ 'message': message })
         self.has_error = True
@@ -99,9 +97,15 @@ class ValidatorBase():
     def valid_file_extension(self, key, config):
         if ('valid_file_extension' in config and key in self.request and self.request[key] != ''): 
             extensions = Helper.get_valid_extensions()
-            print(self.request[key])
             if (self.request[key] not in extensions):
                 self.handle_validation_error('Invalid file extension.')
+
+
+    def valid_values(self, key, config):
+        if ('valid_values' in config and key in self.request and self.request[key] != ''):
+            if (isinstance(config['valid_values'], list)):
+                if (self.request[key] not in config['valid_values']):
+                    self.handle_validation_error('The field: \''+ key +'\' only accepts the following values: ' + str(config['valid_values']))
 
     
     def is_valid(self, *args, **kwargs):
@@ -122,6 +126,7 @@ class ValidatorBase():
                 self.max_file_size(key, config)
                 self.valid_file_type(key, config)
                 self.valid_file_extension(key, config)
+                self.valid_values(key, config)
 
         return not self.has_error
 
