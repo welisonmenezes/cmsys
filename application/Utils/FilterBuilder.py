@@ -31,7 +31,7 @@ class FilterBuilder():
     def set_date_filter(self, key, *args, **kwargs):
         if (self.args[key]):
             try:
-                date_time = Helper.get_date_from_string(self.args[key])
+                date_time = Helper().get_date_from_string(self.args[key])
 
                 date_modifier = 'greater_or_equal'
                 if ('date_modifier' in kwargs and kwargs['date_modifier']):
@@ -60,8 +60,8 @@ class FilterBuilder():
         try:
             if ('compare_date_time_one' in kwargs and 'compare_date_time_two' in  kwargs 
                 and kwargs['compare_date_time_one'] and kwargs['compare_date_time_two']):
-                date_time_one = Helper.get_date_from_string(kwargs['compare_date_time_one'])
-                date_time_two = Helper.get_date_from_string(kwargs['compare_date_time_two'])
+                date_time_one = Helper().get_date_from_string(kwargs['compare_date_time_one'])
+                date_time_two = Helper().get_date_from_string(kwargs['compare_date_time_two'])
 
                 if ('not_between' in kwargs and kwargs['not_between'] == '1'):
                     self.filter += (not_(self.get_context_attr(key, kwargs).between(date_time_one, date_time_two)),)

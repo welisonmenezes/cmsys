@@ -18,7 +18,7 @@ class ControllerBase(Resource):
 
     
     def get(self, id=None):
-        return ErrorHandler.get_error(405, 'This method must be implemented by a child class.')
+        return ErrorHandler().get_error(405, 'This method must be implemented by a child class.')
 
 
     def post(self):

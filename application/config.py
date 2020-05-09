@@ -38,4 +38,4 @@ _valid_mimetypes = {
     'text/css': 'css',
     'text/csv': 'csv'
 }
-VALID_MIMETYPES = _valid_mimetypes.update(IMAGE_MIMETYPES)
+VALID_MIMETYPES = {**_valid_mimetypes, **IMAGE_MIMETYPES}

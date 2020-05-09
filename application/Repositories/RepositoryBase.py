@@ -24,12 +24,12 @@ class RepositoryBase():
         except AttributeError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler.get_error(400, e)
+            return ErrorHandler().get_error(400, e)
 
         except HTTPException as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler.get_error(500, e)
+            return ErrorHandler().get_error(500, e)
             
         finally:
             session.close()

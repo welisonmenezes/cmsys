@@ -206,7 +206,7 @@ class MediaRepository(RepositoryBase):
 
     def get_file_details_from_request(self, data):
         try:
-            type_and_data = Helper.get_file_type_and_data(data['file'])
+            type_and_data = Helper().get_file_type_and_data(data['file'])
             file_details = {
                 'type': type_and_data[0],
                 'data': base64.b64decode(type_and_data[1])

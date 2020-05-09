@@ -68,7 +68,7 @@ class ValidatorBase():
     def is_file(self, key, config):
         if ('is_file' in config and key in self.request and self.request[key] != ''):
             try:
-                type_and_data = Helper.get_file_type_and_data(self.request[key])
+                type_and_data = Helper().get_file_type_and_data(self.request[key])
                 file_data = type_and_data[1]
                 file_type = type_and_data[0]
                 return base64.b64encode(base64.b64decode(file_data)) == file_data
@@ -78,16 +78,16 @@ class ValidatorBase():
 
     def max_file_size(self, key, config):
         if ('max_file_size' in config and key in self.request and self.request[key] != ''):
-            if (int(Helper.get_base64_size(self.request[key])) > int(app_config['MAX_UPLOAD_SIZE'])):
+            if (int(Helper().get_base64_size(self.request[key])) > int(app_config['MAX_UPLOAD_SIZE'])):
                 self.handle_validation_error('The file size cannot exceed 5 MB.')
 
 
     def valid_file_type(self, key, config):
         if ('valid_file_type' in config and key in self.request and self.request[key] != ''):
             try:
-                file_type_data = Helper.get_file_type_and_data(self.request[key])
+                file_type_data = Helper().get_file_type_and_data(self.request[key])
                 file_type = file_type_data[0]
-                valid_types = Helper.get_valid_mimetypes()
+                valid_types = Helper().get_valid_mimetypes()
                 if (file_type not in valid_types):
                     self.handle_validation_error('Invalid file type.')
             except Exception as e:
@@ -96,7 +96,7 @@ class ValidatorBase():
 
     def valid_file_extension(self, key, config):
         if ('valid_file_extension' in config and key in self.request and self.request[key] != ''): 
-            extensions = Helper.get_valid_extensions()
+            extensions = Helper().get_valid_extensions()
             if (self.request[key] not in extensions):
                 self.handle_validation_error('Invalid file extension.')
 
