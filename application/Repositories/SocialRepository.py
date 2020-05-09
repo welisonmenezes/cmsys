@@ -78,25 +78,10 @@ class SocialRepository(RepositoryBase):
                         origin = data['origin']
                     )
 
-                    # TODO: implement add foreign element as a method to simplify the use
-
-                    # add forgein elements
-                    try:
-                        if (social.origin == 'configuration'):
-                            if (not 'configuration_id' in data):
-                                return ErrorHandler(400, 'If the origin field is configuration the field configuration_id is required').response
-
-                            social.configuration_id = self.get_existing_foreing_id(data, 'configuration_id', Configuration, session)
-                            
-                        elif (social.origin == 'user'):
-                            if (not 'user_id' in data):
-                                return ErrorHandler(400, 'If the origin field is user the field user_id is required').response
-
-                            social.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
-
-                    except Exception as e:
-                        return ErrorHandler(400, e).response
-
+                    fk_was_added = self.add_foreign_keys(social, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
+                    
                     session.add(social)
                     session.commit()
                     last_id = social.id
@@ -131,22 +116,9 @@ class SocialRepository(RepositoryBase):
                         social.origin = data['origin']
                         social.description = data['description']
 
-                        # add forgein elements
-                        try:
-                            if (social.origin == 'configuration'):
-                                if (not 'configuration_id' in data):
-                                    return ErrorHandler(400, 'If the origin field is configuration the field configuration_id is required').response
-
-                                social.configuration_id = self.get_existing_foreing_id(data, 'configuration_id', Configuration, session)
-                                
-                            elif (social.origin == 'user'):
-                                if (not 'user_id' in data):
-                                    return ErrorHandler(400, 'If the origin field is user the field user_id is required').response
-
-                                social.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
-
-                        except Exception as e:
-                            return ErrorHandler(400, e).response
+                        fk_was_added = self.add_foreign_keys(social, data, session)
+                        if (fk_was_added != True):
+                            return fk_was_added
 
                         session.commit()
 
@@ -182,3 +154,23 @@ class SocialRepository(RepositoryBase):
                 return ErrorHandler(404, 'No Social found.').response
 
         return self.response(fn, True)
+
+    
+    def add_foreign_keys(self, social, data, session):
+        try:
+            if (social.origin == 'configuration'):
+                if (not 'configuration_id' in data):
+                    return ErrorHandler(400, 'If the origin field is configuration the field configuration_id is required').response
+
+                social.configuration_id = self.get_existing_foreing_id(data, 'configuration_id', Configuration, session)
+                
+            elif (social.origin == 'user'):
+                if (not 'user_id' in data):
+                    return ErrorHandler(400, 'If the origin field is user the field user_id is required').response
+
+                social.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
+
+            return True
+
+        except Exception as e:
+            return ErrorHandler(400, e).response

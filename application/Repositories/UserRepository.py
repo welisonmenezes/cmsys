@@ -6,6 +6,8 @@ from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class UserRepository(RepositoryBase):
 
+    # TODO: only allow user add avatar_id it medias is an image
+
     def set_query_fields(self, args):
         if (args['get_children'] and args['get_children'] == '1'):
             self.fields = [User]
@@ -103,13 +105,9 @@ class UserRepository(RepositoryBase):
                         status = data['status']
                     )
                     
-                    # add forgein elements
-                    try:
-                        user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
-                        user.avatar_id = self.get_existing_foreing_id(data, 'avatar_id', Media, session)
-                        user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
-                    except Exception as e:
-                        return ErrorHandler(400, e).response
+                    fk_was_added = self.add_foreign_keys(user, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
 
                     session.add(user)
                     session.commit()
@@ -147,13 +145,9 @@ class UserRepository(RepositoryBase):
                         user.email = data['email']
                         user.status = data['status']
 
-                        # add forgein elements
-                        try:
-                            user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
-                            user.avatar_id = self.get_existing_foreing_id(data, 'avatar_id', Media, session)
-                            user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
-                        except Exception as e:
-                            return ErrorHandler(400, e).response
+                        fk_was_added = self.add_foreign_keys(user, data, session)
+                        if (fk_was_added != True):
+                            return fk_was_added
 
                         session.commit()
 
@@ -199,3 +193,14 @@ class UserRepository(RepositoryBase):
                 return ErrorHandler(404, 'No User found.').response
 
         return self.response(fn, True)
+
+
+    def add_foreign_keys(self, user, data, session):
+        try:
+            user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
+            user.avatar_id = self.get_existing_foreing_id(data, 'avatar_id', Media, session)
+            user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
+            return True
+
+        except Exception as e:
+            return ErrorHandler(400, e).response
