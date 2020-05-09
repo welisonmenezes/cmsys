@@ -14,7 +14,8 @@ class UserController(ControllerBase):
         self.parser.add_argument('registered')
         self.parser.add_argument('status')
         self.parser.add_argument('role_id')
-        self.parser.add_argument('get_children')
+        self.parser.add_argument('get_role')
+        self.parser.add_argument('get_socials')
         self.args = self.parser.parse_args()
 
         if id:

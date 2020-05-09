@@ -8,23 +8,16 @@ class UserRepository(RepositoryBase):
 
     # TODO: only allow user add avatar_id it medias is an image
 
-    def set_query_fields(self, args):
-        if (args['get_children'] and args['get_children'] == '1'):
-            self.fields = [User]
-        else:
-            self.fields = [
-                User.id,
-                User.login,
-                User.password,
-                User.first_name,
-                User.last_name,
-                User.email,
-                User.registered,
-                User.status,
-                User.role_id,
-                User.avatar_id,
-                User.page_id
-            ]
+    def get_exclude_fields(self, args):
+        exclude_fields = ()
+
+        if (args['get_role'] != '1'):
+            exclude_fields += ('role',)
+
+        if (args['get_socials'] != '1'):
+            exclude_fields += ('socials',)
+
+        return exclude_fields
 
 
     def get(self, args):
@@ -33,8 +26,6 @@ class UserRepository(RepositoryBase):
             fb.set_like_filter('email')
             fb.set_equals_filter('status')
             fb.set_equals_filter('role_id')
-
-            self.set_query_fields(args)
 
             try:
                 fb.set_date_filter('registered', date_modifier=args['date_modifier'])
@@ -55,9 +46,9 @@ class UserRepository(RepositoryBase):
             if (args['name']):
                 filter += (or_(User.first_name.like('%'+args['name']+'%'), User.last_name.like('%'+args['name']+'%'), User.nickname.like('%'+args['name']+'%')),)
 
-            query = session.query(*self.fields).filter(*filter).order_by(*order_by)
+            query = session.query(User).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
-            schema = UserSchema(many=True)
+            schema = UserSchema(many=True, exclude=self.get_exclude_fields(args))
             data = schema.dump(result.items)
 
             return {
@@ -70,11 +61,8 @@ class UserRepository(RepositoryBase):
 
     def get_by_id(self, id, args):
         def fn(session):
-
-            self.set_query_fields(args)
-
-            schema = UserSchema(many=False)
-            result = session.query(*self.fields).filter_by(id=id).first()
+            schema = UserSchema(many=False, exclude=self.get_exclude_fields(args))
+            result = session.query(User).filter_by(id=id).first()
             data = schema.dump(result)
 
             if (data):
