@@ -1,6 +1,6 @@
 from sqlalchemy import or_
 from .RepositoryBase import RepositoryBase
-from Models import User, UserSchema, Media, Post, Role
+from Models import User, UserSchema, Media, Post, Role, Social
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
@@ -76,6 +76,8 @@ class UserRepository(RepositoryBase):
     def create(self, request):
         def fn(session):
             data = request.get_json()
+
+            # TODO: implement password cryptography
 
             if (data):
                 validator = UserValidator(data)
@@ -157,16 +159,18 @@ class UserRepository(RepositoryBase):
         def fn(session):
             user = session.query(User).filter_by(id=id).first()
 
-            if (user):
+            if user:
 
                 # TODO: check if user has post (dont allow to delete)
                 # TODO: enable to delete user by parameter 'admin_new_owner' to delegate to admin his medias
-                # TODO: check if user has social (delete social as well)
                 # TODO: check if user has comments (delete comments as well)
 
                 media = session.query(Media.id).filter_by(user_id=user.id).first()
-                if (media):
+                if media:
                     return ErrorHandler().get_error(406, 'You cannot delete this User because it has related Media.')
+
+                # delete user socials
+                session.query(Social).filter_by(user_id=user.id).delete(synchronize_session='evaluate')
 
                 session.delete(user)
                 session.commit()
