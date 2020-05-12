@@ -10,7 +10,7 @@ from .UserController import *
 from .VariableController import *
 
 def start_controllers(app, api):
-    """Sets all routers of this API. Starts the Resources (Controllers) the will respond the http requests"""
+    """Sets all routers of this API. Starts the Resources (Controllers) the will respond the http requests."""
 
     # Error 404 handler
     @app.route('/api/<path:path>', defaults={'path': ''})

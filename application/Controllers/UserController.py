@@ -2,17 +2,17 @@ from .ControllerBase import ControllerBase
 from Repositories import UserRepository
 
 class UserController(ControllerBase):
-    """This flask_restful API's Resource works like a controller to UserRepository"""
+    """This flask_restful API's Resource works like a controller to UserRepository."""
 
     def __init__(self):
-        """Starts the repository from which data will be written or retrieved"""
+        """Starts the repository from which data will be written or retrieved."""
 
         super(UserController, self).__init__()
         self.repo = UserRepository()
         
 
     def get(self, id=None):
-        """Rewrite ControllerBase get method to apply customizations to the get http verb responder"""
+        """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
         self.parser.add_argument('name')
         self.parser.add_argument('email')

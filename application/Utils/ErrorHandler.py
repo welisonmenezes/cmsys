@@ -2,9 +2,12 @@ from app import app
 from Decorators import SingletonDecorator
 
 @SingletonDecorator
-class ErrorHandler(object):
+class ErrorHandler():
+    """Generic class to get formatted error json object"""
 
     def get_error(self, error_code, error_message):
+        """Returns the error object and put in the response the given error code and error message"""
+
         if (type(error_message) == list or type(error_message) == str):
             error = error_message
         else:

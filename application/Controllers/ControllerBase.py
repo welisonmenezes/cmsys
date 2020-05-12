@@ -3,11 +3,11 @@ from flask_restful import Resource, reqparse
 from Utils import ErrorHandler
 
 class ControllerBase(Resource):
-    """The base class that will provide basics configurations and methods to its children
+    """The base class that will provide basics configurations and methods to its children.
 
     Parameters
     ----------
-    Resource: A controller that responses the Resource flask_restful API
+    Resource: A controller that responses the Resource flask_restful API.
     """
 
     def __init__(self):
@@ -27,7 +27,7 @@ class ControllerBase(Resource):
 
     
     def get(self, id=None):
-        """Runs the get http request method response"""
+        """Runs the get http request method response."""
 
         try:
             return self.repo.get(self.request)
@@ -36,7 +36,7 @@ class ControllerBase(Resource):
 
 
     def post(self):
-        """Runs the post http request method response"""
+        """Runs the post http request method response."""
 
         try:
             return self.repo.create(self.request)
@@ -45,7 +45,7 @@ class ControllerBase(Resource):
 
 
     def put(self, id=None):
-        """Runs the get http request method response"""
+        """Runs the get http request method response."""
 
         try:
             return self.repo.update(id, self.request)
@@ -54,7 +54,7 @@ class ControllerBase(Resource):
 
 
     def delete(self, id=None):
-        """Runs the delete http request method response"""
+        """Runs the delete http request method response."""
 
         try:
             return self.repo.delete(id)

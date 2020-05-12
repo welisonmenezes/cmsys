@@ -2,17 +2,17 @@ from .ControllerBase import ControllerBase
 from Repositories import CapabilityRepository
 
 class CapabilityController(ControllerBase):
-    """This flask_restful API's Resource works like a controller to CapabilityRepository"""
+    """This flask_restful API's Resource works like a controller to CapabilityRepository."""
 
     def __init__(self):
-        """Starts the repository from which data will be written or retrieved"""
+        """Starts the repository from which data will be written or retrieved."""
 
         super(CapabilityController, self).__init__()
         self.repo = CapabilityRepository()
 
     
     def get(self, id=None):
-        """Rewrite ControllerBase get method to apply customizations to the get http verb responder"""
+        """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
         self.parser.add_argument('get_roles')
         self.parser.add_argument('description')

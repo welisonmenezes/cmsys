@@ -1,8 +1,10 @@
 import math
 
-class Paginate(object):
+class Paginate():
+    """When instantiated generates a paginator to the given SqlAlchemy query."""
 
     def __init__(self, query, page, size):
+        """Gets the SqlAlchemy query and apply on it the given page and size to generate the paginated result."""
 
         if page <= 0:
             raise AttributeError('page needs to be >= 1')
@@ -17,6 +19,7 @@ class Paginate(object):
 
         
     def get_pagination_infos(self, query, items, page, size):
+        """Returns the properly formatted pagination infos. This method is called by the __init__ method above."""
 
         prev_items = (page - 1) * size
         total = query.order_by(None).count()
