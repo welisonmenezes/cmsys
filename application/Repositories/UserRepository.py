@@ -8,21 +8,6 @@ class UserRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of User."""
 
-    def get_exclude_fields(self, args):
-        """Returns the fields witch must be ignored by the sql query.
-            The arguments received by parameters determines the correct behave."""
-
-        exclude_fields = ()
-
-        if (args['get_role'] != '1'):
-            exclude_fields += ('role',)
-
-        if (args['get_socials'] != '1'):
-            exclude_fields += ('socials',)
-
-        return exclude_fields
-
-
     def get(self, args):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
@@ -54,7 +39,7 @@ class UserRepository(RepositoryBase):
 
             query = session.query(User).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
-            schema = UserSchema(many=True, exclude=self.get_exclude_fields(args))
+            schema = UserSchema(many=True, exclude=self.get_exclude_fields(args, ['role', 'socials']))
             data = schema.dump(result.items)
 
             return {
@@ -70,7 +55,7 @@ class UserRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = UserSchema(many=False, exclude=self.get_exclude_fields(args))
+            schema = UserSchema(many=False, exclude=self.get_exclude_fields(args, ['role', 'socials']))
             result = session.query(User).filter_by(id=id).first()
             data = schema.dump(result)
 

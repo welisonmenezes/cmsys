@@ -7,18 +7,6 @@ class RoleRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Role."""
 
-    def get_exclude_fields(self, args):
-        """Returns the fields witch must be ignored by the sql query.
-            The arguments received by parameters determines the correct behave."""
-
-        exclude_fields = ()
-
-        if (args['get_capabilities'] != '1'):
-            exclude_fields += ('capabilities',)
-
-        return exclude_fields
-
-    
     def get(self, args):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
@@ -39,7 +27,7 @@ class RoleRepository(RepositoryBase):
             
             query = session.query(Role).join(*self.joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
-            schema = RoleSchema(many=True, exclude=self.get_exclude_fields(args))
+            schema = RoleSchema(many=True, exclude=self.get_exclude_fields(args, ['capabilities']))
             data = schema.dump(result.items)
 
             return {
@@ -55,7 +43,7 @@ class RoleRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args))
+            schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args, ['capabilities']))
             result = session.query(Role).filter_by(id=id).first()
             data = schema.dump(result)
 

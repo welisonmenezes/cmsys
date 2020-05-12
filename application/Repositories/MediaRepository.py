@@ -10,17 +10,6 @@ from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 class MediaRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Media."""
-
-    def get_exclude_fields(self, args):
-        """Returns the fields witch must be ignored by the sql query.
-            The arguments received by parameters determines the correct behave."""
-
-        exclude_fields = ()
-
-        if (args['return_file_data'] != '1'):
-            exclude_fields += ('file',)
-
-        return exclude_fields
     
     def get(self, args):
         """Returns a list of data recovered from model.

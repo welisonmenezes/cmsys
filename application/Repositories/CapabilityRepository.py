@@ -7,20 +7,6 @@ class CapabilityRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Capability."""
 
-    # TODO: checks if is possible simplify its call, by put it at parent class
-    
-    def get_exclude_fields(self, args):
-        """Returns the fields witch must be ignored by the sql query.
-            The arguments received by parameters determines the correct behave."""
-
-        exclude_fields = ()
-
-        if (args['get_roles'] != '1'):
-            exclude_fields += ('roles',)
-
-        return exclude_fields
-
-    
     def get(self, args):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
@@ -40,7 +26,7 @@ class CapabilityRepository(RepositoryBase):
             
             query = session.query(Capability).join(*self.joins).filter(*filter).order_by(*order_by)
             result = Paginate(query, page, limit)
-            schema = CapabilitySchema(many=True, exclude=self.get_exclude_fields(args))
+            schema = CapabilitySchema(many=True, exclude=self.get_exclude_fields(args, ['roles']))
             data = schema.dump(result.items)
 
             return {
@@ -56,7 +42,7 @@ class CapabilityRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = CapabilitySchema(many=False, exclude=self.get_exclude_fields(args))
+            schema = CapabilitySchema(many=False, exclude=self.get_exclude_fields(args, ['roles']))
             result = session.query(Capability).filter_by(id=id).first()
             data = schema.dump(result)
 

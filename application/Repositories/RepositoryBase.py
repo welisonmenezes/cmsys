@@ -59,3 +59,17 @@ class RepositoryBase():
                 return element if get_all_filelds else element.id
             else:
                 raise Exception('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))
+
+    
+    def get_exclude_fields(self, args, fields):
+        """Returns the fields witch must be ignored by the sql query.
+            The arguments received by parameters determines the correct behave."""
+
+        exclude_fields = ()
+
+        if fields and isinstance(fields, list):
+            for field in fields:
+                if (not args['get_' + str(field)] or args['get_' + str(field)] != '1'):
+                    exclude_fields += (field,)
+
+        return exclude_fields
