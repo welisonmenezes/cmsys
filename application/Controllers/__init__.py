@@ -10,6 +10,7 @@ from .UserController import *
 from .VariableController import *
 
 def start_controllers(app, api):
+    """Sets all routers of this API. Starts the Resources (Controllers) the will respond the http requests"""
 
     # Error 404 handler
     @app.route('/api/<path:path>', defaults={'path': ''})
@@ -19,6 +20,7 @@ def start_controllers(app, api):
             'message': 'The requested resource does not exist.'
         }), 404
 
+
     # Erro 405 handler
     @app.errorhandler(405)
     def error_405(error):
@@ -27,12 +29,14 @@ def start_controllers(app, api):
             'message': 'Method not allowed.'
         }), 405
 
+
     # Api root handler
     @app.route('/api/', defaults={'path': ''})
     def index(path):
         return jsonify({
             'message': 'Wellcome to cmsys api v.1.0.0.'
         }), 200
+
 
     # Erro 500 handler
     @app.errorhandler(500)
@@ -42,7 +46,8 @@ def start_controllers(app, api):
             'message': 'An internal error has occurred.'
         }), 500
 
-    # resources
+
+    # Resources (controllers)
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
     api.add_resource(MediaController, '/media', '/media/<int:id>')

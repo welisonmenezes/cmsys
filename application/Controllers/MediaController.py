@@ -2,13 +2,18 @@ from .ControllerBase import ControllerBase
 from Repositories import MediaRepository
 
 class MediaController(ControllerBase):
+    """This flask_restful API's Resource works like a controller to MediaRepository"""
 
     def __init__(self):
-        self.repo = MediaRepository()
+        """Start the repository from which data will be written or retrieved"""
+
         super(MediaController, self).__init__()
+        self.repo = MediaRepository()
 
 
     def get(self, id=None):
+        """Rewrite ControllerBase get method to apply customizations to the get http verb responder"""
+
         self.parser.add_argument('download_file')
         self.parser.add_argument('return_file_data')
         self.parser.add_argument('s')
