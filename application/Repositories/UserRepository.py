@@ -161,14 +161,17 @@ class UserRepository(RepositoryBase):
     def delete(self, id):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
+        if id == 1:
+            return ErrorHandler().get_error(400, 'The Super Admin user cannot be deleted.')
+
         def fn(session):
+            
             user = session.query(User).filter_by(id=id).first()
 
             if user:
                 
                 # TODO: check if user has post (dont allow to delete)
                 # TODO: check if user has comments (delete comments as well)
-                # TODO: don't allow to delete user with id 1
 
                 # delete or delegate user medias
                 image_was_deleted = self.delete_or_delegate_user_contents(user,session, Media)
