@@ -5,7 +5,7 @@ class SocialController(ControllerBase):
     """This flask_restful API's Resource works like a controller to SocialRepository"""
 
     def __init__(self):
-        """Start the repository from which data will be written or retrieved"""
+        """Starts the repository from which data will be written or retrieved"""
 
         super(SocialController, self).__init__()
         self.repo = SocialRepository()

@@ -1,6 +1,8 @@
 from functools import wraps
 
 def SingletonDecorator(cls):
+    """Decorator to implement the singleton pattern to its members"""
+
     instances = {}
     @wraps(cls)
 
