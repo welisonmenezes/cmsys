@@ -2,8 +2,10 @@ from .ValidatorBase import ValidatorBase
 from Models import Session, Variable
 
 class VariableValidator(ValidatorBase):
+    """Configures the Variable validator to the parent class applies the validators correctly."""
 
     def __init__(self, obj_data):
+        """Gets the object data that will be validated and initializes the configurations."""
 
         self.request = obj_data
 
