@@ -39,3 +39,5 @@ _valid_mimetypes = {
     'text/csv': 'csv'
 }
 VALID_MIMETYPES = {**_valid_mimetypes, **IMAGE_MIMETYPES}
+
+DEFAULT_LIMIT_PAGINATION_RESULTS = 2

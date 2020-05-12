@@ -1,5 +1,6 @@
 from sqlalchemy import desc, asc, not_
 from Utils import Checker, Helper
+from app import app_config
 
 class FilterBuilder():
     """Builds the filter tuple. Puts into the given context the
@@ -12,7 +13,7 @@ class FilterBuilder():
         self.context = context
         self.args = args
         self.page = 1
-        self.limit = 10
+        self.limit = app_config['DEFAULT_LIMIT_PAGINATION_RESULTS']
 
 
     def get_context_attr(self, key, kwa):
