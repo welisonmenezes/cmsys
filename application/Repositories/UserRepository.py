@@ -3,6 +3,8 @@ from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
+from flask import  request
+
 
 class UserRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -163,14 +165,15 @@ class UserRepository(RepositoryBase):
             user = session.query(User).filter_by(id=id).first()
 
             if user:
-
+                
                 # TODO: check if user has post (dont allow to delete)
-                # TODO: enable to delete user by parameter 'admin_new_owner' to delegate to admin his medias
                 # TODO: check if user has comments (delete comments as well)
+                # TODO: don't allow to delete user with id 1
 
-                media = session.query(Media.id).filter_by(user_id=user.id).first()
-                if media:
-                    return ErrorHandler().get_error(406, 'You cannot delete this User because it has related Media.')
+                # delete or delegate user medias
+                image_was_deleted = self.delete_or_delegate_user_media(user, session)
+                if image_was_deleted != True:
+                    return image_was_deleted
 
                 # delete user socials
                 session.query(Social).filter_by(user_id=user.id).delete(synchronize_session='evaluate')
@@ -197,12 +200,32 @@ class UserRepository(RepositoryBase):
             user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
 
             image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
-            if (Checker().is_image_type(image.type)):
-                user.avatar_id = image.id
-            else:
-                return ErrorHandler().get_error(400, 'The user avatar must be an image file.')
+            if image:
+                if Checker().is_image_type(image.type):
+                    user.avatar_id = image.id
+                else:
+                    return ErrorHandler().get_error(400, 'The user avatar must be an image file.')
 
             return True
 
         except Exception as e:
             return ErrorHandler().get_error(400, e)
+
+    
+    def delete_or_delegate_user_media(self, user, session):
+        """Deletes user's medias or delegates they to user superadmin (id=1)"""
+
+        media = session.query(Media.id).filter_by(user_id=user.id).first()
+        if media:
+            if 'admin_new_owner' in request.args and request.args['admin_new_owner'] == '1':
+                medias = session.query(Media).filter_by(user_id=user.id).all()
+                for m in medias:
+                    admin = session.query(User).filter_by(id=1).first()
+                    if admin:
+                        m.user_id = admin.id
+                    else:
+                        return ErrorHandler().get_error(406, 'Could not find the super admin user.') 
+            else:
+                return ErrorHandler().get_error(406, 'You cannot delete this User because it has related Media.')
+        
+        return True

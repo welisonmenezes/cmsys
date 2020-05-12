@@ -32,7 +32,7 @@ class ControllerBase(Resource):
         try:
             return self.repo.get(self.request)
         except Exception as e:
-            return ErrorHandler().get_error(405, e)
+            return ErrorHandler().get_error(405, str(e))
 
 
     def post(self):
@@ -41,7 +41,7 @@ class ControllerBase(Resource):
         try:
             return self.repo.create(self.request)
         except Exception as e:
-            return ErrorHandler().get_error(405, e)
+            return ErrorHandler().get_error(405, str(e))
 
 
     def put(self, id=None):
@@ -50,7 +50,7 @@ class ControllerBase(Resource):
         try:
             return self.repo.update(id, self.request)
         except Exception as e:
-            return ErrorHandler().get_error(405, e)
+            return ErrorHandler().get_error(405, str(e))
 
 
     def delete(self, id=None):
@@ -59,4 +59,4 @@ class ControllerBase(Resource):
         try:
             return self.repo.delete(id)
         except Exception as e:
-            return ErrorHandler().get_error(405, e)
+            return ErrorHandler().get_error(405, str(e))

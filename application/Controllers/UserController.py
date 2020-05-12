@@ -21,6 +21,7 @@ class UserController(ControllerBase):
         self.parser.add_argument('role_id')
         self.parser.add_argument('get_role')
         self.parser.add_argument('get_socials')
+        self.parser.add_argument('admin_new_owner')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)

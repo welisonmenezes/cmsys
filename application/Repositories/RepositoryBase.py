@@ -27,17 +27,17 @@ class RepositoryBase():
         except SQLAlchemyError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler().get_error().get_error(500, e)
+            return ErrorHandler().get_error(500, str(e))
 
         except AttributeError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler().get_error(400, e)
+            return ErrorHandler().get_error(400, str(e))
 
         except HTTPException as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler().get_error(500, e)
+            return ErrorHandler().get_error(500, str(e))
             
         finally:
             session.close()
@@ -46,8 +46,6 @@ class RepositoryBase():
     def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):
         """Checks if a given id exists as primary key of the given context (a model) and returns it.
             Also is possible returns the complete row if get_all_fields is true."""
-
-        # TODO: check if is possible remove the data and key param and receive the id directly
 
         if (key in data):
             if (get_all_filelds):
