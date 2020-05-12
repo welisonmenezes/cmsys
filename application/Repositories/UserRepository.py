@@ -5,8 +5,13 @@ from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class UserRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of User."""
 
     def get_exclude_fields(self, args):
+        """Returns the fields witch must be ignored by the sql query.
+            The arguments received by parameters determines the correct behave."""
+
         exclude_fields = ()
 
         if (args['get_role'] != '1'):
@@ -19,6 +24,9 @@ class UserRepository(RepositoryBase):
 
 
     def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             fb = FilterBuilder(User, args)
             fb.set_like_filter('email')
@@ -58,6 +66,9 @@ class UserRepository(RepositoryBase):
         
 
     def get_by_id(self, id, args):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             schema = UserSchema(many=False, exclude=self.get_exclude_fields(args))
             result = session.query(User).filter_by(id=id).first()
@@ -74,6 +85,8 @@ class UserRepository(RepositoryBase):
 
     
     def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -115,6 +128,9 @@ class UserRepository(RepositoryBase):
 
 
     def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -156,6 +172,8 @@ class UserRepository(RepositoryBase):
 
 
     def delete(self, id):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
         def fn(session):
             user = session.query(User).filter_by(id=id).first()
 
@@ -186,6 +204,9 @@ class UserRepository(RepositoryBase):
 
 
     def add_foreign_keys(self, user, data, session):
+        """Controls if the role_id, page_id and avatar_id an existing foreign key data.
+            Also checks if the avatar_id refers to an image file type."""
+
         try:
             user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
             user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)

@@ -5,8 +5,13 @@ from Validators import VariableValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class VariableRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of Variable."""
     
     def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             fb = FilterBuilder(Variable, args)
             filter = fb.get_filter()
@@ -31,6 +36,9 @@ class VariableRepository(RepositoryBase):
         
 
     def get_by_id(self, id):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             schema = VariableSchema(many=False)
             result = session.query(Variable).filter_by(id=id).first()
@@ -47,6 +55,8 @@ class VariableRepository(RepositoryBase):
 
     
     def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -76,6 +86,9 @@ class VariableRepository(RepositoryBase):
 
 
     def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -107,6 +120,8 @@ class VariableRepository(RepositoryBase):
 
 
     def delete(self, id):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
         def fn(session):
             variable = session.query(Variable).filter_by(id=id).first()
 

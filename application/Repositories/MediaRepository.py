@@ -8,8 +8,13 @@ from Validators import MediaValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class MediaRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of Media."""
 
     def get_exclude_fields(self, args):
+        """Returns the fields witch must be ignored by the sql query.
+            The arguments received by parameters determines the correct behave."""
+
         exclude_fields = ()
 
         if (args['return_file_data'] != '1'):
@@ -18,6 +23,9 @@ class MediaRepository(RepositoryBase):
         return exclude_fields
     
     def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             fb = FilterBuilder(Media, args)
             fb.set_equals_filter('type')
@@ -57,6 +65,9 @@ class MediaRepository(RepositoryBase):
         
 
     def get_by_id(self, id, args):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             schema = MediaSchema(many=False)
             result = session.query(Media).filter_by(id=id).first()
@@ -75,8 +86,9 @@ class MediaRepository(RepositoryBase):
         return self.response(fn, False)
 
 
-    # download file (run when download_file == 1)
     def get_file(self, id):
+        """Returns the file to donwload (run when download_file == 1 configured at controller)."""
+
         def fn(session):
             result = session.query(Media).filter_by(id=id).first()
             if (result):
@@ -87,8 +99,10 @@ class MediaRepository(RepositoryBase):
         return self.response(fn, False)
 
 
-    # show image preview (run from ImageController)
     def get_image_preview(self, id):
+        """Returns the image preview
+            (This method is called by the Image Controller which has its own endpoint for this purpose)."""
+
         def fn(session):
             result = session.query(Media).filter_by(id=id).first()
             image_types = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/svg']
@@ -101,6 +115,8 @@ class MediaRepository(RepositoryBase):
 
 
     def file_response(self, result, is_preview):
+        """Returns the file, or to preview or to download."""
+
         saved_file = str(base64.b64encode(result.file))
         saved_file = saved_file[2:]
         imgdata = base64.b64decode(saved_file)
@@ -112,6 +128,8 @@ class MediaRepository(RepositoryBase):
 
     
     def image_not_found_response(self):
+        """Provides a default image preview if the requested image preview was fail."""
+
         notFoundImage = app_config['NOT_FOUND_IMAGE']
         imgdata = base64.b64decode(notFoundImage)
         response = make_response(imgdata)
@@ -120,6 +138,8 @@ class MediaRepository(RepositoryBase):
         
     
     def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -160,6 +180,9 @@ class MediaRepository(RepositoryBase):
 
 
     def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -205,6 +228,9 @@ class MediaRepository(RepositoryBase):
 
 
     def get_file_details_from_request(self, data):
+        """Separates the mimetype and the real base64 data from sended base64 data
+            and returns it as a dictonary item."""
+        
         try:
             type_and_data = Helper().get_file_type_and_data(data['file'])
             file_details = {
@@ -217,6 +243,8 @@ class MediaRepository(RepositoryBase):
 
 
     def delete(self, id):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
         def fn(session):
             media = session.query(Media).filter_by(id=id).first()
 

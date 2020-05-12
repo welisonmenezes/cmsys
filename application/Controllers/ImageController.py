@@ -4,7 +4,7 @@ from Utils import ErrorHandler
 
 class ImageController(ControllerBase):
     """This flask_restful API's Resource works like a controller to MediaRepository,
-       but only implements the get_image_preview method of this repository."""
+        but only implements the get_image_preview method of this repository."""
 
     def __init__(self):
         """Starts the repository from which data will be written or retrieved."""

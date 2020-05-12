@@ -4,8 +4,13 @@ from Validators import BlacklistValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
 class BlacklistRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of Blacklist."""
     
     def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             fb = FilterBuilder(Blacklist, args)
             fb.set_equals_filter('type')
@@ -30,6 +35,9 @@ class BlacklistRepository(RepositoryBase):
         
 
     def get_by_id(self, id):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             schema = BlacklistSchema(many=False)
             result = session.query(Blacklist).filter_by(id=id).first()
@@ -46,6 +54,8 @@ class BlacklistRepository(RepositoryBase):
 
     
     def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -76,6 +86,9 @@ class BlacklistRepository(RepositoryBase):
 
 
     def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -108,6 +121,8 @@ class BlacklistRepository(RepositoryBase):
 
 
     def delete(self, id):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
         def fn(session):
             blacklist = session.query(Blacklist).filter_by(id=id).first()
 

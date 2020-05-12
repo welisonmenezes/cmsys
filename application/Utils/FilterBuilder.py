@@ -2,7 +2,8 @@ from sqlalchemy import desc, asc, not_
 from Utils import Checker, Helper
 
 class FilterBuilder():
-    """Builds the filter tuple. Puts into the given context the corresponding arguments given by parameters."""
+    """Builds the filter tuple. Puts into the given context the
+        corresponding arguments given by parameters."""
 
     def __init__(self, context, args):
         """Gets the context (the Model) and applies the given arguments."""
@@ -15,7 +16,8 @@ class FilterBuilder():
 
 
     def get_context_attr(self, key, kwa):
-        """Returns the correct context. If has the parameters joined and joined_key returns this correctly."""
+        """Returns the correct context. If has the parameters joined
+            and joined_key returns this correctly."""
 
         if ('joined' in kwa and 'joined_key' in kwa):
             return getattr(kwa['joined'], kwa['joined_key'])
@@ -62,7 +64,7 @@ class FilterBuilder():
                 elif (date_modifier == 'different'):
                     self.filter += (self.get_context_attr(key, kwargs) != date_time,)
                 else:
-                    raise Exception('The parameter \'date_modifier\' must be one of these: [greater, less, greater_or_equal, less_or_equal, equal or different]')
+                    raise Exception('The parameter \'date_modifier\' must be one of these:[greater, less, greater_or_equal, less_or_equal, equal or different]')
 
             except Exception as e:
                 raise Exception(str(e))
@@ -111,7 +113,8 @@ class FilterBuilder():
 
 
     def get_order_by(self):
-        """Returns the correct order_by configuration. The args order_by and order determine how it will behave."""
+        """Returns the correct order_by configuration.
+            The args order_by and order determine how it will behave."""
 
         if (self.args['order_by'] and self.args['order_by'] != ''):
             if (self.args['order'] and self.args['order'] == 'desc'):

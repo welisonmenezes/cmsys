@@ -24,7 +24,7 @@ class Helper():
 
 
     def get_file_type_and_data(self, b64string):
-        """Returns from given base64 string its type and its real data."""
+        """Returns from given base64 string its type and its real data as a tuple."""
 
         header, data = b64string.split(',', 1)
         header = header.replace('data:','').replace(';base64','')

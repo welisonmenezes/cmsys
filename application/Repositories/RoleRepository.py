@@ -4,8 +4,13 @@ from Validators import RoleValidator, CapabilityValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class RoleRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of Role."""
 
     def get_exclude_fields(self, args):
+        """Returns the fields witch must be ignored by the sql query.
+            The arguments received by parameters determines the correct behave."""
+
         exclude_fields = ()
 
         if (args['get_capabilities'] != '1'):
@@ -15,6 +20,9 @@ class RoleRepository(RepositoryBase):
 
     
     def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             fb = FilterBuilder(Role, args)
             fb.set_equals_filter('can_access_admin')
@@ -43,6 +51,9 @@ class RoleRepository(RepositoryBase):
         
 
     def get_by_id(self, id, args):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args))
             result = session.query(Role).filter_by(id=id).first()
@@ -59,6 +70,8 @@ class RoleRepository(RepositoryBase):
 
     
     def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -72,7 +85,7 @@ class RoleRepository(RepositoryBase):
                         can_access_admin = data['can_access_admin'],
                     )
 
-                    add_capabilite = self.add_capability(role, data, session)
+                    add_capabilite = self.add_capabilities(role, data, session)
                     if (add_capabilite != True):
                         return add_capabilite
 
@@ -94,6 +107,9 @@ class RoleRepository(RepositoryBase):
 
 
     def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -112,7 +128,7 @@ class RoleRepository(RepositoryBase):
                         self.edit_capabilities(role, data, session)
 
                         # update role's capabilities
-                        add_capabilite = self.add_capability(role, data, session)
+                        add_capabilite = self.add_capabilities(role, data, session)
                         if (add_capabilite != True):
                             return add_capabilite
 
@@ -135,6 +151,8 @@ class RoleRepository(RepositoryBase):
 
 
     def delete(self, id):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
         def fn(session):
             role = session.query(Role).filter_by(id=id).first()
 
@@ -152,7 +170,11 @@ class RoleRepository(RepositoryBase):
         return self.response(fn, True)
 
 
-    def add_capability(self, role, data, session):
+    def add_capabilities(self, role, data, session):
+        """Adds capabilities, if it is possible, into the Role.
+            First checks if capability with an id exists at data base, if so, includes it.
+            If capability has no id, creates a new and then, include it."""
+
         if ('capabilities' in data and isinstance(data['capabilities'], list)):
             for capability in data['capabilities']:
                 if ('id' in capability and Checker().can_be_integer(capability['id'])):
@@ -182,6 +204,9 @@ class RoleRepository(RepositoryBase):
 
 
     def edit_capabilities(self, role, data, session):
+        """Edit the capabilities of the Role. It Checks between sended capabilities 
+            and saved capabilities what must be deleted or added."""
+
         old_capabilities = []
         new_old_capabilities = []
 

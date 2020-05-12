@@ -4,8 +4,13 @@ from Validators import SocialValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
 
 class SocialRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of Social."""
 
     def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             fb = FilterBuilder(Social, args)
             fb.set_like_filter('name')
@@ -30,6 +35,9 @@ class SocialRepository(RepositoryBase):
         
 
     def get_by_id(self, id):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             schema = SocialSchema(many=False)
             result = session.query(Social).filter_by(id=id).first()
@@ -46,6 +54,8 @@ class SocialRepository(RepositoryBase):
 
     
     def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -83,6 +93,9 @@ class SocialRepository(RepositoryBase):
 
 
     def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -122,6 +135,8 @@ class SocialRepository(RepositoryBase):
 
 
     def delete(self, id):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
         def fn(session):
             social = session.query(Social).filter_by(id=id).first()
 
@@ -140,6 +155,9 @@ class SocialRepository(RepositoryBase):
 
     
     def add_foreign_keys(self, social, data, session):
+        """Controls if the configuration_id or user_id gets an existing foreign key data.
+            Also checks if origin suitable to the foreign key requested."""
+        
         try:
             if (social.origin == 'configuration'):
                 if (not 'configuration_id' in data):

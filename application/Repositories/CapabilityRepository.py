@@ -4,8 +4,15 @@ from Validators import CapabilityValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
 class CapabilityRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of Capability."""
 
+    # TODO: checks if is possible simplify its call, by put it at parent class
+    
     def get_exclude_fields(self, args):
+        """Returns the fields witch must be ignored by the sql query.
+            The arguments received by parameters determines the correct behave."""
+
         exclude_fields = ()
 
         if (args['get_roles'] != '1'):
@@ -15,6 +22,9 @@ class CapabilityRepository(RepositoryBase):
 
     
     def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             fb = FilterBuilder(Capability, args)
             fb.set_equals_filter('type')
@@ -42,6 +52,9 @@ class CapabilityRepository(RepositoryBase):
         
 
     def get_by_id(self, id, args):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
         def fn(session):
             schema = CapabilitySchema(many=False, exclude=self.get_exclude_fields(args))
             result = session.query(Capability).filter_by(id=id).first()
@@ -58,6 +71,8 @@ class CapabilityRepository(RepositoryBase):
 
     
     def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -91,6 +106,9 @@ class CapabilityRepository(RepositoryBase):
 
 
     def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
         def fn(session):
             data = request.get_json()
 
@@ -126,6 +144,8 @@ class CapabilityRepository(RepositoryBase):
 
 
     def delete(self, id):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
         def fn(session):
             capability = session.query(Capability).filter_by(id=id).first()
 
