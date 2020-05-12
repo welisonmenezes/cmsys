@@ -171,7 +171,7 @@ class UserRepository(RepositoryBase):
                 # TODO: don't allow to delete user with id 1
 
                 # delete or delegate user medias
-                image_was_deleted = self.delete_or_delegate_user_media(user, session)
+                image_was_deleted = self.delete_or_delegate_user_contents(user,session, Media)
                 if image_was_deleted != True:
                     return image_was_deleted
 
@@ -211,21 +211,22 @@ class UserRepository(RepositoryBase):
         except Exception as e:
             return ErrorHandler().get_error(400, e)
 
-    
-    def delete_or_delegate_user_media(self, user, session):
-        """Deletes user's medias or delegates they to user superadmin (id=1)"""
 
-        media = session.query(Media.id).filter_by(user_id=user.id).first()
-        if media:
+    def delete_or_delegate_user_contents(self, user, session, content_context):
+        """Deletes user's contents from content_context passed by parameter
+            or delegates they to user superadmin (id=1)"""
+
+        content = session.query(content_context).filter_by(user_id=user.id).first()
+        if content:
             if 'admin_new_owner' in request.args and request.args['admin_new_owner'] == '1':
-                medias = session.query(Media).filter_by(user_id=user.id).all()
-                for m in medias:
+                contents = session.query(content_context).filter_by(user_id=user.id).all()
+                for c in contents:
                     admin = session.query(User).filter_by(id=1).first()
                     if admin:
-                        m.user_id = admin.id
+                        c.user_id = admin.id
                     else:
                         return ErrorHandler().get_error(406, 'Could not find the super admin user.') 
             else:
-                return ErrorHandler().get_error(406, 'You cannot delete this User because it has related Media.')
+                return ErrorHandler().get_error(406, 'You cannot delete this User because it has related xxxx.')
         
         return True

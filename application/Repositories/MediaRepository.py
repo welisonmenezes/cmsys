@@ -142,6 +142,8 @@ class MediaRepository(RepositoryBase):
                     except Exception as e:
                         return ErrorHandler().get_error(400, e)
 
+                    # TODO: validate if user_id refers a existing user on database
+
                     media = Media(
                         name = data['name'],
                         description = data['description'],
