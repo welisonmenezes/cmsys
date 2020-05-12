@@ -170,7 +170,7 @@ class UserRepository(RepositoryBase):
 
             if user:
                 
-                # TODO: check if user has post (dont allow to delete)
+                # TODO: check if user has post (dont allow to delete or delegato to superadmin)
                 # TODO: check if user has comments (delete comments as well)
 
                 # delete or delegate user medias
@@ -195,11 +195,11 @@ class UserRepository(RepositoryBase):
 
 
     def add_foreign_keys(self, user, data, session):
-        """Controls if the role_id, page_id and avatar_id an existing foreign key data.
+        """Controls if the role_id, page_id and avatar_id are an existing foreign key data.
             Also checks if the avatar_id refers to an image file type."""
 
         try:
-            if (user.id != 1): # Cannot change User Admin role.
+            if (user.id != 1): # Cannot change Super Admin user role.
                 user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
 
             user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)

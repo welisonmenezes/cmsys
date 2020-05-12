@@ -142,17 +142,19 @@ class MediaRepository(RepositoryBase):
                     except Exception as e:
                         return ErrorHandler().get_error(400, e)
 
-                    # TODO: validate if user_id refers a existing user on database
-
                     media = Media(
                         name = data['name'],
                         description = data['description'],
                         type = file_details['type'],
                         extension = data['extension'],
                         file = file_details['data'],
-                        origin = data['origin'],
-                        user_id = data['user_id']
+                        origin = data['origin']
                     )
+
+                    fk_was_added = self.add_foreign_keys(media, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
+
                     session.add(media)
                     session.commit()
                     last_id = media.id
@@ -188,7 +190,10 @@ class MediaRepository(RepositoryBase):
                         media.name = data['name']
                         media.description = data['description']
                         media.origin = data['origin']
-                        media.user_id = data['user_id']
+
+                        fk_was_added = self.add_foreign_keys(media, data, session)
+                        if (fk_was_added != True):
+                            return fk_was_added
 
                         if (data['file'] and data['file'] != ''):
                             try:
@@ -258,3 +263,13 @@ class MediaRepository(RepositoryBase):
                 return ErrorHandler().get_error(404, 'No Media found.')
 
         return self.response(fn, True)
+
+
+    def add_foreign_keys(self, media, data, session):
+        """Controls if the user_id is an existing foreign key data."""
+
+        try:
+            media.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
+            return True
+        except Exception as e:
+            return ErrorHandler().get_error(400, e)
