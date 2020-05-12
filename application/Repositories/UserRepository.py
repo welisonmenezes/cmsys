@@ -199,7 +199,9 @@ class UserRepository(RepositoryBase):
             Also checks if the avatar_id refers to an image file type."""
 
         try:
-            user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
+            if (user.id != 1): # Cannot change User Admin role.
+                user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
+
             user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
 
             image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
