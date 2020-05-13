@@ -11,7 +11,7 @@ class BlacklistRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             fb = FilterBuilder(Blacklist, args)
             fb.set_equals_filter('type')
             fb.set_equals_filter('target')
@@ -26,14 +26,14 @@ class BlacklistRepository(RepositoryBase):
                 'pagination': result.pagination
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
         
 
     def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             result = session.query(Blacklist).filter_by(id=id).first()
             schema = BlacklistSchema(many=False)
             data = schema.dump(result)
@@ -42,80 +42,67 @@ class BlacklistRepository(RepositoryBase):
                 'data': schema.dump(result)
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = BlacklistValidator(data)
+            def proccess(session, data):
 
-                if (validator.is_valid()):
-                    blacklist = Blacklist(
-                        type = data['type'],
-                        value = data['value'],
-                        target = data['target']
-                    )
-                    session.add(blacklist)
-                    session.commit()
-                    last_id = blacklist.id
+                blacklist = Blacklist(
+                    type = data['type'],
+                    value = data['value'],
+                    target = data['target']
+                )
+                session.add(blacklist)
+                session.commit()
+                last_id = blacklist.id
 
-                    return {
-                        'message': 'Blacklist saved successfully.',
-                        'id': last_id
-                    }, 200
-                else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+                return {
+                    'message': 'Blacklist saved successfully.',
+                    'id': last_id
+                }, 200
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(proccess, request.get_json(), BlacklistValidator, session)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = BlacklistValidator(data)
+            def proccess(session, data):
+                blacklist = session.query(Blacklist).filter_by(id=id).first()
 
-                if (validator.is_valid(id=id)):
-                    blacklist = session.query(Blacklist).filter_by(id=id).first()
+                if (blacklist):
+                    blacklist.type = data['type']
+                    blacklist.value = data['value']
+                    blacklist.target = data['target']
+                    session.commit()
 
-                    if (blacklist):
-                        blacklist.type = data['type']
-                        blacklist.value = data['value']
-                        blacklist.target = data['target']
-                        session.commit()
-
-                        return {
-                            'message': 'Blacklist updated successfully.',
-                            'id': blacklist.id
-                        }, 200
-                    else:
-                        return ErrorHandler().get_error(404, 'No Blacklist found.')
+                    return {
+                        'message': 'Blacklist updated successfully.',
+                        'id': blacklist.id
+                    }, 200
 
                 else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+                    return ErrorHandler().get_error(404, 'No Blacklist found.')
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(proccess, request.get_json(), BlacklistValidator, session, id=id)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        def fn(session):
+        def run(session):
             blacklist = session.query(Blacklist).filter_by(id=id).first()
 
             if (blacklist):
@@ -129,4 +116,4 @@ class BlacklistRepository(RepositoryBase):
             else:
                 return ErrorHandler().get_error(404, 'No Blacklist found.')
 
-        return self.response(fn, True)
+        return self.response(run, True)

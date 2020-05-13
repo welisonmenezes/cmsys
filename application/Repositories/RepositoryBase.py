@@ -15,14 +15,14 @@ class RepositoryBase():
         self.fields = []
 
     
-    def response(self, fn, need_rollback):
+    def response(self, run, need_rollback):
         """Applies the errors handling before returns a response.
             Must be implemented by methods of RepositoryBase's children classes."""
 
         session = Session()
 
         try:
-            return fn(session)
+            return run(session)
 
         except SQLAlchemyError as e:
             if (need_rollback):
@@ -41,6 +41,22 @@ class RepositoryBase():
             
         finally:
             session.close()
+
+    
+    def validate_before(self, proccess, data, validator_context, session, id=None):
+        """Validates the given data using the given validator before runs the given proccess."""
+
+        if (data):
+            validator = validator_context(data)
+
+            if (validator.is_valid(id=id)):
+                return proccess(session, data)
+
+            else:
+                return ErrorHandler().get_error(400, validator.get_errors())
+
+        else:
+            return ErrorHandler().get_error(400, 'No data send.')
 
     
     def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):
