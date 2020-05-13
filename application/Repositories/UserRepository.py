@@ -14,7 +14,7 @@ class UserRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             fb = FilterBuilder(User, args)
             fb.set_like_filter('email')
             fb.set_equals_filter('status')
@@ -46,14 +46,14 @@ class UserRepository(RepositoryBase):
                 'pagination': result.pagination
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
         
 
     def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             result = session.query(User).filter_by(id=id).first()
             excluded_fields = self.get_exclude_fields(args, ['role', 'socials'])
             excluded_fields += ('password',)
@@ -63,13 +63,13 @@ class UserRepository(RepositoryBase):
                 'data': schema.dump(result)
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
 
-        def fn(session):
+        def run(session):
 
             def process(session, data):
                 user = User(
@@ -97,14 +97,14 @@ class UserRepository(RepositoryBase):
 
             return self.validate_before(process, request.get_json(), UserValidator, session)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
 
-        def fn(session):
+        def run(session):
 
             def process(session, data):
                 user = session.query(User).filter_by(id=id).first()
@@ -135,7 +135,7 @@ class UserRepository(RepositoryBase):
 
             return self.validate_before(process, request.get_json(), UserValidator, session, id=id)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def delete(self, id, request):
@@ -144,7 +144,7 @@ class UserRepository(RepositoryBase):
         if id == 1:
             return ErrorHandler().get_error(400, 'The Super Admin user cannot be deleted.')
 
-        def fn(session):
+        def run(session):
             
             user = session.query(User).filter_by(id=id).first()
 
@@ -171,7 +171,7 @@ class UserRepository(RepositoryBase):
             else:
                 return ErrorHandler().get_error(404, 'No User found.')
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def add_foreign_keys(self, user, data, session):

@@ -12,7 +12,7 @@ class VariableRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             fb = FilterBuilder(Variable, args)
 
             filter = fb.get_filter()
@@ -28,14 +28,14 @@ class VariableRepository(RepositoryBase):
                 'pagination': result.pagination
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
         
 
     def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             schema = VariableSchema(many=False)
             result = session.query(Variable).filter_by(id=id).first()
 
@@ -43,13 +43,13 @@ class VariableRepository(RepositoryBase):
                 'data': schema.dump(result)
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
 
-        def fn(session):
+        def run(session):
 
             def process(session, data):
                 variable = Variable(
@@ -67,14 +67,14 @@ class VariableRepository(RepositoryBase):
 
             return self.validate_before(process, request.get_json(), VariableValidator, session)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
 
-        def fn(session):
+        def run(session):
 
             def process(session, data):
                 variable = session.query(Variable).filter_by(id=id).first()
@@ -93,13 +93,13 @@ class VariableRepository(RepositoryBase):
 
             return self.validate_before(process, request.get_json(), VariableValidator, session, id=id)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        def fn(session):
+        def run(session):
             variable = session.query(Variable).filter_by(id=id).first()
 
             if (variable):
@@ -113,4 +113,4 @@ class VariableRepository(RepositoryBase):
             else:
                 return ErrorHandler().get_error(404, 'No Variable found.')
 
-        return self.response(fn, True)
+        return self.response(run, True)
