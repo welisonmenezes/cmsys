@@ -50,7 +50,7 @@ class BlacklistRepository(RepositoryBase):
 
         def run(session):
 
-            def proccess(session, data):
+            def process(session, data):
 
                 blacklist = Blacklist(
                     type = data['type'],
@@ -66,7 +66,7 @@ class BlacklistRepository(RepositoryBase):
                     'id': last_id
                 }, 200
 
-            return self.validate_before(proccess, request.get_json(), BlacklistValidator, session)
+            return self.validate_before(process, request.get_json(), BlacklistValidator, session)
 
         return self.response(run, True)
 
@@ -77,7 +77,7 @@ class BlacklistRepository(RepositoryBase):
 
         def run(session):
 
-            def proccess(session, data):
+            def process(session, data):
                 blacklist = session.query(Blacklist).filter_by(id=id).first()
 
                 if (blacklist):
@@ -94,7 +94,7 @@ class BlacklistRepository(RepositoryBase):
                 else:
                     return ErrorHandler().get_error(404, 'No Blacklist found.')
 
-            return self.validate_before(proccess, request.get_json(), BlacklistValidator, session, id=id)
+            return self.validate_before(process, request.get_json(), BlacklistValidator, session, id=id)
 
         return self.response(run, True)
 

@@ -43,14 +43,14 @@ class RepositoryBase():
             session.close()
 
     
-    def validate_before(self, proccess, data, validator_context, session, id=None):
-        """Validates the given data using the given validator before runs the given proccess."""
+    def validate_before(self, process, data, validator_context, session, id=None):
+        """Validates the given data using the given validator before runs the given process."""
 
         if (data):
             validator = validator_context(data)
 
             if (validator.is_valid(id=id)):
-                return proccess(session, data)
+                return process(session, data)
 
             else:
                 return ErrorHandler().get_error(400, validator.get_errors())
