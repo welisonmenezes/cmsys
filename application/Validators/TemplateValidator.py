@@ -27,6 +27,8 @@ class TemplateValidator(ValidatorBase):
             }
         }
 
+        # TODO: validate the value to only accept a value json structure
+
         self.errors = []
         self.has_error = False
         self.complete_key_list = True
