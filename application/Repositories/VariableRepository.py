@@ -50,29 +50,22 @@ class VariableRepository(RepositoryBase):
         """Creates a new row based on the data received by the request object."""
 
         def fn(session):
-            data = request.get_json()
 
-            if (data):
-                validator = VariableValidator(data)
+            def process(session, data):
+                variable = Variable(
+                    key = data['key'],
+                    value = data['value']
+                )
+                session.add(variable)
+                session.commit()
+                last_id = variable.id
 
-                if (validator.is_valid()):
-                    variable = Variable(
-                        key = data['key'],
-                        value = data['value']
-                    )
-                    session.add(variable)
-                    session.commit()
-                    last_id = variable.id
+                return {
+                    'message': 'Variable saved successfully.',
+                    'id': last_id
+                }, 200
 
-                    return {
-                        'message': 'Variable saved successfully.',
-                        'id': last_id
-                    }, 200
-                else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
-
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(process, request.get_json(), VariableValidator, session)
 
         return self.response(fn, True)
 
@@ -82,31 +75,23 @@ class VariableRepository(RepositoryBase):
             The data comes from the request object."""
 
         def fn(session):
-            data = request.get_json()
 
-            if (data):
-                validator = VariableValidator(data)
+            def process(session, data):
+                variable = session.query(Variable).filter_by(id=id).first()
 
-                if (validator.is_valid(id=id)):
-                    variable = session.query(Variable).filter_by(id=id).first()
+                if (variable):
+                    variable.key = data['key']
+                    variable.value = data['value']
+                    session.commit()
 
-                    if (variable):
-                        variable.key = data['key']
-                        variable.value = data['value']
-                        session.commit()
-
-                        return {
-                            'message': 'Variable updated successfully.',
-                            'id': variable.id
-                        }, 200
-                    else:
-                        return ErrorHandler().get_error(404, 'No Variable found.')
-
+                    return {
+                        'message': 'Variable updated successfully.',
+                        'id': variable.id
+                    }, 200
                 else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+                    return ErrorHandler().get_error(404, 'No Variable found.')
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(process, request.get_json(), VariableValidator, session, id=id)
 
         return self.response(fn, True)
 
