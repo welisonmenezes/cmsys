@@ -70,7 +70,7 @@ class MediaRepository(RepositoryBase):
         return self.response(fn, False)
 
 
-    def get_file(self, id):
+    def get_file(self, id, args):
         """Returns the file to donwload (run when download_file == 1 configured at controller)."""
 
         def fn(session):
@@ -233,7 +233,7 @@ class MediaRepository(RepositoryBase):
             raise Exception('Cannot get file details. Please, check if it is a valid file.')
 
 
-    def delete(self, id):
+    def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def fn(session):

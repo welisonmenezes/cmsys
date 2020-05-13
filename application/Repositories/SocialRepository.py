@@ -29,7 +29,7 @@ class SocialRepository(RepositoryBase):
         return self.response(fn, False)
         
 
-    def get_by_id(self, id):
+    def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
@@ -125,7 +125,7 @@ class SocialRepository(RepositoryBase):
         return self.response(fn, True)
 
 
-    def delete(self, id):
+    def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def fn(session):

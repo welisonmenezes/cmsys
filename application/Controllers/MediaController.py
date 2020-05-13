@@ -24,7 +24,7 @@ class MediaController(ControllerBase):
         self.args = self.parser.parse_args()
         
         if (id and self.args['download_file'] == '1'):
-            return self.repo.get_file(id)
+            return self.repo.get_file(id, self.args)
         elif id:
             return self.repo.get_by_id(id, self.args)
         else:

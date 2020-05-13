@@ -57,6 +57,6 @@ class ControllerBase(Resource):
         """Runs the delete http request method response."""
 
         try:
-            return self.repo.delete(id)
+            return self.repo.delete(id, self.request)
         except Exception as e:
             return ErrorHandler().get_error(405, str(e))

@@ -1,5 +1,4 @@
 from sqlalchemy import or_
-from flask import  request
 from app import bcrypt
 from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social
@@ -154,7 +153,7 @@ class UserRepository(RepositoryBase):
         return self.response(fn, True)
 
 
-    def delete(self, id):
+    def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         if id == 1:
@@ -170,7 +169,7 @@ class UserRepository(RepositoryBase):
                 # TODO: check if user has comments (delete comments as well)
 
                 # delete or delegate user medias
-                image_was_deleted = self.delete_or_delegate_user_contents(user,session, Media)
+                image_was_deleted = self.delete_or_delegate_user_contents(user,session, Media, request)
                 if image_was_deleted != True:
                     return image_was_deleted
 
@@ -213,7 +212,7 @@ class UserRepository(RepositoryBase):
             return ErrorHandler().get_error(400, e)
 
 
-    def delete_or_delegate_user_contents(self, user, session, content_context):
+    def delete_or_delegate_user_contents(self, user, session, content_context, request):
         """Deletes user's contents from content_context passed by parameter
             or delegates they to user superadmin (id=1)"""
 

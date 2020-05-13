@@ -134,7 +134,7 @@ class CapabilityRepository(RepositoryBase):
         return self.response(fn, True)
 
 
-    def delete(self, id):
+    def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def fn(session):

@@ -17,4 +17,4 @@ class VariableController(ControllerBase):
         self.parser.add_argument('s')
         self.args = self.parser.parse_args()
         
-        return self.repo.get_by_id(id) if id else self.repo.get(self.args)
+        return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
