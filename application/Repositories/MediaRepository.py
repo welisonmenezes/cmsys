@@ -15,7 +15,7 @@ class MediaRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             fb = FilterBuilder(Media, args)
             fb.set_equals_filter('type')
             fb.set_equals_filter('origin')
@@ -45,14 +45,14 @@ class MediaRepository(RepositoryBase):
                 'pagination': result.pagination
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
         
 
     def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             result = session.query(Media).filter_by(id=id).first()
             schema = MediaSchema(many=False)
             data = schema.dump(result)
@@ -67,27 +67,27 @@ class MediaRepository(RepositoryBase):
             else:
                 return ErrorHandler().get_error(404, 'No Media found.')
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
 
     def get_file(self, id, args):
         """Returns the file to donwload (run when download_file == 1 configured at controller)."""
 
-        def fn(session):
+        def run(session):
             result = session.query(Media).filter_by(id=id).first()
             if (result):
                 return self.file_response(result, False)
             else:
                 return ErrorHandler().get_error(404, 'Culd not load this file.')
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
 
     def get_image_preview(self, id):
         """Returns the image preview
             (This method is called by the Image Controller which has its own endpoint for this purpose)."""
 
-        def fn(session):
+        def run(session):
             result = session.query(Media).filter_by(id=id).first()
             image_types = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/svg']
             if (result and result.type in image_types):
@@ -95,7 +95,7 @@ class MediaRepository(RepositoryBase):
             else:
                 return self.image_not_found_response()
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
 
     def file_response(self, result, is_preview):
@@ -124,98 +124,81 @@ class MediaRepository(RepositoryBase):
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = MediaValidator(data)
+            def process(session, data):
+                try:
+                    file_details = self.get_file_details_from_request(data)
+                except Exception as e:
+                    return ErrorHandler().get_error(400, e)
 
-                if (validator.is_valid()):
+                media = Media(
+                    name = data['name'],
+                    description = data['description'],
+                    type = file_details['type'],
+                    extension = data['extension'],
+                    file = file_details['data'],
+                    origin = data['origin']
+                )
 
-                    try:
-                        file_details = self.get_file_details_from_request(data)
-                    except Exception as e:
-                        return ErrorHandler().get_error(400, e)
+                fk_was_added = self.add_foreign_keys(media, data, session)
+                if (fk_was_added != True):
+                    return fk_was_added
 
-                    media = Media(
-                        name = data['name'],
-                        description = data['description'],
-                        type = file_details['type'],
-                        extension = data['extension'],
-                        file = file_details['data'],
-                        origin = data['origin']
-                    )
+                session.add(media)
+                session.commit()
+                last_id = media.id
 
-                    fk_was_added = self.add_foreign_keys(media, data, session)
-                    if (fk_was_added != True):
-                        return fk_was_added
+                return {
+                    'message': 'Media saved successfully.',
+                    'id': last_id
+                }, 200
 
-                    session.add(media)
-                    session.commit()
-                    last_id = media.id
+            return self.validate_before(process, request.get_json(), MediaValidator, session)
 
-                    return {
-                        'message': 'Media saved successfully.',
-                        'id': last_id
-                    }, 200
-                else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
-
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
-
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = MediaValidator(data)
+            def process(session, data):
+                media = session.query(Media).filter_by(id=id).first()
 
-                if (validator.is_valid(id=id)):
+                if (Media):
+                    media.name = data['name']
+                    media.description = data['description']
+                    media.origin = data['origin']
 
-                    media = session.query(Media).filter_by(id=id).first()
+                    fk_was_added = self.add_foreign_keys(media, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
 
-                    if (Media):
-                        media.name = data['name']
-                        media.description = data['description']
-                        media.origin = data['origin']
+                    if (data['file'] and data['file'] != ''):
+                        try:
+                            file_details = self.get_file_details_from_request(data)
+                        except Exception as e:
+                            return ErrorHandler().get_error(400, e)
 
-                        fk_was_added = self.add_foreign_keys(media, data, session)
-                        if (fk_was_added != True):
-                            return fk_was_added
+                        media.type = file_details['type']
+                        media.extension = data['extension']
+                        media.file = file_details['data']
 
-                        if (data['file'] and data['file'] != ''):
-                            try:
-                                file_details = self.get_file_details_from_request(data)
-                            except Exception as e:
-                                return ErrorHandler().get_error(400, e)
+                    session.commit()
 
-                            media.type = file_details['type']
-                            media.extension = data['extension']
-                            media.file = file_details['data']
-
-                        session.commit()
-
-                        return {
-                            'message': 'Media updated successfully.',
-                            'id': media.id
-                        }, 200
-                    else:
-                        return ErrorHandler().get_error(404, 'No Media found.')
-
+                    return {
+                        'message': 'Media updated successfully.',
+                        'id': media.id
+                    }, 200
                 else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+                    return ErrorHandler().get_error(404, 'No Media found.')
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(process, request.get_json(), MediaValidator, session, id=id)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def get_file_details_from_request(self, data):
@@ -236,7 +219,7 @@ class MediaRepository(RepositoryBase):
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        def fn(session):
+        def run(session):
             media = session.query(Media).filter_by(id=id).first()
 
             if (media):
@@ -257,7 +240,7 @@ class MediaRepository(RepositoryBase):
             else:
                 return ErrorHandler().get_error(404, 'No Media found.')
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def add_foreign_keys(self, media, data, session):
