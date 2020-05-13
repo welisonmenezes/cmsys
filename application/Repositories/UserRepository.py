@@ -70,39 +70,32 @@ class UserRepository(RepositoryBase):
         """Creates a new row based on the data received by the request object."""
 
         def fn(session):
-            data = request.get_json()
 
-            if (data):
-                validator = UserValidator(data)
+            def process(session, data):
+                user = User(
+                    login = data['login'],
+                    password = bcrypt.generate_password_hash(data['password']),
+                    nickname = data['nickname'],
+                    first_name = data['first_name'],
+                    last_name = data['last_name'],
+                    email = data['email'],
+                    status = data['status']
+                )
+                
+                fk_was_added = self.add_foreign_keys(user, data, session)
+                if (fk_was_added != True):
+                    return fk_was_added
 
-                if (validator.is_valid()):
-                    user = User(
-                        login = data['login'],
-                        password = bcrypt.generate_password_hash(data['password']),
-                        nickname = data['nickname'],
-                        first_name = data['first_name'],
-                        last_name = data['last_name'],
-                        email = data['email'],
-                        status = data['status']
-                    )
-                    
-                    fk_was_added = self.add_foreign_keys(user, data, session)
-                    if (fk_was_added != True):
-                        return fk_was_added
+                session.add(user)
+                session.commit()
+                last_id = user.id
 
-                    session.add(user)
-                    session.commit()
-                    last_id = user.id
+                return {
+                    'message': 'User saved successfully.',
+                    'id': last_id
+                }, 200
 
-                    return {
-                        'message': 'User saved successfully.',
-                        'id': last_id
-                    }, 200
-                else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
-
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(process, request.get_json(), UserValidator, session)
 
         return self.response(fn, True)
 
@@ -112,43 +105,35 @@ class UserRepository(RepositoryBase):
             The data comes from the request object."""
 
         def fn(session):
-            data = request.get_json()
 
-            if (data):
-                validator = UserValidator(data)
+            def process(session, data):
+                user = session.query(User).filter_by(id=id).first()
 
-                if (validator.is_valid(id=id)):
-                    user = session.query(User).filter_by(id=id).first()
+                if (user):
+                    user.login = data['login']
+                    user.nickname = data['nickname']
+                    user.first_name = data['first_name']
+                    user.last_name = data['last_name']
+                    user.email = data['email']
+                    user.status = data['status']
 
-                    if (user):
-                        user.login = data['login']
-                        user.nickname = data['nickname']
-                        user.first_name = data['first_name']
-                        user.last_name = data['last_name']
-                        user.email = data['email']
-                        user.status = data['status']
+                    if data['password'] != '' and not bcrypt.check_password_hash(user.password, data['password']):
+                        user.password = bcrypt.generate_password_hash(data['password'])
 
-                        if data['password'] != '' and not bcrypt.check_password_hash(user.password, data['password']):
-                            user.password = bcrypt.generate_password_hash(data['password'])
+                    fk_was_added = self.add_foreign_keys(user, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
 
-                        fk_was_added = self.add_foreign_keys(user, data, session)
-                        if (fk_was_added != True):
-                            return fk_was_added
+                    session.commit()
 
-                        session.commit()
-
-                        return {
-                            'message': 'User updated successfully.',
-                            'id': user.id
-                        }, 200
-                    else:
-                        return ErrorHandler().get_error(404, 'No User found.')
-
+                    return {
+                        'message': 'User updated successfully.',
+                        'id': user.id
+                    }, 200
                 else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+                    return ErrorHandler().get_error(404, 'No User found.')
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(process, request.get_json(), UserValidator, session, id=id)
 
         return self.response(fn, True)
 
