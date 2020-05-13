@@ -16,18 +16,13 @@ class BlacklistRepository(RepositoryBase):
             fb.set_equals_filter('type')
             fb.set_equals_filter('target')
             fb.set_like_filter('value')
-            filter = fb.get_filter()
-            order_by = fb.get_order_by()
-            page = fb.get_page()
-            limit = fb.get_limit()
 
-            query = session.query(Blacklist).filter(*filter).order_by(*order_by)
-            result = Paginate(query, page, limit)
+            query = session.query(Blacklist).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = BlacklistSchema(many=True)
-            data = schema.dump(result.items)
 
             return {
-                'data': data,
+                'data': schema.dump(result.items),
                 'pagination': result.pagination
             }, 200
 
@@ -39,16 +34,13 @@ class BlacklistRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = BlacklistSchema(many=False)
             result = session.query(Blacklist).filter_by(id=id).first()
+            schema = BlacklistSchema(many=False)
             data = schema.dump(result)
 
-            if (data):
-                return {
-                    'data': data
-                }, 200
-            else:
-                return ErrorHandler().get_error(404, 'No Blacklist found.')
+            return {
+                'data': schema.dump(result)
+            }, 200
 
         return self.response(fn, False)
 

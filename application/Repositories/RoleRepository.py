@@ -17,21 +17,16 @@ class RoleRepository(RepositoryBase):
             fb.set_like_filter('name')
             fb.set_like_filter('description')
             fb.set_equals_filter('capability_description', joined=Capability, joined_key='description')
-            filter = fb.get_filter()
-            order_by = fb.get_order_by()
-            page = fb.get_page()
-            limit = fb.get_limit()
 
             if (args['capability_description'] and args['capability_description'] != ''):
                 self.joins.append(Role.capabilities)
             
-            query = session.query(Role).join(*self.joins).filter(*filter).order_by(*order_by)
-            result = Paginate(query, page, limit)
+            query = session.query(Role).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = RoleSchema(many=True, exclude=self.get_exclude_fields(args, ['capabilities']))
-            data = schema.dump(result.items)
 
             return {
-                'data': data,
+                'data': schema.dump(result.items),
                 'pagination': result.pagination
             }, 200
 
@@ -43,16 +38,12 @@ class RoleRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args, ['capabilities']))
             result = session.query(Role).filter_by(id=id).first()
-            data = schema.dump(result)
+            schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args, ['capabilities']))
 
-            if (data):
-                return {
-                    'data': data
-                }, 200
-            else:
-                return ErrorHandler().get_error(404, 'No Role found.')
+            return {
+                'data': schema.dump(result)
+            }, 200
 
         return self.response(fn, False)
 

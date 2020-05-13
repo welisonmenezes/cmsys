@@ -19,18 +19,13 @@ class CapabilityRepository(RepositoryBase):
             fb.set_equals_filter('can_read')
             fb.set_equals_filter('can_delete')
             fb.set_like_filter('description')
-            filter = fb.get_filter()
-            order_by = fb.get_order_by()
-            page = fb.get_page()
-            limit = fb.get_limit()
             
-            query = session.query(Capability).join(*self.joins).filter(*filter).order_by(*order_by)
-            result = Paginate(query, page, limit)
+            query = session.query(Capability).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = CapabilitySchema(many=True, exclude=self.get_exclude_fields(args, ['roles']))
-            data = schema.dump(result.items)
 
             return {
-                'data': data,
+                'data': schema.dump(result.items),
                 'pagination': result.pagination
             }, 200
 
@@ -44,14 +39,10 @@ class CapabilityRepository(RepositoryBase):
         def fn(session):
             schema = CapabilitySchema(many=False, exclude=self.get_exclude_fields(args, ['roles']))
             result = session.query(Capability).filter_by(id=id).first()
-            data = schema.dump(result)
 
-            if (data):
-                return {
-                    'data': data
-                }, 200
-            else:
-                return ErrorHandler().get_error(404, 'No Capability found.')
+            return {
+                'data': schema.dump(result)
+            }, 200
 
         return self.response(fn, False)
 

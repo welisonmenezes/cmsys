@@ -32,20 +32,15 @@ class UserRepository(RepositoryBase):
                 return ErrorHandler().get_error(400, str(e))
 
             filter = fb.get_filter()
-            order_by = fb.get_order_by()
-            page = fb.get_page()
-            limit = fb.get_limit()
-
             if (args['name']):
                 filter += (or_(User.first_name.like('%'+args['name']+'%'), User.last_name.like('%'+args['name']+'%'), User.nickname.like('%'+args['name']+'%')),)
 
-            query = session.query(User).filter(*filter).order_by(*order_by)
-            result = Paginate(query, page, limit)
+            query = session.query(User).filter(*filter).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = UserSchema(many=True, exclude=self.get_exclude_fields(args, ['role', 'socials']))
-            data = schema.dump(result.items)
 
             return {
-                'data': data,
+                'data': schema.dump(result.items),
                 'pagination': result.pagination
             }, 200
 
@@ -57,16 +52,12 @@ class UserRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = UserSchema(many=False, exclude=self.get_exclude_fields(args, ['role', 'socials']))
             result = session.query(User).filter_by(id=id).first()
-            data = schema.dump(result)
+            schema = UserSchema(many=False, exclude=self.get_exclude_fields(args, ['role', 'socials']))
 
-            if (data):
-                return {
-                    'data': data
-                }, 200
-            else:
-                return ErrorHandler().get_error(404, 'No User found.')
+            return {
+                'data': schema.dump(result)
+            }, 200
 
         return self.response(fn, False)
 

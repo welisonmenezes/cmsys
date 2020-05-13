@@ -16,18 +16,13 @@ class SocialRepository(RepositoryBase):
             fb.set_like_filter('name')
             fb.set_equals_filter('origin')
             fb.set_equals_filter('user_id')
-            filter = fb.get_filter()
-            order_by = fb.get_order_by()
-            page = fb.get_page()
-            limit = fb.get_limit()
 
-            query = session.query(Social).filter(*filter).order_by(*order_by)
-            result = Paginate(query, page, limit)
+            query = session.query(Social).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = SocialSchema(many=True)
-            data = schema.dump(result.items)
 
             return {
-                'data': data,
+                'data': schema.dump(result.items),
                 'pagination': result.pagination
             }, 200
 
@@ -39,16 +34,12 @@ class SocialRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = SocialSchema(many=False)
             result = session.query(Social).filter_by(id=id).first()
-            data = schema.dump(result)
+            schema = SocialSchema(many=False)
 
-            if (data):
-                return {
-                    'data': data
-                }, 200
-            else:
-                return ErrorHandler().get_error(404, 'No Social found.')
+            return {
+                'data': schema.dump(result)
+            }, 200
 
         return self.response(fn, False)
 

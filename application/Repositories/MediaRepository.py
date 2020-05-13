@@ -33,20 +33,15 @@ class MediaRepository(RepositoryBase):
                 return ErrorHandler().get_error(400, str(e))
 
             filter = fb.get_filter()
-            order_by = fb.get_order_by()
-            page = fb.get_page()
-            limit = fb.get_limit()
-
             if (args['s']):
                 filter += (or_(Media.name.like('%'+args['s']+'%'), Media.description.like('%'+args['s']+'%')),)
 
-            query = session.query(Media).filter(*filter).order_by(*order_by)
-            result = Paginate(query, page, limit)
+            query = session.query(Media).filter(*filter).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = MediaSchema(many=True)
-            data = schema.dump(result.items)
 
             return {
-                'data': data,
+                'data': schema.dump(result.items),
                 'pagination': result.pagination
             }, 200
 
@@ -58,8 +53,8 @@ class MediaRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def fn(session):
-            schema = MediaSchema(many=False)
             result = session.query(Media).filter_by(id=id).first()
+            schema = MediaSchema(many=False)
             data = schema.dump(result)
 
             if (data):

@@ -14,21 +14,17 @@ class VariableRepository(RepositoryBase):
 
         def fn(session):
             fb = FilterBuilder(Variable, args)
-            filter = fb.get_filter()
-            order_by = fb.get_order_by()
-            page = fb.get_page()
-            limit = fb.get_limit()
 
+            filter = fb.get_filter()
             if (args['s']):
                 filter += (or_(Variable.key.like('%'+args['s']+'%'), Variable.value.like('%'+args['s']+'%')),)
 
-            query = session.query(Variable).filter(*filter).order_by(*order_by)
-            result = Paginate(query, page, limit)
+            query = session.query(Variable).filter(*filter).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = VariableSchema(many=True)
-            data = schema.dump(result.items)
 
             return {
-                'data': data,
+                'data': schema.dump(result.items),
                 'pagination': result.pagination
             }, 200
 
@@ -42,14 +38,10 @@ class VariableRepository(RepositoryBase):
         def fn(session):
             schema = VariableSchema(many=False)
             result = session.query(Variable).filter_by(id=id).first()
-            data = schema.dump(result)
 
-            if (data):
-                return {
-                    'data': data
-                }, 200
-            else:
-                return ErrorHandler().get_error(404, 'No Variable found.')
+            return {
+                'data': schema.dump(result)
+            }, 200
 
         return self.response(fn, False)
 
