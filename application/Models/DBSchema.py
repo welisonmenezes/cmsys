@@ -31,6 +31,11 @@ class SocialSchema(ma.Schema):
         fields = ('id', 'name', 'url', 'target', 'description', 'origin', 'configuration_id', 'user_id')
 
 
+class TemplateSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'description', 'value')
+
+
 class UserSchema(ma.Schema):
     role = fields.Nested('RoleSchema', many=False, exclude=('capabilities',))
     socials = fields.Nested('RoleSchema', many=True)
