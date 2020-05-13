@@ -14,7 +14,7 @@ class UserController(ControllerBase):
     def get(self, id=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        self.parser.add_argument('name')
+        self.parser.add_argument('s')
         self.parser.add_argument('email')
         self.parser.add_argument('registered')
         self.parser.add_argument('status')

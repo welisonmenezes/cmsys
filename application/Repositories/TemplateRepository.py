@@ -1,4 +1,3 @@
-from sqlalchemy import or_
 from .RepositoryBase import RepositoryBase
 from Models import Template, TemplateSchema
 from Validators import TemplateValidator
@@ -16,11 +15,12 @@ class TemplateRepository(RepositoryBase):
             fb = FilterBuilder(Template, args)
             fb.set_equals_filter('name')
             
-            filter = fb.get_filter()
-            if (args['s']):
-                filter += (or_(Template.name.like('%'+args['s']+'%'), Template.description.like('%'+args['s']+'%')),)
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
-            query = session.query(Template).filter(*filter).order_by(*fb.get_order_by())
+            query = session.query(Template).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = TemplateSchema(many=True)
 

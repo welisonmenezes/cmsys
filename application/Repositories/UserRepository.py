@@ -1,4 +1,3 @@
-from sqlalchemy import or_
 from app import bcrypt
 from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social
@@ -28,14 +27,11 @@ class UserRepository(RepositoryBase):
                     compare_date_time_two=args['compare_date_time_two'],
                     not_between=args['not_between']
                 )
+                fb.set_and_or_filter('s', 'or', [{'field':'first_name', 'type':'like'}, {'field':'last_name', 'type':'like'}, {'field':'nickname', 'type':'like'}])
             except Exception as e:
                 return ErrorHandler().get_error(400, str(e))
 
-            filter = fb.get_filter()
-            if (args['name']):
-                filter += (or_(User.first_name.like('%'+args['name']+'%'), User.last_name.like('%'+args['name']+'%'), User.nickname.like('%'+args['name']+'%')),)
-
-            query = session.query(User).filter(*filter).order_by(*fb.get_order_by())
+            query = session.query(User).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             excluded_fields = self.get_exclude_fields(args, ['role', 'socials'])
             excluded_fields += ('password',)

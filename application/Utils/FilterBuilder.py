@@ -1,4 +1,4 @@
-from sqlalchemy import desc, asc, not_
+from sqlalchemy import desc, asc, not_, or_, and_
 from Utils import Checker, Helper
 from app import app_config
 
@@ -38,6 +38,36 @@ class FilterBuilder():
 
         if (self.args[key]):
             self.filter += (self.get_context_attr(key, kwargs).like('%' + self.args[key] + '%'), )
+
+    
+    def set_and_or_filter(self, key, modifier, configurations, *args, **kwargs):
+        """Sets filter witch applies the and_ or or_ SqlAchemy method on 
+            the given configuration array of dictionary"""
+
+        try:
+            list_or = ()
+            list_and = ()
+
+            if (self.args[key] and isinstance(configurations, list)):
+
+                for config in configurations:
+                    
+                    if config['type'] == 'like' and modifier == 'or':
+                        list_or += (self.get_context_attr(config['field'], kwargs).like('%' + self.args[key] + '%'),)
+                    elif config['type'] == 'like' and modifier == 'and':
+                        list_and += (self.get_context_attr(config['field'], kwargs).like('%' + self.args[key] + '%'),)
+                    elif config['type'] == 'equal' and modifier == 'or':
+                        list_or += (self.get_context_attr(config['field'], kwargs) == self.args[key],)
+                    elif config['type'] == 'equal' and modifier == 'and':
+                        list_and += (self.get_context_attr(config['field'], kwargs) == self.args[key],)
+
+                self.filter += (or_(*list_or),)
+                self.filter += (and_(*list_and),)
+
+        except Exception as e:
+            raise Exception(str(e)) 
+        
+
 
     
     def set_date_filter(self, key, *args, **kwargs):

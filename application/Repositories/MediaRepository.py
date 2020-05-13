@@ -1,5 +1,4 @@
 from flask import make_response
-from sqlalchemy import or_
 import base64
 from app import app_config
 from .RepositoryBase import RepositoryBase
@@ -29,14 +28,11 @@ class MediaRepository(RepositoryBase):
                     compare_date_time_two=args['compare_date_time_two'],
                     not_between=args['not_between']
                 )
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
                 return ErrorHandler().get_error(400, str(e))
 
-            filter = fb.get_filter()
-            if (args['s']):
-                filter += (or_(Media.name.like('%'+args['s']+'%'), Media.description.like('%'+args['s']+'%')),)
-
-            query = session.query(Media).filter(*filter).order_by(*fb.get_order_by())
+            query = session.query(Media).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = MediaSchema(many=True)
 
@@ -213,7 +209,7 @@ class MediaRepository(RepositoryBase):
             }
             return file_details
         except:
-            raise Exception('Cannot get file details. Please, check if it is a valid file.')
+            raise Exception('Cannot get file details. Please, check if it is a valid base64 file.')
 
 
     def delete(self, id, request):

@@ -1,4 +1,3 @@
-from sqlalchemy import or_
 from .RepositoryBase import RepositoryBase
 from Models import Variable, VariableSchema
 from Validators import VariableValidator
@@ -15,11 +14,12 @@ class VariableRepository(RepositoryBase):
         def run(session):
             fb = FilterBuilder(Variable, args)
 
-            filter = fb.get_filter()
-            if (args['s']):
-                filter += (or_(Variable.key.like('%'+args['s']+'%'), Variable.value.like('%'+args['s']+'%')),)
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'key', 'type':'like'}, {'field':'value', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
-            query = session.query(Variable).filter(*filter).order_by(*fb.get_order_by())
+            query = session.query(Variable).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = VariableSchema(many=True)
 
