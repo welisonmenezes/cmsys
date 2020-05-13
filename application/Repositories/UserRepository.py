@@ -1,9 +1,10 @@
 from sqlalchemy import or_
+from flask import  request
+from app import bcrypt
 from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
-from flask import  request
 
 
 class UserRepository(RepositoryBase):
@@ -37,7 +38,9 @@ class UserRepository(RepositoryBase):
 
             query = session.query(User).filter(*filter).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = UserSchema(many=True, exclude=self.get_exclude_fields(args, ['role', 'socials']))
+            excluded_fields = self.get_exclude_fields(args, ['role', 'socials'])
+            excluded_fields += ('password',)
+            schema = UserSchema(many=True, exclude=excluded_fields)
 
             return {
                 'data': schema.dump(result.items),
@@ -53,7 +56,9 @@ class UserRepository(RepositoryBase):
 
         def fn(session):
             result = session.query(User).filter_by(id=id).first()
-            schema = UserSchema(many=False, exclude=self.get_exclude_fields(args, ['role', 'socials']))
+            excluded_fields = self.get_exclude_fields(args, ['role', 'socials'])
+            excluded_fields += ('password',)
+            schema = UserSchema(many=False, exclude=excluded_fields)
 
             return {
                 'data': schema.dump(result)
@@ -68,15 +73,13 @@ class UserRepository(RepositoryBase):
         def fn(session):
             data = request.get_json()
 
-            # TODO: implement password cryptography
-
             if (data):
                 validator = UserValidator(data)
 
                 if (validator.is_valid()):
                     user = User(
                         login = data['login'],
-                        password = data['password'],
+                        password = bcrypt.generate_password_hash(data['password']),
                         nickname = data['nickname'],
                         first_name = data['first_name'],
                         last_name = data['last_name'],
@@ -120,12 +123,14 @@ class UserRepository(RepositoryBase):
 
                     if (user):
                         user.login = data['login']
-                        user.password = data['password']
                         user.nickname = data['nickname']
                         user.first_name = data['first_name']
                         user.last_name = data['last_name']
                         user.email = data['email']
                         user.status = data['status']
+
+                        if data['password'] != '' and not bcrypt.check_password_hash(user.password, data['password']):
+                            user.password = bcrypt.generate_password_hash(data['password'])
 
                         fk_was_added = self.add_foreign_keys(user, data, session)
                         if (fk_was_added != True):

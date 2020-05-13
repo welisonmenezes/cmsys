@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 
 # TODO: create a global location where Exceptions are processed
 
@@ -8,6 +9,7 @@ from flask_cors import CORS
 app = Flask(__name__, template_folder='Views/UI', static_folder='Views/UI/static')
 app.config.from_pyfile('config.py')
 app_config = app.config
+bcrypt = Bcrypt(app)
 
 # configurate logging
 if app_config['ENABLE_LOG_FILE']:

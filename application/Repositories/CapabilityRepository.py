@@ -161,6 +161,7 @@ class CapabilityRepository(RepositoryBase):
 
     
     def verify_identical_capability(self, data, session, id=None):
+        """Verifies if already exists another capability with exactly same values, if so, returns this."""
 
         filter = (
             Capability.type == data['type'],

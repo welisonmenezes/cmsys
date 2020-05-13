@@ -3,8 +3,6 @@ from werkzeug.exceptions import HTTPException
 from Utils import ErrorHandler
 from Models import Session
 
-# TODO: try implement a method that fill the objects easier
-
 class RepositoryBase():
     """It Works like parent class witch must provide common attributes and methods
         and applies the response method to each child's method responder."""
