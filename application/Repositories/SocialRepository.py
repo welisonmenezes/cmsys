@@ -11,7 +11,7 @@ class SocialRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             fb = FilterBuilder(Social, args)
             fb.set_like_filter('name')
             fb.set_equals_filter('origin')
@@ -26,14 +26,14 @@ class SocialRepository(RepositoryBase):
                 'pagination': result.pagination
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
         
 
     def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             result = session.query(Social).filter_by(id=id).first()
             schema = SocialSchema(many=False)
 
@@ -41,94 +41,79 @@ class SocialRepository(RepositoryBase):
                 'data': schema.dump(result)
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = SocialValidator(data)
+            def process(session, data):
+                social = Social(
+                    name = data['name'],
+                    url = data['url'],
+                    target = data['target'],
+                    description = data['description'],
+                    origin = data['origin']
+                )
 
-                if (validator.is_valid()):
-                    social = Social(
-                        name = data['name'],
-                        url = data['url'],
-                        target = data['target'],
-                        description = data['description'],
-                        origin = data['origin']
-                    )
+                fk_was_added = self.add_foreign_keys(social, data, session)
+                if (fk_was_added != True):
+                    return fk_was_added
+                
+                session.add(social)
+                session.commit()
+                last_id = social.id
 
-                    fk_was_added = self.add_foreign_keys(social, data, session)
-                    if (fk_was_added != True):
-                        return fk_was_added
-                    
-                    session.add(social)
-                    session.commit()
-                    last_id = social.id
+                return {
+                    'message': 'Social saved successfully.',
+                    'id': last_id
+                }, 200
 
-                    return {
-                        'message': 'Social saved successfully.',
-                        'id': last_id
-                    }, 200
-                else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+            return self.validate_before(process, request.get_json(), SocialValidator, session)
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
-
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = SocialValidator(data)
+            def process(session, data):
+                social = session.query(Social).filter_by(id=id).first()
 
-                if (validator.is_valid(id=id)):
-                    social = session.query(Social).filter_by(id=id).first()
+                if (social):
+                    social.name = data['name']
+                    social.url = data['url']
+                    social.target = data['target']
+                    social.origin = data['origin']
+                    social.description = data['description']
 
-                    if (social):
-                        social.name = data['name']
-                        social.url = data['url']
-                        social.target = data['target']
-                        social.origin = data['origin']
-                        social.description = data['description']
+                    fk_was_added = self.add_foreign_keys(social, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
 
-                        fk_was_added = self.add_foreign_keys(social, data, session)
-                        if (fk_was_added != True):
-                            return fk_was_added
+                    session.commit()
 
-                        session.commit()
-
-                        return {
-                            'message': 'Social updated successfully.',
-                            'id': social.id
-                        }, 200
-                    else:
-                        return ErrorHandler().get_error(404, 'No Social found.')
-
+                    return {
+                        'message': 'Social updated successfully.',
+                        'id': social.id
+                    }, 200
                 else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+                    return ErrorHandler().get_error(404, 'No Social found.')
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(process, request.get_json(), SocialValidator, session, id=id)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        def fn(session):
+        def run(session):
             social = session.query(Social).filter_by(id=id).first()
 
             if (social):
@@ -142,7 +127,7 @@ class SocialRepository(RepositoryBase):
             else:
                 return ErrorHandler().get_error(404, 'No Social found.')
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
     
     def add_foreign_keys(self, social, data, session):
