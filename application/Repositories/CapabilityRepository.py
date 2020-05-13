@@ -57,6 +57,12 @@ class CapabilityRepository(RepositoryBase):
                 validator = CapabilityValidator(data)
 
                 if (validator.is_valid()):
+                    
+                    # verify if already exists an identical capability
+                    identical_capability = self.verify_identical_capability(data, session)
+                    if identical_capability != False:
+                        return ErrorHandler().get_error(400, 'The capability ' + str(identical_capability.id) + ' has exactly the same configurations.')
+
                     capability = Capability(
                         description = data['description'],
                         type = data['type'],
@@ -65,6 +71,7 @@ class CapabilityRepository(RepositoryBase):
                         can_read = data['can_read'],
                         can_delete = data['can_delete']
                     )
+
                     session.add(capability)
                     session.commit()
                     last_id = capability.id
@@ -93,6 +100,12 @@ class CapabilityRepository(RepositoryBase):
                 validator = CapabilityValidator(data)
 
                 if (validator.is_valid(id=id)):
+
+                    # verify if already exists an identical capability
+                    identical_capability = self.verify_identical_capability(data, session, id)
+                    if identical_capability != False:
+                        return ErrorHandler().get_error(400, 'The capability ' + str(identical_capability.id) + ' has exactly the same configurations.')
+
                     capability = session.query(Capability).filter_by(id=id).first()
 
                     if (capability):
@@ -102,6 +115,7 @@ class CapabilityRepository(RepositoryBase):
                         capability.can_write = data['can_write']
                         capability.can_read = data['can_read']
                         capability.can_delete = data['can_delete']
+                        
                         session.commit()
 
                         return {
@@ -144,3 +158,21 @@ class CapabilityRepository(RepositoryBase):
                 return ErrorHandler().get_error(404, 'No Capability found.')
 
         return self.response(fn, True)
+
+    
+    def verify_identical_capability(self, data, session, id=None):
+
+        filter = (
+            Capability.type == data['type'],
+            Capability.target_id == int(data['target_id']),
+            Capability.can_write == data['can_write'],
+            Capability.can_read == data['can_read'],
+            Capability.can_delete == data['can_delete'],
+        )
+
+        if id:
+            filter += (Capability.id != id,)
+
+        capability = session.query(Capability).filter(*filter).first()
+
+        return capability if capability else False
