@@ -11,7 +11,7 @@ class RoleRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             fb = FilterBuilder(Role, args)
             fb.set_equals_filter('can_access_admin')
             fb.set_like_filter('name')
@@ -30,14 +30,14 @@ class RoleRepository(RepositoryBase):
                 'pagination': result.pagination
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
         
 
     def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        def fn(session):
+        def run(session):
             result = session.query(Role).filter_by(id=id).first()
             schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args, ['capabilities']))
 
@@ -45,94 +45,77 @@ class RoleRepository(RepositoryBase):
                 'data': schema.dump(result)
             }, 200
 
-        return self.response(fn, False)
+        return self.response(run, False)
 
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = RoleValidator(data)
+            def process(session, data):
+                role = Role(
+                    name = data['name'],
+                    description = data['description'],
+                    can_access_admin = data['can_access_admin'],
+                )
 
-                if (validator.is_valid()):
-                    role = Role(
-                        name = data['name'],
-                        description = data['description'],
-                        can_access_admin = data['can_access_admin'],
-                    )
+                add_capabilite = self.add_capabilities(role, data, session)
+                if (add_capabilite != True):
+                    return add_capabilite
 
-                    add_capabilite = self.add_capabilities(role, data, session)
-                    if (add_capabilite != True):
-                        return add_capabilite
+                session.add(role)
+                session.commit()
+                last_id = role.id
 
-                    session.add(role)
-                    session.commit()
-                    last_id = role.id
+                return {
+                    'message': 'Role saved successfully.',
+                    'id': last_id
+                }, 200
 
-                    return {
-                        'message': 'Role saved successfully.',
-                        'id': last_id
-                    }, 200
-                else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+            return self.validate_before(process, request.get_json(), RoleValidator, session)
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
-
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
 
-        def fn(session):
-            data = request.get_json()
+        def run(session):
 
-            if (data):
-                validator = RoleValidator(data)
+            def process(session, data):
+                role = session.query(Role).filter_by(id=id).first()
 
-                if (validator.is_valid(id=id)):
-                    role = session.query(Role).filter_by(id=id).first()
+                if (role):
+                    role.name = data['name']
+                    role.description = data['description']
+                    role.can_access_admin = data['can_access_admin']
 
-                    if (role):
-                        role.name = data['name']
-                        role.description = data['description']
-                        role.can_access_admin = data['can_access_admin']
+                    self.edit_capabilities(role, data, session)
 
-                        # clear deleted capabilities
-                        self.edit_capabilities(role, data, session)
+                    add_capabilite = self.add_capabilities(role, data, session)
+                    if (add_capabilite != True):
+                        return add_capabilite
 
-                        # update role's capabilities
-                        add_capabilite = self.add_capabilities(role, data, session)
-                        if (add_capabilite != True):
-                            return add_capabilite
+                    session.commit()
 
-                        session.commit()
-
-                        return {
-                            'message': 'Role updated successfully.',
-                            'id': role.id
-                        }, 200
-                    else:
-                        return ErrorHandler().get_error(404, 'No Role found.')
-
+                    return {
+                        'message': 'Role updated successfully.',
+                        'id': role.id
+                    }, 200
                 else:
-                    return ErrorHandler().get_error(400, validator.get_errors())
+                    return ErrorHandler().get_error(404, 'No Role found.')
 
-            else:
-                return ErrorHandler().get_error(400, 'No data send.')
+            return self.validate_before(process, request.get_json(), RoleValidator, session, id=id)
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        def fn(session):
+        def run(session):
             role = session.query(Role).filter_by(id=id).first()
 
             if (role):
@@ -146,7 +129,7 @@ class RoleRepository(RepositoryBase):
             else:
                 return ErrorHandler().get_error(404, 'No Role found.')
 
-        return self.response(fn, True)
+        return self.response(run, True)
 
 
     def add_capabilities(self, role, data, session):
