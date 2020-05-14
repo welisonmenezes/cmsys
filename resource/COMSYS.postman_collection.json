@@ -458,7 +458,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=id&order=asc",
+							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=id&order=asc&s=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -487,6 +487,10 @@
 								{
 									"key": "order",
 									"value": "asc"
+								},
+								{
+									"key": "s",
+									"value": ""
 								}
 							]
 						}
@@ -721,6 +725,219 @@
 								"api",
 								"media",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PostType",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/post-type?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"post-type"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/post-type?page=1&limit=10&order_by=id&order=desc&name=&type=&get_template=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"post-type"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "type",
+									"value": ""
+								},
+								{
+									"key": "get_template",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/post-type/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"post-type",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"post-type name 6x\",\n\t\"type\": \"post-type xxx\",\n\t\"template_idx\": \"\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/post-type",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"post-type"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"post-type 9\",\n\t\"type\": \"post-type xxx\",\n\t\"template_id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/post-type/9",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"post-type",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/post-type/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"post-type",
+								"3"
 							]
 						}
 					},
@@ -1211,7 +1428,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/template?page=1&limit=10&order_by=id&order=desc",
+							"raw": "http://127.0.0.1:5000/api/template?page=1&limit=10&order_by=id&order=asc&s=4&name=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1239,7 +1456,15 @@
 								},
 								{
 									"key": "order",
-									"value": "desc"
+									"value": "asc"
+								},
+								{
+									"key": "s",
+									"value": "4"
+								},
+								{
+									"key": "name",
+									"value": ""
 								}
 							]
 						}
@@ -1283,7 +1508,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"template-2\",\n\t\"description\": \"x\",\n\t\"value\": \"xxx\"\n}"
+							"raw": "{\n\t\"name\": \"template-6\",\n\t\"description\": \"\",\n\t\"value\": \"xxx\"\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/template",
@@ -1349,7 +1574,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/template/3",
+							"raw": "http://127.0.0.1:5000/api/template/1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1361,7 +1586,7 @@
 							"path": [
 								"api",
 								"template",
-								"3"
+								"1"
 							]
 						}
 					},
@@ -1379,7 +1604,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&get_role=&get_socials=",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&get_role=&get_socials=&s=mar",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1408,6 +1633,10 @@
 								{
 									"key": "get_socials",
 									"value": ""
+								},
+								{
+									"key": "s",
+									"value": "mar"
 								}
 							]
 						}
@@ -1420,7 +1649,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&name=&email=gi&status=&role_id=&registered=&date_modifier=equal&get_role=1&get_socials=1&compare_date_time_one=2020-05-06T00:00:00&compare_date_time_two=2020-05-08T00:00:00&not_between=1",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&s=&email=gi&status=&role_id=&registered=&date_modifier=equal&get_role=1&get_socials=1&compare_date_time_one=2020-05-06T00:00:00&compare_date_time_two=2020-05-08T00:00:00&not_between=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1451,7 +1680,7 @@
 									"value": "asc"
 								},
 								{
-									"key": "name",
+									"key": "s",
 									"value": ""
 								},
 								{
@@ -1681,7 +1910,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/variable?s=four&order_by=id&order=asc",
+							"raw": "http://127.0.0.1:5000/api/variable?s=test&order_by=id&order=asc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1697,7 +1926,7 @@
 							"query": [
 								{
 									"key": "s",
-									"value": "four"
+									"value": "test"
 								},
 								{
 									"key": "order_by",
