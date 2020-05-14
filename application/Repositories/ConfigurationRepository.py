@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Configuration, ConfigurationSchema
+from Models import Configuration, ConfigurationSchema, Language
 from Validators import ConfigurationValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -51,9 +51,13 @@ class ConfigurationRepository(RepositoryBase):
                     title = data['title'],
                     description = data['description'],
                     has_comments = data['has_comments'],
-                    email = data['email'],
-                    language_id = data['language_id']
+                    email = data['email']
                 )
+
+                fk_was_added = self.add_foreign_keys(configuration, data, session)
+                if (fk_was_added != True):
+                    return fk_was_added
+
                 session.add(configuration)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Configuration', configuration.id)
@@ -77,7 +81,11 @@ class ConfigurationRepository(RepositoryBase):
                     configuration.description = data['description']
                     configuration.has_comments = data['has_comments']
                     configuration.email = data['email']
-                    configuration.language_id = data['language_id']
+                    
+                    fk_was_added = self.add_foreign_keys(configuration, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Configuration', configuration.id)
 
@@ -104,3 +112,13 @@ class ConfigurationRepository(RepositoryBase):
                 return ErrorHandler().get_error(404, 'No Configuration found.')
 
         return self.response(run, True)
+
+
+    def add_foreign_keys(self, configuration, data, session):
+        """Controls if the language_id is an existing foreign key data."""
+
+        try:
+            configuration.language_id = self.get_existing_foreing_id(data, 'language_id', Language, session)
+            return True
+        except Exception as e:
+            return ErrorHandler().get_error(400, e)
