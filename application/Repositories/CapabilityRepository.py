@@ -77,25 +77,22 @@ class CapabilityRepository(RepositoryBase):
 
             def process(session, data):
 
-                identical_capability = self.verify_identical_capability(data, session, id)
-                if identical_capability != False:
-                    return ErrorHandler().get_error(400, 'The capability ' + str(identical_capability.id) + ' has exactly the same configurations.')
+                def fn(session, capability):
 
-                capability = session.query(Capability).filter_by(id=id).first()
+                    identical_capability = self.verify_identical_capability(data, session, id)
+                    if identical_capability != False:
+                        return ErrorHandler().get_error(400, 'The capability ' + str(identical_capability.id) + ' has exactly the same configurations.')
 
-                if (capability):
                     capability.description = data['description']
                     capability.type = data['type']
                     capability.target_id = data['target_id']
                     capability.can_write = data['can_write']
                     capability.can_read = data['can_read']
                     capability.can_delete = data['can_delete']
-                    
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Capability', capability.id)
-
-                else:
-                    return ErrorHandler().get_error(404, 'No Capability found.')
+                
+                return self.run_if_exists(fn, Capability, id, session)
 
             return self.validate_before(process, request.get_json(), CapabilityValidator, session, id=id)
 
@@ -106,10 +103,9 @@ class CapabilityRepository(RepositoryBase):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def run(session):
-            capability = session.query(Capability).filter_by(id=id).first()
 
-            if (capability):
-
+            def fn(session, capability):
+                
                 if (capability.roles):
                     return ErrorHandler().get_error(406, 'You cannot delete this Capability because it has a related Role.')
 
@@ -117,26 +113,6 @@ class CapabilityRepository(RepositoryBase):
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Capability', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No Capability found.')
+            return self.run_if_exists(fn, Capability, id, session)
 
         return self.response(run, True)
-
-    
-    def verify_identical_capability(self, data, session, id=None):
-        """Verifies if already exists another capability with exactly same values, if so, returns this."""
-
-        filter = (
-            Capability.type == data['type'],
-            Capability.target_id == int(data['target_id']),
-            Capability.can_write == data['can_write'],
-            Capability.can_read == data['can_read'],
-            Capability.can_delete == data['can_delete'],
-        )
-
-        if id:
-            filter += (Capability.id != id,)
-
-        capability = session.query(Capability).filter(*filter).first()
-
-        return capability if capability else False

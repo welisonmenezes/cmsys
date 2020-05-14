@@ -66,9 +66,8 @@ class LanguageRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                language = session.query(Language).filter_by(id=id).first()
 
-                if (language):
+                def fn(session, language):
                     language.name = data['name']
                     language.code = data['code']
                     language.status = data['status']
@@ -76,8 +75,7 @@ class LanguageRepository(RepositoryBase):
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Language', language.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No Language found.')
+                return self.run_if_exists(fn, Language, id, session)
 
             return self.validate_before(process, request.get_json(), LanguageValidator, session, id=id)
 
@@ -92,14 +90,12 @@ class LanguageRepository(RepositoryBase):
 
         def run(session):
 
-            # TODO: forbid delete language that has any related post
-            # TODO: forbid delete language that has any related menu
-            # TODO: forbid delete language that has any related comment
-            # TODO: forbid delete language that has any related term
+            def fn(session, language):
 
-            language = session.query(Language).filter_by(id=id).first()
-
-            if language:
+                # TODO: forbid delete language that has any related post
+                # TODO: forbid delete language that has any related menu
+                # TODO: forbid delete language that has any related comment
+                # TODO: forbid delete language that has any related term
 
                 is_foreigners = self.is_foreigners([(language, 'language_id', Configuration)], session)
                 if is_foreigners != False:
@@ -109,7 +105,6 @@ class LanguageRepository(RepositoryBase):
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Language', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No Language found.')
+            return self.run_if_exists(fn, Language, id, session)
 
         return self.response(run, True)

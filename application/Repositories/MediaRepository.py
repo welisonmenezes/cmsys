@@ -90,29 +90,6 @@ class MediaRepository(RepositoryBase):
 
         return self.response(run, False)
 
-
-    def file_response(self, result, is_preview):
-        """Returns the file, or to preview or to download."""
-
-        saved_file = str(base64.b64encode(result.file))
-        saved_file = saved_file[2:]
-        imgdata = base64.b64decode(saved_file)
-        response = make_response(imgdata)
-        response.headers.set('Content-Type', result.type)
-        if (not is_preview):
-            response.headers.set('Content-Disposition', 'attachment; filename=' + result.name + '.' + result.extension)
-        return response
-
-    
-    def image_not_found_response(self):
-        """Provides a default image preview if the requested image preview was fail."""
-
-        notFoundImage = app_config['NOT_FOUND_IMAGE']
-        imgdata = base64.b64decode(notFoundImage)
-        response = make_response(imgdata)
-        response.headers.set('Content-Type', 'image/png')
-        return response
-        
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
@@ -154,9 +131,8 @@ class MediaRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                media = session.query(Media).filter_by(id=id).first()
 
-                if (Media):
+                def fn(session, media):
                     media.name = data['name']
                     media.description = data['description']
                     media.origin = data['origin']
@@ -178,12 +154,56 @@ class MediaRepository(RepositoryBase):
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Media', media.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No Media found.')
+                return self.run_if_exists(fn, Media, id, session)
 
             return self.validate_before(process, request.get_json(), MediaValidator, session, id=id)
 
         return self.response(run, True)
+
+    
+    def delete(self, id, request):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
+        def run(session):
+
+            def fn(session, media):
+
+                # TODO: check if media can be deleted (if any post is related to the media, it cannot be deleted)
+
+                is_foreigners = self.is_foreigners([(media, 'avatar_id', User)], session)
+                if is_foreigners != False:
+                    return is_foreigners
+
+                session.delete(media)
+                session.commit()
+                return self.handle_success(None, None, 'delete', 'Media', id)
+
+            return self.run_if_exists(fn, Media, id, session)
+
+        return self.response(run, True)
+
+
+    def file_response(self, result, is_preview):
+        """Returns the file, or to preview or to download."""
+
+        saved_file = str(base64.b64encode(result.file))
+        saved_file = saved_file[2:]
+        imgdata = base64.b64decode(saved_file)
+        response = make_response(imgdata)
+        response.headers.set('Content-Type', result.type)
+        if (not is_preview):
+            response.headers.set('Content-Disposition', 'attachment; filename=' + result.name + '.' + result.extension)
+        return response
+
+    
+    def image_not_found_response(self):
+        """Provides a default image preview if the requested image preview was fail."""
+
+        notFoundImage = app_config['NOT_FOUND_IMAGE']
+        imgdata = base64.b64decode(notFoundImage)
+        response = make_response(imgdata)
+        response.headers.set('Content-Type', 'image/png')
+        return response
 
 
     def get_file_details_from_request(self, data):
@@ -199,30 +219,6 @@ class MediaRepository(RepositoryBase):
             return file_details
         except:
             raise Exception('Cannot get file details. Please, check if it is a valid base64 file.')
-
-
-    def delete(self, id, request):
-        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
-
-        def run(session):
-            media = session.query(Media).filter_by(id=id).first()
-
-            if (media):
-
-                # TODO: check if media can be deleted (if any post is related to the media, it cannot be deleted)
-
-                is_foreigners = self.is_foreigners([(media, 'avatar_id', User)], session)
-                if is_foreigners != False:
-                    return is_foreigners
-
-                session.delete(media)
-                session.commit()
-                return self.handle_success(None, None, 'delete', 'Media', id)
-
-            else:
-                return ErrorHandler().get_error(404, 'No Media found.')
-
-        return self.response(run, True)
 
 
     def add_foreign_keys(self, media, data, session):

@@ -7,10 +7,6 @@ class RepositoryBase():
     """It Works like parent class witch must provide common attributes and methods
         and applies the response method to each child's method responder."""
 
-
-    # TODO: create a method that forbid delete element which has a relationship occurrences
-
-
     def __init__(self):
         """Starts the common attributes on instantiation of the class."""
 
@@ -61,6 +57,16 @@ class RepositoryBase():
         else:
             return ErrorHandler().get_error(400, 'No data send.')
 
+
+    def run_if_exists(self, fn, context, id, session):
+        """Runs the given method if the given element exists at the database."""
+
+        element = session.query(context).filter_by(id=id).first()
+        if (element):
+            return fn(session, element)
+        else:
+            return ErrorHandler().get_error(404, 'No ' + context.__tablename__ + ' found.')
+
     
     def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):
         """Checks if a given id exists as primary key of the given context (a model) and returns it.
@@ -110,8 +116,8 @@ class RepositoryBase():
 
 
     def is_foreigners(self, configurations, session):
-        """Verifies if is a foreigner on any given context at configuration, if so, return errors.
-            How to use: [(current_context, foreign_key_at_target_context, target_context)]"""
+        """Verifies if is a foreigner on any given context at configuration, if so, return errors. How to use:
+            The configuration must like: [(current_context, foreign_key_at_target_context, target_context)]"""
 
         errors = []
         for config in configurations:

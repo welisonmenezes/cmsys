@@ -91,9 +91,8 @@ class UserRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                user = session.query(User).filter_by(id=id).first()
 
-                if (user):
+                def fn(session, user):
                     user.login = data['login']
                     user.nickname = data['nickname']
                     user.first_name = data['first_name']
@@ -111,8 +110,7 @@ class UserRepository(RepositoryBase):
                     session.commit()
                     return self.handle_success(None, None, 'update', 'User', user.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No User found.')
+                return self.run_if_exists(fn, User, id, session)
 
             return self.validate_before(process, request.get_json(), UserValidator, session, id=id)
 
@@ -126,11 +124,8 @@ class UserRepository(RepositoryBase):
             return ErrorHandler().get_error(400, 'The Super Admin user cannot be deleted.')
 
         def run(session):
-            
-            user = session.query(User).filter_by(id=id).first()
 
-            if user:
-                
+            def fn(session, user):
                 # TODO: check if user has post (dont allow to delete or delegato to superadmin)
                 # TODO: check if user has comments (delete comments as well)
 
@@ -139,15 +134,13 @@ class UserRepository(RepositoryBase):
                 if image_was_deleted != True:
                     return image_was_deleted
 
-                # delete user socials
                 session.query(Social).filter_by(user_id=user.id).delete(synchronize_session='evaluate')
 
                 session.delete(user)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'User', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No User found.')
+            return self.run_if_exists(fn, User, id, session)
 
         return self.response(run, True)
 

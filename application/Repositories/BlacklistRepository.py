@@ -65,17 +65,15 @@ class BlacklistRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                blacklist = session.query(Blacklist).filter_by(id=id).first()
-
-                if (blacklist):
+                
+                def fn(session, blacklist):
                     blacklist.type = data['type']
                     blacklist.value = data['value']
                     blacklist.target = data['target']
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Blacklist', blacklist.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No Blacklist found.')
+                return self.run_if_exists(fn, Blacklist, id, session)
 
             return self.validate_before(process, request.get_json(), BlacklistValidator, session, id=id)
 
@@ -86,14 +84,12 @@ class BlacklistRepository(RepositoryBase):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def run(session):
-            blacklist = session.query(Blacklist).filter_by(id=id).first()
 
-            if (blacklist):
+            def fn(session, blacklist):
                 session.delete(blacklist)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Blacklist', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No Blacklist found.')
+            return self.run_if_exists(fn, Blacklist, id, session)
 
         return self.response(run, True)

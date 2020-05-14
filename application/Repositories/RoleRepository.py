@@ -73,9 +73,8 @@ class RoleRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                role = session.query(Role).filter_by(id=id).first()
 
-                if (role):
+                def fn(session, role):
                     role.name = data['name']
                     role.description = data['description']
                     role.can_access_admin = data['can_access_admin']
@@ -89,8 +88,9 @@ class RoleRepository(RepositoryBase):
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Role', role.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No Role found.')
+                return self.run_if_exists(fn, Role, id, session)
+
+                role = session.query(Role).filter_by(id=id).first()
 
             return self.validate_before(process, request.get_json(), RoleValidator, session, id=id)
 
@@ -101,15 +101,13 @@ class RoleRepository(RepositoryBase):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def run(session):
-            role = session.query(Role).filter_by(id=id).first()
 
-            if (role):
+            def fn(session, role):
                 session.delete(role)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Role', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No Role found.')
+            return self.run_if_exists(fn, Role, id, session)
 
         return self.response(run, True)
 
@@ -121,29 +119,13 @@ class RoleRepository(RepositoryBase):
 
         if ('capabilities' in data and isinstance(data['capabilities'], list)):
             for capability in data['capabilities']:
-                if ('id' in capability and Checker().can_be_integer(capability['id'])):
-                    registered_capability = session.query(Capability).filter_by(id=int(capability['id'])).first()
+                if (capability and Checker().can_be_integer(capability)):
+                    registered_capability = session.query(Capability).filter_by(id=int(capability)).first()
                     if (registered_capability):
                         role.capabilities.append(registered_capability)
                     else:
-                        return ErrorHandler().get_error(400, 'Capability ' + str(capability['id']) + ' does not exists.')
-                else:
-                    capability_validator = CapabilityValidator(capability)
-                    if (capability_validator.is_valid()):
-                        capability = Capability(
-                            description = capability['description'],
-                            type = capability['type'],
-                            target_id = capability['target_id'],
-                            can_write = capability['can_write'],
-                            can_read = capability['can_read'],
-                            can_delete = capability['can_delete']
-                        )
-                        role.capabilities.append(capability)
-                    else:
-                        capability_validator.get_errors().insert(0, {
-                            'message': 'Check if all Capability object is configured correctly.'
-                        })
-                        return ErrorHandler().get_error(400, capability_validator.get_errors())
+                        return ErrorHandler().get_error(400, 'Capability ' + str(capability) + ' does not exists.')
+                        
         return True
 
 
@@ -160,8 +142,8 @@ class RoleRepository(RepositoryBase):
 
         if ('capabilities' in data and isinstance(data['capabilities'], list)):
             for capability in data['capabilities']:
-                if ('id' in capability and Checker().can_be_integer(capability['id'])):
-                    new_old_capabilities.append(capability['id'])
+                if (capability and Checker().can_be_integer(capability)):
+                    new_old_capabilities.append(capability)
 
         capabilities_to_delete = list(set(old_capabilities) - set(new_old_capabilities))
 

@@ -68,9 +68,8 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                post_type = session.query(PostType).filter_by(id=id).first()
 
-                if (post_type):
+                def fn(session, post_type):
                     post_type.name = data['name']
                     post_type.type = data['type']
 
@@ -81,8 +80,7 @@ class PostTypeRepository(RepositoryBase):
                     session.commit()
                     return self.handle_success(None, None, 'update', 'PostType', post_type.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No PostType found.')
+                return self.run_if_exists(fn, PostType, id, session)
 
             return self.validate_before(process, request.get_json(), PostTypeValidator, session, id=id)
 
@@ -93,9 +91,8 @@ class PostTypeRepository(RepositoryBase):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def run(session):
-            post_type = session.query(PostType).filter_by(id=id).first()
 
-            if post_type:
+            def fn(session, post_type):
 
                 # TODO: forbid delete post type witch has a related post
 
@@ -103,8 +100,7 @@ class PostTypeRepository(RepositoryBase):
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'PostType', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No PostType found.')
+            return self.run_if_exists(fn, PostType, id, session)
 
         return self.response(run, True)
 

@@ -74,9 +74,8 @@ class ConfigurationRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                configuration = session.query(Configuration).filter_by(id=id).first()
 
-                if (configuration):
+                def fn(session, configuration):
                     configuration.title = data['title']
                     configuration.description = data['description']
                     configuration.has_comments = data['has_comments']
@@ -88,9 +87,8 @@ class ConfigurationRepository(RepositoryBase):
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Configuration', configuration.id)
-
-                else:
-                    return ErrorHandler().get_error(404, 'No Configuration found.')
+                
+                return self.run_if_exists(fn, Configuration, id, session)
 
             return self.validate_before(process, request.get_json(), ConfigurationValidator, session, id=id)
 
@@ -104,15 +102,13 @@ class ConfigurationRepository(RepositoryBase):
             return ErrorHandler().get_error(400, 'The Primary configuration row cannot be deleted.')
 
         def run(session):
-            configuration = session.query(Configuration).filter_by(id=id).first()
 
-            if (configuration):
+            def fn(session, configuration):
                 session.delete(configuration)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Configuration', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No Configuration found.')
+            return self.run_if_exists(fn, Configuration, id, session)
 
         return self.response(run, True)
 

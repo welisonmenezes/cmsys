@@ -68,17 +68,15 @@ class TemplateRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                template = session.query(Template).filter_by(id=id).first()
 
-                if (template):
+                def fn(session, template):
                     template.name = data['name']
                     template.description = data['description']
                     template.value = data['value']
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Template', template.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No Template found.')
+                return self.run_if_exists(fn, Template, id, session)
 
             return self.validate_before(process, request.get_json(), TemplateValidator, session, id=id)
 
@@ -89,9 +87,8 @@ class TemplateRepository(RepositoryBase):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def run(session):
-            template = session.query(Template).filter_by(id=id).first()
 
-            if (template):
+            def fn(session, template):
 
                 is_foreigners = self.is_foreigners([(template, 'template_id', PostType)], session)
                 if is_foreigners != False:
@@ -101,7 +98,6 @@ class TemplateRepository(RepositoryBase):
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Template', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No Template found.')
+            return self.run_if_exists(fn, Template, id, session)
 
         return self.response(run, True)

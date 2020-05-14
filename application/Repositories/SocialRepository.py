@@ -71,9 +71,8 @@ class SocialRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                social = session.query(Social).filter_by(id=id).first()
 
-                if (social):
+                def fn(session, social):
                     social.name = data['name']
                     social.url = data['url']
                     social.target = data['target']
@@ -87,8 +86,7 @@ class SocialRepository(RepositoryBase):
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Social', social.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No Social found.')
+                return self.run_if_exists(fn, Social, id, session)
 
             return self.validate_before(process, request.get_json(), SocialValidator, session, id=id)
 
@@ -99,15 +97,13 @@ class SocialRepository(RepositoryBase):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def run(session):
-            social = session.query(Social).filter_by(id=id).first()
 
-            if (social):
+            def fn(session, social):
                 session.delete(social)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Social', id)
 
-            else:
-                return ErrorHandler().get_error(404, 'No Social found.')
+            return self.run_if_exists(fn, Social, id, session)
 
         return self.response(run, True)
 

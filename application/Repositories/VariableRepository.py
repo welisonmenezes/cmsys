@@ -65,16 +65,14 @@ class VariableRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                variable = session.query(Variable).filter_by(id=id).first()
 
-                if (variable):
+                def fn(session, variable):
                     variable.key = data['key']
                     variable.value = data['value']
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Variable', variable.id)
 
-                else:
-                    return ErrorHandler().get_error(404, 'No Variable found.')
+                return self.run_if_exists(fn, Variable, id, session)
 
             return self.validate_before(process, request.get_json(), VariableValidator, session, id=id)
 
@@ -85,14 +83,12 @@ class VariableRepository(RepositoryBase):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
         def run(session):
-            variable = session.query(Variable).filter_by(id=id).first()
 
-            if (variable):
+            def fn(session, variable):
                 session.delete(variable)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Variable', id)
-
-            else:
-                return ErrorHandler().get_error(404, 'No Variable found.')
+            
+            return self.run_if_exists(fn, Variable, id, session)
 
         return self.response(run, True)
