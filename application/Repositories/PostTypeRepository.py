@@ -13,13 +13,12 @@ class PostTypeRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(PostType, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_like_filter('name')
+            fb.set_equals_filter('type')
 
             query = session.query(PostType).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = PostTypeSchema(many=True)
+            schema = PostTypeSchema(many=True, exclude=self.get_exclude_fields(args, ['template']))
 
             return {
                 'data': schema.dump(result.items),
@@ -35,7 +34,7 @@ class PostTypeRepository(RepositoryBase):
 
         def run(session):
             result = session.query(PostType).filter_by(id=id).first()
-            schema = PostTypeSchema(many=False)
+            schema = PostTypeSchema(many=False, exclude=self.get_exclude_fields(args, ['template']))
             data = schema.dump(result)
 
             return {
