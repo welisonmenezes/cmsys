@@ -20,6 +20,12 @@ class MediaSchema(ma.Schema):
         fields = ('id', 'name', 'description', 'type', 'extension', 'origin', 'created', 'user_id')
 
 
+class PostTypeSchema(ma.Schema):
+    template = fields.Nested('TemplateSchema', many=False)
+    class Meta:
+        fields = ('id', 'name', 'type', 'template_id', 'template')
+
+
 class RoleSchema(ma.Schema):
     capabilities = fields.Nested('CapabilitySchema', many=True, exclude=('roles',))
     class Meta:

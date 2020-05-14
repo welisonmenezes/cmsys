@@ -1,6 +1,7 @@
 from .BlacklistValidator import *
 from .CapabilityValidator import *
 from .MediaValidator import *
+from .PostTypeValidator import *
 from .RoleValidator import *
 from .SocialValidator import *
 from .TemplateValidator import *
