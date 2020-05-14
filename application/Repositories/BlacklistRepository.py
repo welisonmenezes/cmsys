@@ -20,11 +20,7 @@ class BlacklistRepository(RepositoryBase):
             query = session.query(Blacklist).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = BlacklistSchema(many=True)
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'Blacklist')
 
         return self.response(run, False)
         
@@ -36,11 +32,7 @@ class BlacklistRepository(RepositoryBase):
         def run(session):
             result = session.query(Blacklist).filter_by(id=id).first()
             schema = BlacklistSchema(many=False)
-            data = schema.dump(result)
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'Blacklist')
 
         return self.response(run, False)
 
@@ -59,12 +51,7 @@ class BlacklistRepository(RepositoryBase):
                 )
                 session.add(blacklist)
                 session.commit()
-                last_id = blacklist.id
-
-                return {
-                    'message': 'Blacklist saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'Blacklist', blacklist.id)
 
             return self.validate_before(process, request.get_json(), BlacklistValidator, session)
 
@@ -85,11 +72,7 @@ class BlacklistRepository(RepositoryBase):
                     blacklist.value = data['value']
                     blacklist.target = data['target']
                     session.commit()
-
-                    return {
-                        'message': 'Blacklist updated successfully.',
-                        'id': blacklist.id
-                    }, 200
+                    return self.handle_success(None, None, 'update', 'Blacklist', blacklist.id)
 
                 else:
                     return ErrorHandler().get_error(404, 'No Blacklist found.')
@@ -108,11 +91,8 @@ class BlacklistRepository(RepositoryBase):
             if (blacklist):
                 session.delete(blacklist)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'Blacklist', id)
 
-                return {
-                    'message': 'Blacklist deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No Blacklist found.')
 

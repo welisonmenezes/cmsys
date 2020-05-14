@@ -24,11 +24,7 @@ class RoleRepository(RepositoryBase):
             query = session.query(Role).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = RoleSchema(many=True, exclude=self.get_exclude_fields(args, ['capabilities']))
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'Role')
 
         return self.response(run, False)
         
@@ -40,10 +36,7 @@ class RoleRepository(RepositoryBase):
         def run(session):
             result = session.query(Role).filter_by(id=id).first()
             schema = RoleSchema(many=False, exclude=self.get_exclude_fields(args, ['capabilities']))
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'Role')
 
         return self.response(run, False)
 
@@ -66,12 +59,7 @@ class RoleRepository(RepositoryBase):
 
                 session.add(role)
                 session.commit()
-                last_id = role.id
-
-                return {
-                    'message': 'Role saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'Role', role.id)
 
             return self.validate_before(process, request.get_json(), RoleValidator, session)
 
@@ -99,11 +87,8 @@ class RoleRepository(RepositoryBase):
                         return add_capabilite
 
                     session.commit()
+                    return self.handle_success(None, None, 'update', 'Role', role.id)
 
-                    return {
-                        'message': 'Role updated successfully.',
-                        'id': role.id
-                    }, 200
                 else:
                     return ErrorHandler().get_error(404, 'No Role found.')
 
@@ -121,11 +106,8 @@ class RoleRepository(RepositoryBase):
             if (role):
                 session.delete(role)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'Role', id)
 
-                return {
-                    'message': 'Role deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No Role found.')
 

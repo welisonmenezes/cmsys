@@ -20,11 +20,7 @@ class SocialRepository(RepositoryBase):
             query = session.query(Social).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = SocialSchema(many=True)
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'Social')
 
         return self.response(run, False)
         
@@ -36,10 +32,7 @@ class SocialRepository(RepositoryBase):
         def run(session):
             result = session.query(Social).filter_by(id=id).first()
             schema = SocialSchema(many=False)
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'Social')
 
         return self.response(run, False)
 
@@ -64,12 +57,7 @@ class SocialRepository(RepositoryBase):
                 
                 session.add(social)
                 session.commit()
-                last_id = social.id
-
-                return {
-                    'message': 'Social saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'Social', social.id)
 
             return self.validate_before(process, request.get_json(), SocialValidator, session)
 
@@ -97,11 +85,8 @@ class SocialRepository(RepositoryBase):
                         return fk_was_added
 
                     session.commit()
+                    return self.handle_success(None, None, 'update', 'Social', social.id)
 
-                    return {
-                        'message': 'Social updated successfully.',
-                        'id': social.id
-                    }, 200
                 else:
                     return ErrorHandler().get_error(404, 'No Social found.')
 
@@ -119,11 +104,8 @@ class SocialRepository(RepositoryBase):
             if (social):
                 session.delete(social)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'Social', id)
 
-                return {
-                    'message': 'Social deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No Social found.')
 

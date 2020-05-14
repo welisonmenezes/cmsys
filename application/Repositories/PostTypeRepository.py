@@ -19,11 +19,7 @@ class PostTypeRepository(RepositoryBase):
             query = session.query(PostType).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = PostTypeSchema(many=True, exclude=self.get_exclude_fields(args, ['template']))
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'PostType')
 
         return self.response(run, False)
         
@@ -35,11 +31,7 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
             result = session.query(PostType).filter_by(id=id).first()
             schema = PostTypeSchema(many=False, exclude=self.get_exclude_fields(args, ['template']))
-            data = schema.dump(result)
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'PostType')
 
         return self.response(run, False)
 
@@ -62,12 +54,7 @@ class PostTypeRepository(RepositoryBase):
 
                 session.add(post_type)
                 session.commit()
-                last_id = post_type.id
-
-                return {
-                    'message': 'PostType saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'PostType', post_type.id)
 
             return self.validate_before(process, request.get_json(), PostTypeValidator, session)
 
@@ -92,11 +79,7 @@ class PostTypeRepository(RepositoryBase):
                         return fk_was_added
 
                     session.commit()
-
-                    return {
-                        'message': 'PostType updated successfully.',
-                        'id': post_type.id
-                    }, 200
+                    return self.handle_success(None, None, 'update', 'PostType', post_type.id)
 
                 else:
                     return ErrorHandler().get_error(404, 'No PostType found.')
@@ -115,11 +98,8 @@ class PostTypeRepository(RepositoryBase):
             if (post_type):
                 session.delete(post_type)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'PostType', id)
 
-                return {
-                    'message': 'PostType deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No PostType found.')
 

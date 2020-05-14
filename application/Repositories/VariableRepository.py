@@ -22,11 +22,7 @@ class VariableRepository(RepositoryBase):
             query = session.query(Variable).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = VariableSchema(many=True)
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'Variable')
 
         return self.response(run, False)
         
@@ -38,10 +34,7 @@ class VariableRepository(RepositoryBase):
         def run(session):
             schema = VariableSchema(many=False)
             result = session.query(Variable).filter_by(id=id).first()
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'Variable')
 
         return self.response(run, False)
 
@@ -58,12 +51,7 @@ class VariableRepository(RepositoryBase):
                 )
                 session.add(variable)
                 session.commit()
-                last_id = variable.id
-
-                return {
-                    'message': 'Variable saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'Variable', variable.id)
 
             return self.validate_before(process, request.get_json(), VariableValidator, session)
 
@@ -83,11 +71,8 @@ class VariableRepository(RepositoryBase):
                     variable.key = data['key']
                     variable.value = data['value']
                     session.commit()
+                    return self.handle_success(None, None, 'update', 'Variable', variable.id)
 
-                    return {
-                        'message': 'Variable updated successfully.',
-                        'id': variable.id
-                    }, 200
                 else:
                     return ErrorHandler().get_error(404, 'No Variable found.')
 
@@ -105,11 +90,8 @@ class VariableRepository(RepositoryBase):
             if (variable):
                 session.delete(variable)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'Variable', id)
 
-                return {
-                    'message': 'Variable deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No Variable found.')
 

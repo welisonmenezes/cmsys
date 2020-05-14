@@ -35,11 +35,7 @@ class MediaRepository(RepositoryBase):
             query = session.query(Media).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = MediaSchema(many=True)
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'Media')
 
         return self.response(run, False)
         
@@ -60,6 +56,7 @@ class MediaRepository(RepositoryBase):
                 return {
                     'data': data
                 }, 200
+                
             else:
                 return ErrorHandler().get_error(404, 'No Media found.')
 
@@ -143,12 +140,7 @@ class MediaRepository(RepositoryBase):
 
                 session.add(media)
                 session.commit()
-                last_id = media.id
-
-                return {
-                    'message': 'Media saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'Media', media.id)
 
             return self.validate_before(process, request.get_json(), MediaValidator, session)
 
@@ -184,11 +176,8 @@ class MediaRepository(RepositoryBase):
                         media.file = file_details['data']
 
                     session.commit()
+                    return self.handle_success(None, None, 'update', 'Media', media.id)
 
-                    return {
-                        'message': 'Media updated successfully.',
-                        'id': media.id
-                    }, 200
                 else:
                     return ErrorHandler().get_error(404, 'No Media found.')
 
@@ -228,11 +217,8 @@ class MediaRepository(RepositoryBase):
 
                 session.delete(media)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'Media', id)
 
-                return {
-                    'message': 'Media deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No Media found.')
 

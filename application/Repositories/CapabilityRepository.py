@@ -23,11 +23,7 @@ class CapabilityRepository(RepositoryBase):
             query = session.query(Capability).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = CapabilitySchema(many=True, exclude=self.get_exclude_fields(args, ['roles']))
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'Capability')
 
         return self.response(run, False)
         
@@ -39,10 +35,7 @@ class CapabilityRepository(RepositoryBase):
         def run(session):
             schema = CapabilitySchema(many=False, exclude=self.get_exclude_fields(args, ['roles']))
             result = session.query(Capability).filter_by(id=id).first()
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'Capability')
 
         return self.response(run, False)
 
@@ -69,12 +62,7 @@ class CapabilityRepository(RepositoryBase):
 
                 session.add(capability)
                 session.commit()
-                last_id = capability.id
-
-                return {
-                    'message': 'Capability saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'Capability', capability.id)
 
             return self.validate_before(process, request.get_json(), CapabilityValidator, session)
 
@@ -104,11 +92,8 @@ class CapabilityRepository(RepositoryBase):
                     capability.can_delete = data['can_delete']
                     
                     session.commit()
+                    return self.handle_success(None, None, 'update', 'Capability', capability.id)
 
-                    return {
-                        'message': 'Capability updated successfully.',
-                        'id': capability.id
-                    }, 200
                 else:
                     return ErrorHandler().get_error(404, 'No Capability found.')
 
@@ -128,11 +113,7 @@ class CapabilityRepository(RepositoryBase):
                 if (not capability.roles):
                     session.delete(capability)
                     session.commit()
-
-                    return {
-                        'message': 'Capability deleted successfully.',
-                        'id': id
-                    }, 200
+                    return self.handle_success(None, None, 'delete', 'Capability', id)
 
                 else:
                     return ErrorHandler().get_error(406, 'You cannot delete this Capability because it has related Role.')

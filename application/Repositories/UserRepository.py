@@ -36,11 +36,7 @@ class UserRepository(RepositoryBase):
             excluded_fields = self.get_exclude_fields(args, ['role', 'socials'])
             excluded_fields += ('password',)
             schema = UserSchema(many=True, exclude=excluded_fields)
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'User')
 
         return self.response(run, False)
         
@@ -54,10 +50,7 @@ class UserRepository(RepositoryBase):
             excluded_fields = self.get_exclude_fields(args, ['role', 'socials'])
             excluded_fields += ('password',)
             schema = UserSchema(many=False, exclude=excluded_fields)
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'User')
 
         return self.response(run, False)
 
@@ -84,12 +77,7 @@ class UserRepository(RepositoryBase):
 
                 session.add(user)
                 session.commit()
-                last_id = user.id
-
-                return {
-                    'message': 'User saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'User', user.id)
 
             return self.validate_before(process, request.get_json(), UserValidator, session)
 
@@ -121,11 +109,8 @@ class UserRepository(RepositoryBase):
                         return fk_was_added
 
                     session.commit()
+                    return self.handle_success(None, None, 'update', 'User', user.id)
 
-                    return {
-                        'message': 'User updated successfully.',
-                        'id': user.id
-                    }, 200
                 else:
                     return ErrorHandler().get_error(404, 'No User found.')
 
@@ -159,11 +144,8 @@ class UserRepository(RepositoryBase):
 
                 session.delete(user)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'User', id)
 
-                return {
-                    'message': 'User deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No User found.')
 

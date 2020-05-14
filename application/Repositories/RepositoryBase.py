@@ -87,3 +87,20 @@ class RepositoryBase():
                     exclude_fields += (field,)
 
         return exclude_fields
+
+
+    def handle_success(self, result, schema, type, model_name='', id=None):
+        """Handles almost all possible success returns."""
+
+        if type == 'get':
+            return { 'data': schema.dump(result.items), 'pagination': result.pagination }, 200
+        elif type == 'get_by_id':
+            return { 'data': schema.dump(result) }, 200
+        elif type == 'create':
+            return { 'message': model_name + ' saved successfully.', 'id': id }, 200
+        elif type == 'update':
+            return { 'message': model_name + ' updated successfully.', 'id': id }, 200
+        elif type == 'delete':
+            return { 'message': model_name + ' deleted successfully.', 'id': id }, 200
+        else:
+            return ErrorHandler().get_error(500, 'Invalid success error handler parameters.')

@@ -23,11 +23,7 @@ class TemplateRepository(RepositoryBase):
             query = session.query(Template).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = TemplateSchema(many=True)
-
-            return {
-                'data': schema.dump(result.items),
-                'pagination': result.pagination
-            }, 200
+            return self.handle_success(result, schema, 'get', 'Template')
 
         return self.response(run, False)
         
@@ -39,11 +35,7 @@ class TemplateRepository(RepositoryBase):
         def run(session):
             result = session.query(Template).filter_by(id=id).first()
             schema = TemplateSchema(many=False)
-            data = schema.dump(result)
-
-            return {
-                'data': schema.dump(result)
-            }, 200
+            return self.handle_success(result, schema, 'get_by_id', 'Template')
 
         return self.response(run, False)
 
@@ -62,12 +54,7 @@ class TemplateRepository(RepositoryBase):
                 )
                 session.add(template)
                 session.commit()
-                last_id = template.id
-
-                return {
-                    'message': 'Template saved successfully.',
-                    'id': last_id
-                }, 200
+                return self.handle_success(None, None, 'create', 'Template', template.id)
 
             return self.validate_before(process, request.get_json(), TemplateValidator, session)
 
@@ -88,11 +75,7 @@ class TemplateRepository(RepositoryBase):
                     template.description = data['description']
                     template.value = data['value']
                     session.commit()
-
-                    return {
-                        'message': 'Template updated successfully.',
-                        'id': template.id
-                    }, 200
+                    return self.handle_success(None, None, 'update', 'Template', template.id)
 
                 else:
                     return ErrorHandler().get_error(404, 'No Template found.')
@@ -116,11 +99,8 @@ class TemplateRepository(RepositoryBase):
 
                 session.delete(template)
                 session.commit()
+                return self.handle_success(None, None, 'delete', 'Template', id)
 
-                return {
-                    'message': 'Template deleted successfully.',
-                    'id': id
-                }, 200
             else:
                 return ErrorHandler().get_error(404, 'No Template found.')
 
