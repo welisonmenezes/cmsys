@@ -100,6 +100,9 @@ class ConfigurationRepository(RepositoryBase):
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
+        if id == 1:
+            return ErrorHandler().get_error(400, 'The Primary configuration row cannot be deleted.')
+
         def run(session):
             configuration = session.query(Configuration).filter_by(id=id).first()
 
