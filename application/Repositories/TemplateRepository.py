@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Template, TemplateSchema
+from Models import Template, TemplateSchema, PostType
 from Validators import TemplateValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -110,7 +110,9 @@ class TemplateRepository(RepositoryBase):
 
             if (template):
 
-                # TODO: don't allow to delete a template that is used by an post_type
+                post_type = session.query(PostType.id).filter_by(template_id=template.id).first()
+                if (post_type):
+                    return ErrorHandler().get_error(406, 'You cannot delete this Template because it may have a related PostType.')
 
                 session.delete(template)
                 session.commit()
