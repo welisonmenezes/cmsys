@@ -1,4 +1,5 @@
 from .ValidatorBase import ValidatorBase
+from Models import Session, PostType
 
 class PostTypeValidator(ValidatorBase):
     """Configures the PostType validator to the parent class applies the validators correctly."""
@@ -13,7 +14,8 @@ class PostTypeValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 255,
-                'min_length': 1
+                'min_length': 1,
+                'is_unique': True
             },
             'type': {
                 'key_required': True,
@@ -29,5 +31,5 @@ class PostTypeValidator(ValidatorBase):
         self.errors = []
         self.has_error = False
         self.complete_key_list = True
-        self.model = None
-        self.session = None
+        self.model = PostType
+        self.session = Session

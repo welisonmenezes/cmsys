@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import PostType, PostTypeSchema
+from Models import PostType, PostTypeSchema, Template
 from Validators import PostTypeValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -53,9 +53,13 @@ class PostTypeRepository(RepositoryBase):
 
                 post_type = PostType(
                     name = data['name'],
-                    type = data['type'],
-                    template_id = data['template_id']
+                    type = data['type']
                 )
+
+                fk_was_added = self.add_foreign_keys(post_type, data, session)
+                if (fk_was_added != True):
+                    return fk_was_added
+
                 session.add(post_type)
                 session.commit()
                 last_id = post_type.id
@@ -82,7 +86,11 @@ class PostTypeRepository(RepositoryBase):
                 if (post_type):
                     post_type.name = data['name']
                     post_type.type = data['type']
-                    post_type.template_id = data['template_id']
+
+                    fk_was_added = self.add_foreign_keys(post_type, data, session)
+                    if (fk_was_added != True):
+                        return fk_was_added
+
                     session.commit()
 
                     return {
@@ -116,3 +124,13 @@ class PostTypeRepository(RepositoryBase):
                 return ErrorHandler().get_error(404, 'No PostType found.')
 
         return self.response(run, True)
+
+
+    def add_foreign_keys(self, post_type, data, session):
+        """Controls if the template_id is an existing foreign key data."""
+
+        try:
+            post_type.template_id = self.get_existing_foreing_id(data, 'template_id', Template, session)
+            return True
+        except Exception as e:
+            return ErrorHandler().get_error(400, e)
