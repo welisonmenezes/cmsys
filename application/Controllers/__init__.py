@@ -3,6 +3,7 @@ from .ControllerBase import *
 from .BlacklistController import *
 from .CapabilityController import *
 from .ImageController import *
+from .LanguageController import *
 from .MediaController import *
 from .PostTypeController import *
 from .RoleController import *
@@ -53,6 +54,7 @@ def start_controllers(app, api):
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
     api.add_resource(ImageController, '/image/<int:id>')
+    api.add_resource(LanguageController, '/language', '/language/<int:id>')
     api.add_resource(MediaController, '/media', '/media/<int:id>')
     api.add_resource(PostTypeController, '/post-type', '/post-type/<int:id>')
     api.add_resource(RoleController, '/role', '/role/<int:id>')

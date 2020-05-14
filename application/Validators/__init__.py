@@ -1,5 +1,6 @@
 from .BlacklistValidator import *
 from .CapabilityValidator import *
+from .LanguageValidator import *
 from .MediaValidator import *
 from .PostTypeValidator import *
 from .RoleValidator import *
