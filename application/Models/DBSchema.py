@@ -15,6 +15,11 @@ class CapabilitySchema(ma.Schema):
         fields = ('id', 'description', 'type', 'target_id', 'can_write', 'can_write', 'can_read', 'can_delete', 'roles')
 
 
+class ConfigurationSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'title', 'description', 'has_comments', 'email', 'language_id')
+
+
 class LanguageSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'code', 'status', 'datetime_format')

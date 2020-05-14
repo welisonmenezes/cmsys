@@ -2,6 +2,7 @@ from flask import jsonify
 from .ControllerBase import *
 from .BlacklistController import *
 from .CapabilityController import *
+from .ConfigurationController import *
 from .ImageController import *
 from .LanguageController import *
 from .MediaController import *
@@ -53,6 +54,7 @@ def start_controllers(app, api):
     # Resources (controllers)
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
+    api.add_resource(ConfigurationController, '/configuration', '/configuration/<int:id>')
     api.add_resource(ImageController, '/image/<int:id>')
     api.add_resource(LanguageController, '/language', '/language/<int:id>')
     api.add_resource(MediaController, '/media', '/media/<int:id>')
