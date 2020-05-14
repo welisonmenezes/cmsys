@@ -8,6 +8,9 @@ class RepositoryBase():
         and applies the response method to each child's method responder."""
 
 
+    # TODO: create a method that forbid delete element which has a relationship occurrences
+
+
     def __init__(self):
         """Starts the common attributes on instantiation of the class."""
 

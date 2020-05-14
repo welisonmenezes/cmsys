@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Language, LanguageSchema
+from Models import Language, LanguageSchema, Configuration
 from Validators import LanguageValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -95,12 +95,16 @@ class LanguageRepository(RepositoryBase):
             # TODO: forbid delete language that has any related post
             # TODO: forbid delete language that has any related menu
             # TODO: forbid delete language that has any related comment
-            # TODO: forbid delete language that has any related configuration
             # TODO: forbid delete language that has any related term
 
             language = session.query(Language).filter_by(id=id).first()
 
             if (language):
+
+                configuration = session.query(Configuration.id).filter_by(language_id=language.id).first()
+                if (configuration):
+                    return ErrorHandler().get_error(406, 'You cannot delete this Language because it may have a related Configuration.')
+
                 session.delete(language)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Language', id)
