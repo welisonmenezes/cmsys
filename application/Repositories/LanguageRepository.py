@@ -99,11 +99,11 @@ class LanguageRepository(RepositoryBase):
 
             language = session.query(Language).filter_by(id=id).first()
 
-            if (language):
+            if language:
 
-                configuration = session.query(Configuration.id).filter_by(language_id=language.id).first()
-                if (configuration):
-                    return ErrorHandler().get_error(406, 'You cannot delete this Language because it may have a related Configuration.')
+                is_foreigners = self.is_foreigners([(language, 'language_id', Configuration)], session)
+                if is_foreigners != False:
+                    return is_foreigners
 
                 session.delete(language)
                 session.commit()

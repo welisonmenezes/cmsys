@@ -107,3 +107,17 @@ class RepositoryBase():
             return { 'message': model_name + ' deleted successfully.', 'id': id }, 200
         else:
             return ErrorHandler().get_error(500, 'Invalid success error handler parameters.')
+
+
+    def is_foreigners(self, configurations, session):
+        """Verifies if is a foreigner on any given context at configuration, if so, return errors.
+            How to use: [(current_context, foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            filter = (getattr(config[2], config[1])==getattr(config[0], 'id'),)
+            element = session.query(getattr(config[2], 'id')).filter(*filter).first()
+            if (element):
+                errors.append('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
+
+        return False if not errors else ErrorHandler().get_error(406, errors)

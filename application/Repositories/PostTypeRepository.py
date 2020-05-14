@@ -95,7 +95,10 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
             post_type = session.query(PostType).filter_by(id=id).first()
 
-            if (post_type):
+            if post_type:
+
+                # TODO: forbid delete post type witch has a related post
+
                 session.delete(post_type)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'PostType', id)

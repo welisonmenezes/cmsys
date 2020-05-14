@@ -93,9 +93,9 @@ class TemplateRepository(RepositoryBase):
 
             if (template):
 
-                post_type = session.query(PostType.id).filter_by(template_id=template.id).first()
-                if (post_type):
-                    return ErrorHandler().get_error(406, 'You cannot delete this Template because it may have a related PostType.')
+                is_foreigners = self.is_foreigners([(template, 'template_id', PostType)], session)
+                if is_foreigners != False:
+                    return is_foreigners
 
                 session.delete(template)
                 session.commit()

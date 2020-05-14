@@ -211,9 +211,9 @@ class MediaRepository(RepositoryBase):
 
                 # TODO: check if media can be deleted (if any post is related to the media, it cannot be deleted)
 
-                user = session.query(User.id).filter_by(avatar_id=media.id).first()
-                if (user):
-                    return ErrorHandler().get_error(406, 'You cannot delete this File because it may have a related User.')
+                is_foreigners = self.is_foreigners([(media, 'avatar_id', User)], session)
+                if is_foreigners != False:
+                    return is_foreigners
 
                 session.delete(media)
                 session.commit()
