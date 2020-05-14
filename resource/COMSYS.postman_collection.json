@@ -491,7 +491,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/language?page=1&limit=10&order_by=id&order=desc",
+							"raw": "http://127.0.0.1:5000/api/language?page=1&limit=10&order_by=id&order=desc&name=&code=&status=inactive",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -520,6 +520,18 @@
 								{
 									"key": "order",
 									"value": "desc"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "code",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": "inactive"
 								}
 							]
 						}

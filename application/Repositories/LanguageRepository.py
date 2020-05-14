@@ -13,9 +13,9 @@ class LanguageRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Language, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_like_filter('name')
+            fb.set_like_filter('code')
+            fb.set_equals_filter('status')
 
             query = session.query(Language).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
