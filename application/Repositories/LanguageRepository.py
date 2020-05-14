@@ -87,7 +87,17 @@ class LanguageRepository(RepositoryBase):
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
+        if id == 1:
+            return ErrorHandler().get_error(400, 'The Primary Language cannot be be deleted.')
+
         def run(session):
+
+            # TODO: forbid delete language that has any related post
+            # TODO: forbid delete language that has any related menu
+            # TODO: forbid delete language that has any related comment
+            # TODO: forbid delete language that has any related configuration
+            # TODO: forbid delete language that has any related term
+
             language = session.query(Language).filter_by(id=id).first()
 
             if (language):
