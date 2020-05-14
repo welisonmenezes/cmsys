@@ -13,13 +13,16 @@ class ConfigurationRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Configuration, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_equals_filter('language_id')
+
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'title', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
             query = session.query(Configuration).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = ConfigurationSchema(many=True)
+            schema = ConfigurationSchema(many=True, exclude=self.get_exclude_fields(args, ['language']))
             return self.handle_success(result, schema, 'get', 'Configuration')
 
         return self.response(run, False)
@@ -31,7 +34,7 @@ class ConfigurationRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Configuration).filter_by(id=id).first()
-            schema = ConfigurationSchema(many=False)
+            schema = ConfigurationSchema(many=False, exclude=self.get_exclude_fields(args, ['language']))
             return self.handle_success(result, schema, 'get_by_id', 'Configuration')
 
         return self.response(run, False)

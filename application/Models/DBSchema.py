@@ -16,8 +16,9 @@ class CapabilitySchema(ma.Schema):
 
 
 class ConfigurationSchema(ma.Schema):
+    language = fields.Nested('LanguageSchema', many=False)
     class Meta:
-        fields = ('id', 'title', 'description', 'has_comments', 'email', 'language_id')
+        fields = ('id', 'title', 'description', 'has_comments', 'email', 'language_id', 'language')
 
 
 class LanguageSchema(ma.Schema):
