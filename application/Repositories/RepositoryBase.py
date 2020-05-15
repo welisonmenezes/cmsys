@@ -69,7 +69,7 @@ class RepositoryBase():
 
 
     def get_result_by_unique_key(self, id, context, session):
-        if isinstance(id, int):
+        if Checker().can_be_integer(id):
             return session.query(context).filter_by(id=id).first()
         else:
             return session.query(context).filter_by(name=id).first()
