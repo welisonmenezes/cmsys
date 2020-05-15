@@ -78,10 +78,11 @@ class ValidatorBase():
 
         if ('is_unique' in config and isinstance(config['is_unique'], int) and key in self.request):
             el = self.session.query(self.model).filter(getattr(self.model, key)==self.request[key]).first()
+
             if (el):
                 if ('id' in extra_args):
                     if (getattr(el, key) == self.request[key]):
-                        if (int(extra_args['id']) != int(el.id)):
+                        if (not extra_args['id'] or int(extra_args['id']) != int(el.id)):
                             self.handle_validation_error('The field \'' + key + '\' already exists in database.')
                 else:        
                     self.handle_validation_error('The field \'' + key + '\' already exists in database.')

@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Post, PostSchema
+from Models import Post, PostSchema, PostType, Language, User
 from Validators import PostValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
@@ -54,12 +54,13 @@ class PostRepository(RepositoryBase):
                     publish_on = Helper().get_null_if_empty(data['publish_on']),
                     expire_on = Helper().get_null_if_empty(data['expire_on']),
                     created = Helper().get_current_datetime(),
-                    edited = Helper().get_current_datetime(),
-                    #parent_id = data['parent_id'],
-                    post_type_id = data['post_type_id'],
-                    language_id = data['language_id'],
-                    user_id = data['user_id']
+                    edited = Helper().get_current_datetime()
                 )
+
+                fk_was_added = self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
+                if fk_was_added != True:
+                    return fk_was_added
+
                 session.add(post)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Post', post.id)
@@ -86,11 +87,12 @@ class PostRepository(RepositoryBase):
                     post.has_comments = data['has_comments']
                     post.publish_on = Helper().get_null_if_empty(data['publish_on'])
                     post.expire_on = Helper().get_null_if_empty(data['expire_on'])
-                    #post.parent_id = data['parent_id']
                     post.edited = Helper().get_current_datetime()
-                    post.post_type_id = data['post_type_id']
-                    post.language_id = data['language_id']
-                    post.user_id = data['user_id']
+
+                    fk_was_added = self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
+                    if fk_was_added != True:
+                        return fk_was_added
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Post', post.id)
 
