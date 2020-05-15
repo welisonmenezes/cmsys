@@ -44,11 +44,13 @@ class PostValidator(ValidatorBase):
             },
             'publish_on': {
                 'key_required': True,
-                'max_length': 19
+                'max_length': 19,
+                'is_datetime': True
             },
             'expire_on': {
                 'key_required': True,
-                'max_length': 19
+                'max_length': 19,
+                'is_datetime': True
             },
             'parent_id': {
                 'is_integer': True

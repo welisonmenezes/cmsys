@@ -79,3 +79,9 @@ class Helper():
             return file_details
         except:
             raise Exception('Cannot get file details. Please, check if it is a valid base64 file.')
+
+    
+    def get_null_if_empty(self, value):
+        """Returns the value if it is not empty, otherwise, returns None."""
+
+        return None if value == '' else value

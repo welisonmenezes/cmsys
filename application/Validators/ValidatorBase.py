@@ -1,6 +1,6 @@
 import base64
 from app import app_config
-from Utils import Helper
+from Utils import Helper, Checker
 
 class ValidatorBase():
     """Has methods to applay any configured validations from its children classes."""
@@ -99,6 +99,13 @@ class ValidatorBase():
             except Exception:
                 self.handle_validation_error('Invalid file base64 data.')
 
+    
+    def is_datetime(self, key, config):
+        
+        if ('is_datetime' in config and key in self.request and self.request[key] != ''):
+            if not Checker().is_datetime(self.request[key]):
+                self.handle_validation_error('Datetime invalid at field: ' + key + '.')
+
 
     def max_file_size(self, key, config):
         """Validates if the field has valid base64 size."""
@@ -161,6 +168,7 @@ class ValidatorBase():
                 self.valid_file_type(key, config)
                 self.valid_file_extension(key, config)
                 self.valid_values(key, config)
+                self.is_datetime(key, config)
 
         return not self.has_error
 

@@ -51,8 +51,8 @@ class PostRepository(RepositoryBase):
                     status = data['status'],
                     is_protected = data['is_protected'],
                     has_comments = data['has_comments'],
-                    #publish_on = data['publish_on'],
-                    #expire_on = data['expire_on'],
+                    publish_on = Helper().get_null_if_empty(data['publish_on']),
+                    expire_on = Helper().get_null_if_empty(data['expire_on']),
                     created = Helper().get_current_datetime(),
                     edited = Helper().get_current_datetime(),
                     #parent_id = data['parent_id'],
@@ -84,8 +84,8 @@ class PostRepository(RepositoryBase):
                     post.status = data['status']
                     post.is_protected = data['is_protected']
                     post.has_comments = data['has_comments']
-                    #post.publish_on = data['publish_on']
-                    #post.expire_on = data['expire_on']
+                    post.publish_on = Helper().get_null_if_empty(data['publish_on'])
+                    post.expire_on = Helper().get_null_if_empty(data['expire_on'])
                     #post.parent_id = data['parent_id']
                     post.edited = Helper().get_current_datetime()
                     post.post_type_id = data['post_type_id']
