@@ -128,6 +128,7 @@ class UserRepository(RepositoryBase):
         def run(session):
 
             def fn(session, user):
+                
                 # TODO: check if user has comments (delete comments as well)
 
                 image_was_deleted = self.delegate_content_to_delete(user,session, request, (Media, Post))

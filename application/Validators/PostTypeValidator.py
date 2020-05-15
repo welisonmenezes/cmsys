@@ -21,7 +21,8 @@ class PostTypeValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 50,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['user-profile', 'term-page', 'static-page', 'post-page', 'nested-page']
             },
             'template_id': {
                 'is_integer': True

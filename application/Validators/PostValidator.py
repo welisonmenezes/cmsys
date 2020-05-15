@@ -30,7 +30,8 @@ class PostValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 15,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['pending', 'publish', 'draft', 'trash', 'private']
             },
             'is_protected': {
                 'key_required': True,

@@ -143,21 +143,37 @@ class RepositoryBase():
         errors = []
         for config in configurations:
             try:
+                # Social specifications
                 if current_context.__tablename__ == 'Social':
+                    # If origin and field does not correspond, continue.
+                    print(config[0])
                     setattr(current_context, config[0], None)
-
                     if getattr(current_context, 'origin') == 'configuration' and config[0] == 'user_id' or \
                         getattr(current_context, 'origin') == 'user' and config[0] == 'configuration_id':
                         continue
+                
 
+                # User specifications
                 if current_context.__tablename__ == 'User':
+                    # If user is Super Admin, continue.
                     if getattr(current_context, 'id') == 1 and config[0] == 'role_id':
                         continue
 
+                    # If the file referenced by the avatar_id is not a image, return error.
                     if config[0] == 'avatar_id' and config[0] in data:
                         image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
                         if not image or not Checker().is_image_type(image.type):
                             return ErrorHandler().get_error(400, 'The user avatar must be an image file.')
+
+
+                # Post specifications
+                if current_context.__tablename__ == 'Post':
+                    # If the post referenced by the parent_id is not post_type of type post-page, return error.
+                    if config[0] == 'parent_id':
+                        el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+                        if el and el.post_type and el.post_type.type != 'post-page':
+                            return ErrorHandler().get_error(400, 'The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'post-page\'.')
+
 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 

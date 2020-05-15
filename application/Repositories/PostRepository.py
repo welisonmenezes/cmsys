@@ -109,6 +109,13 @@ class PostRepository(RepositoryBase):
         def run(session):
 
             def fn(session, post):
+
+                # TODO: forbid delete post that has Nested Post
+                # TODO: forbid delete post that is user profile (or update the user profile)
+                # TODO: forbid delete post that is term page (or update the term page)
+                # TODO: forbid delete post that has Child posts (or update the child posts)
+                # TODO: forbid delete post that has comments (or delete its comments)
+
                 session.delete(post)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Post', id)
