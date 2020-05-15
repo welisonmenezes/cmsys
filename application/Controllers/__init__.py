@@ -4,6 +4,7 @@ from .CapabilityController import *
 from .ConfigurationController import *
 from .LanguageController import *
 from .MediaController import *
+from .PostController import *
 from .PostTypeController import *
 from .RoleController import *
 from .SocialController import *
@@ -22,6 +23,7 @@ def start_controllers(app, api):
     api.add_resource(ConfigurationController, '/configuration', '/configuration/<int:id>')
     api.add_resource(LanguageController, '/language', '/language/<int:id>')
     api.add_resource(MediaController, '/media', '/media/<id>', '/media/preview/<id>')
+    api.add_resource(PostController, '/post', '/post/<id>')
     api.add_resource(PostTypeController, '/post-type', '/post-type/<int:id>')
     api.add_resource(RoleController, '/role', '/role/<int:id>')
     api.add_resource(SocialController, '/social', '/social/<int:id>')

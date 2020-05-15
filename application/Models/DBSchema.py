@@ -31,6 +31,11 @@ class MediaSchema(ma.Schema):
         fields = ('id', 'name', 'description', 'type', 'extension', 'origin', 'created', 'user_id')
 
 
+class PostSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'title', 'description', 'status', 'is_protected', 'has_comments', 'publish_on', 'expire_on', 'created', 'edited', 'parent_id', 'post_type_id', 'language_id', 'user_id')
+
+
 class PostTypeSchema(ma.Schema):
     template = fields.Nested('TemplateSchema', many=False)
     class Meta:

@@ -235,7 +235,7 @@ class Nest(Base):
 class Post(Base):
     __tablename__ = 'Post'
     id = Column(Integer, primary_key=True)
-    slug = Column(String(255), nullable=False, unique=True) # unique name/url path
+    name = Column(String(255), nullable=False, unique=True) # unique name/url path
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     status = Column(String(15), nullable=False)
