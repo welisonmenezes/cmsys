@@ -98,7 +98,7 @@ class MediaRepository(RepositoryBase):
 
             def process(session, data):
                 try:
-                    file_details = self.get_file_details_from_request(data)
+                    file_details = Helper().get_file_details_from_request(data)
                 except Exception as e:
                     return ErrorHandler().get_error(400, e)
 
@@ -143,7 +143,7 @@ class MediaRepository(RepositoryBase):
 
                     if (data['file'] and data['file'] != ''):
                         try:
-                            file_details = self.get_file_details_from_request(data)
+                            file_details = Helper().get_file_details_from_request(data)
                         except Exception as e:
                             return ErrorHandler().get_error(400, e)
 
@@ -204,18 +204,3 @@ class MediaRepository(RepositoryBase):
         response = make_response(imgdata)
         response.headers.set('Content-Type', 'image/png')
         return response
-
-
-    def get_file_details_from_request(self, data):
-        """Separates the mimetype and the real base64 data from sended base64 data
-            and returns it as a dictonary item."""
-        
-        try:
-            type_and_data = Helper().get_file_type_and_data(data['file'])
-            file_details = {
-                'type': type_and_data[0],
-                'data': base64.b64decode(type_and_data[1])
-            }
-            return file_details
-        except:
-            raise Exception('Cannot get file details. Please, check if it is a valid base64 file.')

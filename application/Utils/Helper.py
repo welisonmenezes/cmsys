@@ -57,3 +57,18 @@ class Helper():
 
         extensions = app_config['VALID_MIMETYPES']
         return extensions.values()
+
+
+    def get_file_details_from_request(self, data):
+        """Separates the mimetype and the real base64 data from sended base64 data
+            and returns it as a dictonary item."""
+        
+        try:
+            type_and_data = self.get_file_type_and_data(data['file'])
+            file_details = {
+                'type': type_and_data[0],
+                'data': base64.b64decode(type_and_data[1])
+            }
+            return file_details
+        except:
+            raise Exception('Cannot get file details. Please, check if it is a valid base64 file.')
