@@ -1,3 +1,4 @@
+from flask import request
 from .ControllerBase import ControllerBase
 from Repositories import MediaRepository
 
@@ -22,8 +23,10 @@ class MediaController(ControllerBase):
         self.parser.add_argument('created')
         self.parser.add_argument('user_id')
         self.args = self.parser.parse_args()
-        
-        if (id and self.args['download_file'] == '1'):
+
+        if str(request.url_rule) == '/api/media/preview/<int:id>':
+            return self.repo.get_image_preview(id)
+        elif (id and self.args['download_file'] == '1'):
             return self.repo.get_file(id, self.args)
         elif id:
             return self.repo.get_by_id(id, self.args)
