@@ -14,9 +14,15 @@ class PostController(ControllerBase):
     def get(self, id=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        # self.parser.add_argument('value')
-        # self.parser.add_argument('type')
-        # self.parser.add_argument('target')
+        self.parser.add_argument('s')
+        self.parser.add_argument('status')
+        self.parser.add_argument('created')
+        self.parser.add_argument('parent_id')
+        self.parser.add_argument('post_type_id')
+        self.parser.add_argument('user_id')
+        self.parser.add_argument('language_id')
+        self.parser.add_argument('get_user')
+        self.parser.add_argument('get_language')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)

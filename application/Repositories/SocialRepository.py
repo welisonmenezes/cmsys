@@ -118,11 +118,11 @@ class SocialRepository(RepositoryBase):
                 setattr(current_context, config[0], None)
 
                 if getattr(current_context, 'origin') == 'configuration' and config[0] == 'user_id' and 'user_id' in data:
-                    errors.append('If the \'origin\' is configuration you dont have to send the \'user_id\'.')
+                    errors.append('If the \'origin\' is \'configuration\' you dont have to send the \'user_id\'.')
                     continue
 
                 if getattr(current_context, 'origin') == 'user' and config[0] == 'configuration_id' and 'configuration_id' in data:
-                    errors.append('If the \'origin\' is configuration you dont have to send the \'configuration_id\'.')
+                    errors.append('If the \'origin\' is \'user\' you dont have to send the \'configuration_id\'.')
                     continue
                 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))

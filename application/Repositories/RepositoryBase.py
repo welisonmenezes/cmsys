@@ -134,7 +134,7 @@ class RepositoryBase():
                 errors.append('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
 
         return False if not errors else ErrorHandler().get_error(406, errors)
-        
+
 
     def add_foreign_keys(self, current_context, data, session, configurations):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
@@ -167,6 +167,6 @@ class RepositoryBase():
                         else:
                             errors.append('Could not find the super admin user.')
                 else:
-                    errors.append('You cannot delete this User because it has related ' + content_context.__tablename__)
+                    errors.append('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
 
         return True if not errors else  ErrorHandler().get_error(406, errors)

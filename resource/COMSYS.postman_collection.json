@@ -1201,7 +1201,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=10&order_by=id&order=desc",
+							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=10&order_by=id&order=desc&s=&status=&date_modifier=&created=&not_between=&compare_date_time_one=2020-04-15T19:12:10&compare_date_time_two=2020-07-15T19:12:10&get_user=0&user_id=&parent_id=&post_type_id=&language_id=3&get_language=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1230,6 +1230,58 @@
 								{
 									"key": "order",
 									"value": "desc"
+								},
+								{
+									"key": "s",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "date_modifier",
+									"value": ""
+								},
+								{
+									"key": "created",
+									"value": ""
+								},
+								{
+									"key": "not_between",
+									"value": ""
+								},
+								{
+									"key": "compare_date_time_one",
+									"value": "2020-04-15T19:12:10"
+								},
+								{
+									"key": "compare_date_time_two",
+									"value": "2020-07-15T19:12:10"
+								},
+								{
+									"key": "get_user",
+									"value": "0"
+								},
+								{
+									"key": "user_id",
+									"value": ""
+								},
+								{
+									"key": "parent_id",
+									"value": ""
+								},
+								{
+									"key": "post_type_id",
+									"value": ""
+								},
+								{
+									"key": "language_id",
+									"value": "3"
+								},
+								{
+									"key": "get_language",
+									"value": ""
 								}
 							]
 						}
@@ -1273,7 +1325,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"post-1\",\n\t\"title\": \"title 1\",\n\t\"description\": \"description 1\",\n\t\"status\": \"status 1\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 1,\n\t\"publish_on\": \"\",\n\t\"expire_on\": \"\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"post-xxx\",\n\t\"title\": \"Post xxx\",\n\t\"description\": \"legal fera xxx\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"\",\n\t\"expire_on\": \"\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 2,\n\t\"user_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post",
@@ -1306,7 +1358,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"post-2\",\n\t\"title\": \"title 2\",\n\t\"description\": \"description 2\",\n\t\"status\": \"status 2\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 1,\n\t\"publish_on\": \"\",\n\t\"expire_on\": \"\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"post-2\",\n\t\"title\": \"titlex 2\",\n\t\"description\": \"zzz 2\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 1,\n\t\"publish_on\": \"2020-05-04 22:53:10\",\n\t\"expire_on\": \"\",\n\t\"parent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post/2",
@@ -1519,7 +1571,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"post-type 9\",\n\t\"type\": \"post-type zzz\",\n\t\"template_id\": 5\n}"
+							"raw": "{\n\t\"name\": \"post-type 9\",\n\t\"type\": \"post-page\",\n\t\"template_id\": 500\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post-type/6",
@@ -1959,7 +2011,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"name-test-4 edited\",\n\t\"url\": \"url-test\",\n\t\"target\": \"target-test\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"user\",\n\t\"configuration_idx\": 2,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"name-test-4 edited\",\n\t\"url\": \"url-test\",\n\t\"target\": \"target-test\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"user\",\n\t\"configuration_id\": 2,\n\t\"user_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/social/4",
@@ -2402,7 +2454,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"akse3ex2\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Marcelion\",\n\t\"email\": \"fe@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 31,\n\t\"page_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"Mariax\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 31,\n\t\"page_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user",
@@ -2435,10 +2487,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"usfdfer-x4x\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 7,\n\t\"avatar_id\": 35,\n\t\"xpage_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"test4\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 7,\n\t\"avatar_id\": 14,\n\t\"xpage_id\": 1\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/1",
+							"raw": "http://127.0.0.1:5000/api/user/4",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2450,7 +2502,7 @@
 							"path": [
 								"api",
 								"user",
-								"1"
+								"4"
 							]
 						}
 					},
@@ -2468,7 +2520,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/22?admin_new_owner=0",
+							"raw": "http://127.0.0.1:5000/api/user/10?admin_new_owner=0",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2480,7 +2532,7 @@
 							"path": [
 								"api",
 								"user",
-								"22"
+								"10"
 							],
 							"query": [
 								{

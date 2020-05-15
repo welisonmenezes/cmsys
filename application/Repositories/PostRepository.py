@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Post, PostSchema, PostType, Language, User
+from Models import Post, PostSchema, PostType, Language
 from Validators import PostValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
@@ -11,17 +11,32 @@ class PostRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-            # TODO: implement the post filters
+            # TODO: implement the post publish_on and expire_on filters
+            # TODO: filter by child field
 
         def run(session):
             fb = FilterBuilder(Post, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_equals_filter('status')
+            fb.set_equals_filter('user_id')
+            fb.set_equals_filter('parent_id')
+            fb.set_equals_filter('post_type_id')
+            fb.set_equals_filter('language_id')
+
+            try:
+                fb.set_date_filter('created', date_modifier=args['date_modifier'])
+                fb.set_between_dates_filter(
+                    'created',
+                    compare_date_time_one=args['compare_date_time_one'],
+                    compare_date_time_two=args['compare_date_time_two'],
+                    not_between=args['not_between']
+                )
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'title', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
             query = session.query(Post).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = PostSchema(many=True)
+            schema = PostSchema(many=True, exclude=self.get_exclude_fields(args, ['user', 'language']))
             return self.handle_success(result, schema, 'get', 'Post')
 
         return self.response(run, False)
@@ -33,7 +48,7 @@ class PostRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Post).filter_by(id=id).first()
-            schema = PostSchema(many=False)
+            schema = PostSchema(many=False, exclude=self.get_exclude_fields(args, ['user', 'language']))
             return self.handle_success(result, schema, 'get_by_id', 'Post')
 
         return self.response(run, False)
