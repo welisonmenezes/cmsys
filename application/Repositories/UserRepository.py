@@ -128,10 +128,9 @@ class UserRepository(RepositoryBase):
         def run(session):
 
             def fn(session, user):
-                # TODO: check if user has post (dont allow to delete or delegato to superadmin)
                 # TODO: check if user has comments (delete comments as well)
 
-                image_was_deleted = self.delete_or_delegate_user_contents(user,session, Media, request)
+                image_was_deleted = self.delegate_content_to_delete(user,session, request, (Media, Post))
                 if image_was_deleted != True:
                     return image_was_deleted
 
@@ -144,25 +143,3 @@ class UserRepository(RepositoryBase):
             return self.run_if_exists(fn, User, id, session)
 
         return self.response(run, True)
-
-
-    # TODO: try make the delete_or_delegate_user_contents as reusable method
-
-    def delete_or_delegate_user_contents(self, user, session, content_context, request):
-        """Deletes user's contents from content_context passed by parameter
-            or delegates they to user superadmin (id=1)"""
-
-        content = session.query(content_context).filter_by(user_id=user.id).first()
-        if content:
-            if 'admin_new_owner' in request.args and request.args['admin_new_owner'] == '1':
-                contents = session.query(content_context).filter_by(user_id=user.id).all()
-                for c in contents:
-                    admin = session.query(User).filter_by(id=1).first()
-                    if admin:
-                        c.user_id = admin.id
-                    else:
-                        return ErrorHandler().get_error(406, 'Could not find the super admin user.') 
-            else:
-                return ErrorHandler().get_error(406, 'You cannot delete this User because it has related xxxx.')
-        
-        return True
