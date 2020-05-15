@@ -106,3 +106,28 @@ class SocialRepository(RepositoryBase):
             return self.run_if_exists(fn, Social, id, session)
 
         return self.response(run, True)
+
+
+    def add_foreign_keys(self, current_context, data, session, configurations):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                setattr(current_context, config[0], None)
+
+                if getattr(current_context, 'origin') == 'configuration' and config[0] == 'user_id' and 'user_id' in data:
+                    errors.append('If the \'origin\' is configuration you dont have to send the \'user_id\'.')
+                    continue
+
+                if getattr(current_context, 'origin') == 'user' and config[0] == 'configuration_id' and 'configuration_id' in data:
+                    errors.append('If the \'origin\' is configuration you dont have to send the \'configuration_id\'.')
+                    continue
+                
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+
+            except Exception as e:
+                errors.append(str(e))
+                
+        return True if not errors else ErrorHandler().get_error(400, errors)

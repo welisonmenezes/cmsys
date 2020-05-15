@@ -2,7 +2,7 @@ from app import bcrypt
 from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social
 from Validators import UserValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper, Checker
 
 
 class UserRepository(RepositoryBase):
@@ -144,3 +144,28 @@ class UserRepository(RepositoryBase):
             return self.run_if_exists(fn, User, id, session)
 
         return self.response(run, True)
+
+
+    def add_foreign_keys(self, current_context, data, session, configurations):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                if getattr(current_context, 'id') == 1 and config[0] == 'role_id':
+                    errors.append('You cannot change the role of the primary user admin.')
+                    continue
+
+                if config[0] == 'avatar_id' and config[0] in data:
+                    image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
+                    if not image or not Checker().is_image_type(image.type):
+                        errors.append('The user avatar must be an image file.')
+                        continue
+                
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+
+            except Exception as e:
+                errors.append(str(e))
+                
+        return True if not errors else ErrorHandler().get_error(400, errors)

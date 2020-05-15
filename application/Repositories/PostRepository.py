@@ -11,6 +11,8 @@ class PostRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
+            # TODO: implement the post filters
+
         def run(session):
             fb = FilterBuilder(Post, args)
             # fb.set_equals_filter('type')
@@ -123,3 +125,27 @@ class PostRepository(RepositoryBase):
             return self.run_if_exists(fn, Post, id, session)
 
         return self.response(run, True)
+
+
+
+    def add_foreign_keys(self, current_context, data, session, configurations):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                if config[0] == 'parent_id':
+                    """If the post referenced by the parent_id is not post_type of type post-page, return error."""
+
+                    el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+                    if el and el.post_type and el.post_type.type != 'post-page':
+                        errors.append('The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'post-page\'.')
+                        continue
+
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+
+            except Exception as e:
+                errors.append(str(e))
+                
+        return True if not errors else ErrorHandler().get_error(400, errors)
