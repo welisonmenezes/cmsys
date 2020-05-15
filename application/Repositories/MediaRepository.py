@@ -45,7 +45,7 @@ class MediaRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def run(session):
-            result = session.query(Media).filter_by(id=id).first()
+            result = self.get_result_by_unique_key(id, Media, session)
             schema = MediaSchema(many=False)
             data = schema.dump(result)
 
@@ -67,7 +67,7 @@ class MediaRepository(RepositoryBase):
         """Returns the file to donwload (run when download_file == 1 configured at controller)."""
 
         def run(session):
-            result = session.query(Media).filter_by(id=id).first()
+            result = self.get_result_by_unique_key(id, Media, session)
             if (result):
                 return self.file_response(result, False)
             else:
@@ -81,7 +81,7 @@ class MediaRepository(RepositoryBase):
             (This method is called by the Image Controller which has its own endpoint for this purpose)."""
 
         def run(session):
-            result = session.query(Media).filter_by(id=id).first()
+            result = self.get_result_by_unique_key(id, Media, session)
             image_types = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/svg']
             if (result and result.type in image_types):
                 return self.file_response(result, True)

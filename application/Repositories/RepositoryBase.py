@@ -67,6 +67,13 @@ class RepositoryBase():
         else:
             return ErrorHandler().get_error(404, 'No ' + context.__tablename__ + ' found.')
 
+
+    def get_result_by_unique_key(self, id, context, session):
+        if isinstance(id, int):
+            return session.query(context).filter_by(id=id).first()
+        else:
+            return session.query(context).filter_by(name=id).first()
+
     
     def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):
         """Checks if a given id exists as primary key of the given context (a model) and returns it.

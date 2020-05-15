@@ -21,7 +21,7 @@ def start_controllers(app, api):
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
     api.add_resource(ConfigurationController, '/configuration', '/configuration/<int:id>')
     api.add_resource(LanguageController, '/language', '/language/<int:id>')
-    api.add_resource(MediaController, '/media', '/media/<int:id>', '/media/preview/<int:id>')
+    api.add_resource(MediaController, '/media', '/media/<id>', '/media/preview/<id>')
     api.add_resource(PostTypeController, '/post-type', '/post-type/<int:id>')
     api.add_resource(RoleController, '/role', '/role/<int:id>')
     api.add_resource(SocialController, '/social', '/social/<int:id>')
