@@ -241,6 +241,8 @@ class Post(Base):
     status = Column(String(15), nullable=False)
     is_protected = Column(Boolean, nullable=False) # if will be accessable to read without login
     has_comments = Column(Boolean, nullable=False)
+    publish_on = Column(DateTime, nullable=True)
+    expire_on = Column(DateTime, nullable=True)
     created = Column(DateTime, default=now, nullable=False)
     edited = Column(DateTime, default=now, onupdate=now, nullable=False)
     # foreignKeys
