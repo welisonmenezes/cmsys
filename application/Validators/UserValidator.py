@@ -19,9 +19,8 @@ class UserValidator(ValidatorBase):
             },
             'password': {
                 'key_required': True,
-                'field_required': True,
-                'max_length': 255,
-                'min_length': 6
+                'field_required_only_post': True,
+                'max_length': 255
             },
             'nickname': {
                 'key_required': True,

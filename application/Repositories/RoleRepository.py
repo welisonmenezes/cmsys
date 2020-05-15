@@ -111,6 +111,7 @@ class RoleRepository(RepositoryBase):
 
         return self.response(run, True)
 
+    # TODO: try make add_capabilities and edit_capabilities as reusable method
 
     def add_capabilities(self, role, data, session):
         """Adds capabilities, if it is possible, into the Role.

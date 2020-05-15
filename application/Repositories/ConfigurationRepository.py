@@ -54,8 +54,8 @@ class ConfigurationRepository(RepositoryBase):
                     email = data['email']
                 )
 
-                fk_was_added = self.add_foreign_keys(configuration, data, session)
-                if (fk_was_added != True):
+                fk_was_added = self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
+                if fk_was_added != True:
                     return fk_was_added
 
                 session.add(configuration)
@@ -81,8 +81,8 @@ class ConfigurationRepository(RepositoryBase):
                     configuration.has_comments = data['has_comments']
                     configuration.email = data['email']
                     
-                    fk_was_added = self.add_foreign_keys(configuration, data, session)
-                    if (fk_was_added != True):
+                    fk_was_added = self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
+                    if fk_was_added != True:
                         return fk_was_added
 
                     session.commit()
@@ -111,13 +111,3 @@ class ConfigurationRepository(RepositoryBase):
             return self.run_if_exists(fn, Configuration, id, session)
 
         return self.response(run, True)
-
-
-    def add_foreign_keys(self, configuration, data, session):
-        """Controls if the language_id is an existing foreign key data."""
-
-        try:
-            configuration.language_id = self.get_existing_foreing_id(data, 'language_id', Language, session)
-            return True
-        except Exception as e:
-            return ErrorHandler().get_error(400, e)

@@ -2,7 +2,7 @@ from app import bcrypt
 from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social
 from Validators import UserValidator
-from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder
 
 
 class UserRepository(RepositoryBase):
@@ -71,8 +71,8 @@ class UserRepository(RepositoryBase):
                     status = data['status']
                 )
                 
-                fk_was_added = self.add_foreign_keys(user, data, session)
-                if (fk_was_added != True):
+                fk_was_added = self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
+                if fk_was_added != True:
                     return fk_was_added
 
                 session.add(user)
@@ -103,8 +103,8 @@ class UserRepository(RepositoryBase):
                     if data['password'] != '' and not bcrypt.check_password_hash(user.password, data['password']):
                         user.password = bcrypt.generate_password_hash(data['password'])
 
-                    fk_was_added = self.add_foreign_keys(user, data, session)
-                    if (fk_was_added != True):
+                    fk_was_added = self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
+                    if fk_was_added != True:
                         return fk_was_added
 
                     session.commit()
@@ -129,7 +129,6 @@ class UserRepository(RepositoryBase):
                 # TODO: check if user has post (dont allow to delete or delegato to superadmin)
                 # TODO: check if user has comments (delete comments as well)
 
-                # delete or delegate user medias
                 image_was_deleted = self.delete_or_delegate_user_contents(user,session, Media, request)
                 if image_was_deleted != True:
                     return image_was_deleted
@@ -145,28 +144,7 @@ class UserRepository(RepositoryBase):
         return self.response(run, True)
 
 
-    def add_foreign_keys(self, user, data, session):
-        """Controls if the role_id, page_id and avatar_id are an existing foreign key data.
-            Also checks if the avatar_id refers to an image file type."""
-
-        try:
-            if (user.id != 1): # Cannot change Super Admin user role.
-                user.role_id = self.get_existing_foreing_id(data, 'role_id', Role, session)
-
-            user.page_id = self.get_existing_foreing_id(data, 'page_id', Post, session)
-
-            image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
-            if image:
-                if Checker().is_image_type(image.type):
-                    user.avatar_id = image.id
-                else:
-                    return ErrorHandler().get_error(400, 'The user avatar must be an image file.')
-
-            return True
-
-        except Exception as e:
-            return ErrorHandler().get_error(400, e)
-
+    # TODO: try make the delete_or_delegate_user_contents as reusable method
 
     def delete_or_delegate_user_contents(self, user, session, content_context, request):
         """Deletes user's contents from content_context passed by parameter

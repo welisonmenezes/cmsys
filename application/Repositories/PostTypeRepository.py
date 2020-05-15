@@ -48,8 +48,8 @@ class PostTypeRepository(RepositoryBase):
                     type = data['type']
                 )
 
-                fk_was_added = self.add_foreign_keys(post_type, data, session)
-                if (fk_was_added != True):
+                fk_was_added = self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
+                if fk_was_added != True:
                     return fk_was_added
 
                 session.add(post_type)
@@ -73,8 +73,8 @@ class PostTypeRepository(RepositoryBase):
                     post_type.name = data['name']
                     post_type.type = data['type']
 
-                    fk_was_added = self.add_foreign_keys(post_type, data, session)
-                    if (fk_was_added != True):
+                    fk_was_added = self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
+                    if fk_was_added != True:
                         return fk_was_added
 
                     session.commit()
@@ -103,13 +103,3 @@ class PostTypeRepository(RepositoryBase):
             return self.run_if_exists(fn, PostType, id, session)
 
         return self.response(run, True)
-
-
-    def add_foreign_keys(self, post_type, data, session):
-        """Controls if the template_id is an existing foreign key data."""
-
-        try:
-            post_type.template_id = self.get_existing_foreing_id(data, 'template_id', Template, session)
-            return True
-        except Exception as e:
-            return ErrorHandler().get_error(400, e)

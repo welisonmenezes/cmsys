@@ -116,3 +116,22 @@ class CapabilityRepository(RepositoryBase):
             return self.run_if_exists(fn, Capability, id, session)
 
         return self.response(run, True)
+
+
+    def verify_identical_capability(self, data, session, id=None):	
+        """Verifies if already exists another capability with exactly same values, if so, returns this."""	
+
+        filter = (	
+            Capability.type == data['type'],	
+            Capability.target_id == int(data['target_id']),	
+            Capability.can_write == data['can_write'],	
+            Capability.can_read == data['can_read'],	
+            Capability.can_delete == data['can_delete'],	
+        )	
+
+        if id:	
+            filter += (Capability.id != id,)	
+
+        capability = session.query(Capability).filter(*filter).first()	
+
+        return capability if capability else False

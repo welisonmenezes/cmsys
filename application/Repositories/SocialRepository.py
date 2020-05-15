@@ -51,8 +51,8 @@ class SocialRepository(RepositoryBase):
                     origin = data['origin']
                 )
 
-                fk_was_added = self.add_foreign_keys(social, data, session)
-                if (fk_was_added != True):
+                fk_was_added = self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
+                if fk_was_added != True:
                     return fk_was_added
                 
                 session.add(social)
@@ -79,8 +79,8 @@ class SocialRepository(RepositoryBase):
                     social.origin = data['origin']
                     social.description = data['description']
 
-                    fk_was_added = self.add_foreign_keys(social, data, session)
-                    if (fk_was_added != True):
+                    fk_was_added = self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
+                    if fk_was_added != True:
                         return fk_was_added
 
                     session.commit()
@@ -106,26 +106,3 @@ class SocialRepository(RepositoryBase):
             return self.run_if_exists(fn, Social, id, session)
 
         return self.response(run, True)
-
-    
-    def add_foreign_keys(self, social, data, session):
-        """Controls if the configuration_id or user_id gets an existing foreign key data.
-            Also checks if origin suitable to the foreign key requested."""
-        
-        try:
-            if (social.origin == 'configuration'):
-                if (not 'configuration_id' in data):
-                    return ErrorHandler().get_error(400, 'If the origin field is configuration the field configuration_id is required')
-
-                social.configuration_id = self.get_existing_foreing_id(data, 'configuration_id', Configuration, session)
-                
-            elif (social.origin == 'user'):
-                if (not 'user_id' in data):
-                    return ErrorHandler().get_error(400, 'If the origin field is user the field user_id is required')
-
-                social.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
-
-            return True
-
-        except Exception as e:
-            return ErrorHandler().get_error(400, e)

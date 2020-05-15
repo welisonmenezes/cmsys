@@ -111,8 +111,8 @@ class MediaRepository(RepositoryBase):
                     origin = data['origin']
                 )
 
-                fk_was_added = self.add_foreign_keys(media, data, session)
-                if (fk_was_added != True):
+                fk_was_added = self.add_foreign_keys(media, data, session, [('user_id', User)])
+                if fk_was_added != True:
                     return fk_was_added
 
                 session.add(media)
@@ -137,8 +137,8 @@ class MediaRepository(RepositoryBase):
                     media.description = data['description']
                     media.origin = data['origin']
 
-                    fk_was_added = self.add_foreign_keys(media, data, session)
-                    if (fk_was_added != True):
+                    fk_was_added = self.add_foreign_keys(media, data, session, [('user_id', User)])
+                    if fk_was_added != True:
                         return fk_was_added
 
                     if (data['file'] and data['file'] != ''):
@@ -219,13 +219,3 @@ class MediaRepository(RepositoryBase):
             return file_details
         except:
             raise Exception('Cannot get file details. Please, check if it is a valid base64 file.')
-
-
-    def add_foreign_keys(self, media, data, session):
-        """Controls if the user_id is an existing foreign key data."""
-
-        try:
-            media.user_id = self.get_existing_foreing_id(data, 'user_id', User, session)
-            return True
-        except Exception as e:
-            return ErrorHandler().get_error(400, e)
