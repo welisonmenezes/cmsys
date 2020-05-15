@@ -108,7 +108,8 @@ class MediaRepository(RepositoryBase):
                     type = file_details['type'],
                     extension = data['extension'],
                     file = file_details['data'],
-                    origin = data['origin']
+                    origin = data['origin'],
+                    created = Helper().get_current_datetime()
                 )
 
                 fk_was_added = self.add_foreign_keys(media, data, session, [('user_id', User)])
@@ -150,6 +151,7 @@ class MediaRepository(RepositoryBase):
                         media.type = file_details['type']
                         media.extension = data['extension']
                         media.file = file_details['data']
+                        media.created = Helper().get_current_datetime()
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Media', media.id)

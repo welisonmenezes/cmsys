@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Post, PostSchema
 from Validators import PostValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class PostRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -53,6 +53,8 @@ class PostRepository(RepositoryBase):
                     has_comments = data['has_comments'],
                     #publish_on = data['publish_on'],
                     #expire_on = data['expire_on'],
+                    created = Helper().get_current_datetime(),
+                    edited = Helper().get_current_datetime(),
                     #parent_id = data['parent_id'],
                     post_type_id = data['post_type_id'],
                     language_id = data['language_id'],
@@ -85,6 +87,7 @@ class PostRepository(RepositoryBase):
                     #post.publish_on = data['publish_on']
                     #post.expire_on = data['expire_on']
                     #post.parent_id = data['parent_id']
+                    post.edited = Helper().get_current_datetime()
                     post.post_type_id = data['post_type_id']
                     post.language_id = data['language_id']
                     post.user_id = data['user_id']

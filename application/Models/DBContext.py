@@ -1,36 +1,28 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, Boolean, DateTime, Table, LargeBinary
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-import datetime
 
 Base = declarative_base()
-
-now = datetime.datetime.now()
-
 
 Post_Term = Table('Post_Term', Base.metadata,
     Column('post_id', Integer, ForeignKey('Post.id'), nullable=False),
     Column('term_id', Integer, ForeignKey('Term.id'), nullable=False)
 )
 
-
 Post_Type_Taxonomy = Table('Post_Type_Taxonomy', Base.metadata,
     Column('post_type_id', Integer, ForeignKey('Post_Type.id'), nullable=False),
     Column('taxonomy_id', Integer, ForeignKey('Taxonomy.id'), nullable=False)
 )
-
 
 Sector_Menu = Table('Sector_Menu', Base.metadata,
     Column('sector_id', Integer, ForeignKey('Sector.id'), nullable=False),
     Column('menu_id', Integer, ForeignKey('Menu.id'), nullable=False)
 )
 
-
 Capability_Role = Table('Capability_Role', Base.metadata,
     Column('capability_id', Integer, ForeignKey('Capability.id'), nullable=False),
     Column('role_id', Integer, ForeignKey('Role.id'), nullable=False)
 )
-
 
 class Blacklist(Base):
     __tablename__ = 'Blacklist'
@@ -60,7 +52,7 @@ class Comment(Base):
     status = Column(String(15), nullable=False)
     origin_ip = Column(String(100), nullable=False)
     origin_agent = Column(String(255), nullable=False)
-    created = Column(DateTime, default=now, nullable=False)
+    created = Column(DateTime, nullable=False)
     # foreignKeys
     parent_id = Column(Integer, ForeignKey('Comment.id'), nullable=True)
     user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
@@ -176,7 +168,7 @@ class Media(Base):
     extension = Column(String(4), nullable=False)
     file = Column(LargeBinary, nullable=False)
     origin = Column(String(50), nullable=False) # where came from (post, user avatar, configuration, etc...)
-    created = Column(DateTime, default=now, nullable=False)
+    created = Column(DateTime, nullable=False)
     # foreignKeys
     user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     # relationships
@@ -243,8 +235,8 @@ class Post(Base):
     has_comments = Column(Boolean, nullable=False)
     publish_on = Column(DateTime, nullable=True)
     expire_on = Column(DateTime, nullable=True)
-    created = Column(DateTime, default=now, nullable=False)
-    edited = Column(DateTime, default=now, onupdate=now, nullable=False)
+    created = Column(DateTime, nullable=False)
+    edited = Column(DateTime, nullable=False)
     # foreignKeys
     parent_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
     post_type_id = Column(Integer, ForeignKey('Post_Type.id'), nullable=False)
@@ -364,7 +356,7 @@ class User(Base):
     first_name = Column(String(100), nullable=True)
     last_name = Column(String(100), nullable=True)
     email = Column(String(100), nullable=False)
-    registered = Column(DateTime, default=now, nullable=False)
+    registered = Column(DateTime, nullable=False)
     status = Column(String(15), nullable=False)
     # foreignKeys
     role_id = Column(Integer, ForeignKey('Role.id'), nullable=False)

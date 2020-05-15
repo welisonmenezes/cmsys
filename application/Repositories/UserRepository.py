@@ -2,7 +2,7 @@ from app import bcrypt
 from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social
 from Validators import UserValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 
 class UserRepository(RepositoryBase):
@@ -68,7 +68,8 @@ class UserRepository(RepositoryBase):
                     first_name = data['first_name'],
                     last_name = data['last_name'],
                     email = data['email'],
-                    status = data['status']
+                    status = data['status'],
+                    registered = Helper().get_current_datetime()
                 )
                 
                 fk_was_added = self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
@@ -99,6 +100,7 @@ class UserRepository(RepositoryBase):
                     user.last_name = data['last_name']
                     user.email = data['email']
                     user.status = data['status']
+                    user.registered = Helper().get_current_datetime()
 
                     if data['password'] != '' and not bcrypt.check_password_hash(user.password, data['password']):
                         user.password = bcrypt.generate_password_hash(data['password'])

@@ -81,7 +81,7 @@ class ValidatorBase():
             if (el):
                 if ('id' in extra_args):
                     if (getattr(el, key) == self.request[key]):
-                        if (extra_args['id'] != el.id):
+                        if (int(extra_args['id']) != int(el.id)):
                             self.handle_validation_error('The field \'' + key + '\' already exists in database.')
                 else:        
                     self.handle_validation_error('The field \'' + key + '\' already exists in database.')

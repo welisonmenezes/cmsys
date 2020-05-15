@@ -15,6 +15,13 @@ class Helper():
         except:
             raise Exception('Invalid format date. It must be like \'0000-00-00 00:00:00\'')
 
+    
+    def get_current_datetime(self):
+        """Returns the current datetime"""
+        
+        from datetime import datetime
+        return datetime.now()
+
 
     def get_base64_size(self, b64string):
         """Calculates the size of a given base64 string and returns its result."""
