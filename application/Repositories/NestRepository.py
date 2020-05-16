@@ -13,13 +13,13 @@ class NestRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Nest, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_equals_filter('post_id')
+            fb.set_equals_filter('post_type_id')
+            fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
 
             query = session.query(Nest).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = NestSchema(many=True)
+            schema = NestSchema(many=True, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
             return self.handle_success(result, schema, 'get', 'Nest')
 
         return self.response(run, False)
@@ -31,7 +31,7 @@ class NestRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Nest).filter_by(id=id).first()
-            schema = NestSchema(many=False)
+            schema = NestSchema(many=False, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
             return self.handle_success(result, schema, 'get_by_id', 'Nest')
 
         return self.response(run, False)

@@ -4,6 +4,9 @@ from app import app
 
 ma = Marshmallow(app)
 
+exclude_post = ('user', 'language', 'parent', 'children', 'post_type', 'nests')
+exclude_post_type = ('template', 'nests',)
+
 class BlacklistSchema(ma.Schema):
     class Meta:
         fields = ('id', 'type', 'value', 'target')
@@ -34,27 +37,31 @@ class MediaSchema(ma.Schema):
 
 
 class NestSchema(ma.Schema):
+    post_type = fields.Nested('PostTypeSchema', many=False, exclude=exclude_post_type)
+    post = fields.Nested('PostSchema', many=False, exclude=exclude_post)
     class Meta:
-        fields = ('id', 'name', 'description', 'limit', 'has_pagination', 'post_id', 'post_type_id')
+        fields = ('id', 'name', 'description', 'limit', 'has_pagination', 'post_id', 'post_type_id', 'post', 'post_type')
 
 
 class PostSchema(ma.Schema):
     user = fields.Nested('UserSchema', many=False, exclude=('role', 'password'))
     language = fields.Nested('LanguageSchema', many=False)
-    parent = fields.Nested('PostSchema', many=False, exclude=('user', 'language', 'parent', 'children'))
-    children = fields.Nested('PostSchema', many=True, exclude=('user', 'language', 'parent', 'children'))
+    parent = fields.Nested('PostSchema', many=False, exclude=exclude_post)
+    children = fields.Nested('PostSchema', many=True, exclude=exclude_post)
     post_type = fields.Nested('PostTypeSchema', many=False)
+    nests = fields.Nested('NestSchema', many=True, exclude=('post',))
     class Meta:
         fields = ('id', 'name', 'title', 'description', 'status', 'is_protected', 
         'has_comments', 'publish_on', 'expire_on', 'created', 'edited', 'parent_id', 
         'post_type_id', 'language_id', 'user_id', 'user', 'language', 'parent', 'children',
-        'post_type')
+        'post_type', 'nests')
 
 
 class PostTypeSchema(ma.Schema):
     template = fields.Nested('TemplateSchema', many=False)
+    nests = fields.Nested('NestSchema', many=True, exclude=('post_type',))
     class Meta:
-        fields = ('id', 'name', 'type', 'template_id', 'template')
+        fields = ('id', 'name', 'type', 'template_id', 'template', 'nests')
 
 
 class RoleSchema(ma.Schema):
@@ -71,7 +78,7 @@ class SocialSchema(ma.Schema):
 
 
 class TemplateSchema(ma.Schema):
-    post_types = fields.Nested('PostTypeSchema', many=True, exclude=('template',))
+    post_types = fields.Nested('PostTypeSchema', many=True, exclude=exclude_post_type)
     class Meta:
         fields = ('id', 'name', 'description', 'value', 'post_types')
 
@@ -81,7 +88,7 @@ class UserSchema(ma.Schema):
     socials = fields.Nested('RoleSchema', many=True)
     medias = fields.Nested('MediaSchema', many=True, exclude=('user',))
     avatar = fields.Nested('MediaSchema', many=False, exclude=('user',))
-    page = fields.Nested('PostSchema', many=False, exclude=('user', 'language', 'parent', 'children', 'post_type'))
+    page = fields.Nested('PostSchema', many=False, exclude=exclude_post)
     class Meta:
         fields = ('id', 'login', 'password', 'nickname', 'first_name', 'last_name', 'email', 
         'registered', 'status', 'role_id', 'avatar_id', 'page_id', 'role', 'socials',

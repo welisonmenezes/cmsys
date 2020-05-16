@@ -220,8 +220,8 @@ class Nest(Base):
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     post_type_id = Column(Integer, ForeignKey('Post_Type.id'), nullable=False)
     # relationships
-    # post = relationship('Post', foreign_keys='Nest.post_id')
-    # post_type = relationship('PostType', foreign_keys='Nest.post_type_id')
+    post = relationship('Post', foreign_keys='Nest.post_id')
+    post_type = relationship('PostType', foreign_keys='Nest.post_type_id')
 
 
 class Post(Base):
@@ -249,10 +249,10 @@ class Post(Base):
     post_type = relationship('PostType', foreign_keys='Post.post_type_id')
     user = relationship('User', foreign_keys='Post.user_id')
     language = relationship('Language', foreign_keys='Post.language_id')
+    nests = relationship('Nest')
     # term = relationship('Term')
     # groupers = relationship('Grouper')
     # comments = relationship('Comment')
-    #nests = relationship('Nest')
     #page_owner = relationship('User', foreign_keys='User.page_id')
 
 
@@ -265,9 +265,9 @@ class PostType(Base):
     template_id = Column(Integer, ForeignKey('Template.id'))
     # relationships
     template = relationship('Template', foreign_keys='PostType.template_id')
+    nests = relationship('Nest')
     # posts = relationship('Post')
     # taxonomies = relationship('Taxonomy', secondary=Post_Type_Taxonomy)
-    # pt_nests = relationship('Nest')
 
 
 class Role(Base):

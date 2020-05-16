@@ -18,7 +18,7 @@ class PostTypeRepository(RepositoryBase):
 
             query = session.query(PostType).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = PostTypeSchema(many=True, exclude=self.get_exclude_fields(args, ['template']))
+            schema = PostTypeSchema(many=True, exclude=self.get_exclude_fields(args, ['template', 'nests']))
             return self.handle_success(result, schema, 'get', 'PostType')
 
         return self.response(run, False)
@@ -30,7 +30,7 @@ class PostTypeRepository(RepositoryBase):
 
         def run(session):
             result = session.query(PostType).filter_by(id=id).first()
-            schema = PostTypeSchema(many=False, exclude=self.get_exclude_fields(args, ['template']))
+            schema = PostTypeSchema(many=False, exclude=self.get_exclude_fields(args, ['template', 'nests']))
             return self.handle_success(result, schema, 'get_by_id', 'PostType')
 
         return self.response(run, False)
