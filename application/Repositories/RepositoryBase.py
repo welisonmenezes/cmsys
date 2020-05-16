@@ -37,6 +37,11 @@ class RepositoryBase():
             if (need_rollback):
                 session.rollback()
             return ErrorHandler().get_error(500, str(e))
+
+        except Exception as e:
+            if (need_rollback):
+                session.rollback()
+            return ErrorHandler().get_error(500, str(e))
             
         finally:
             session.close()
@@ -68,29 +73,6 @@ class RepositoryBase():
             return ErrorHandler().get_error(404, 'No ' + context.__tablename__ + ' found.')
 
 
-    def get_result_by_unique_key(self, id, context, session):
-        if Checker().can_be_integer(id):
-            return session.query(context).filter_by(id=id).first()
-        else:
-            return session.query(context).filter_by(name=id).first()
-
-    
-    def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):
-        """Checks if a given id exists as primary key of the given context (a model) and returns it.
-            Also is possible returns the complete row if get_all_fields is true."""
-
-        if (key in data):
-            if (get_all_filelds):
-                element = session.query(context).filter_by(id=int(data[key])).first()
-            else:
-                element = session.query(getattr(context, 'id')).filter_by(id=int(data[key])).first()
-                
-            if (element):
-                return element if get_all_filelds else element.id
-            else:
-                raise Exception('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))
-
-    
     def get_exclude_fields(self, args, fields):
         """Returns the fields witch must be ignored by the sql query.
             The arguments received by parameters determines the correct behave."""
@@ -122,56 +104,6 @@ class RepositoryBase():
             return ErrorHandler().get_error(500, 'Invalid success error handler parameters.')
 
 
-    def is_foreigners(self, configurations, session):
-        """Verifies if is a foreigner on any given context at configuration, if so, return errors. How to use:
-            The configuration must like: [(current_context, foreign_key_at_target_context, target_context)]"""
-
-        errors = []
-        for config in configurations:
-            filter = (getattr(config[2], config[1])==getattr(config[0], 'id'),)
-            element = session.query(getattr(config[2], 'id')).filter(*filter).first()
-            if (element):
-                errors.append('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
-
-        return False if not errors else ErrorHandler().get_error(406, errors)
-
-
-    def add_foreign_keys(self, current_context, data, session, configurations):
-        """Controls if the list of foreign keys is an existing foreign key data. How to use:
-            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
-
-        errors = []
-        for config in configurations:
-            try:
-                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
-            except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
-
-
-    def delegate_content_to_delete(self, user, session, request, context_list):
-        """Delegates user's contents to superadmin (id=1) from list of context passed 
-            by parameter context_list. Only do that if admin_new_owner is given as arg"""
-
-        errors = []
-        for content_context in context_list:
-            content = session.query(content_context).filter_by(user_id=user.id).first()
-            if content:
-                if 'admin_new_owner' in request.args and request.args['admin_new_owner'] == '1':
-                    contents = session.query(content_context).filter_by(user_id=user.id).all()
-                    for c in contents:
-                        admin = session.query(User).filter_by(id=1).first()
-                        if admin:
-                            c.user_id = admin.id
-                        else:
-                            errors.append('Could not find the super admin user.')
-                else:
-                    errors.append('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
-
-        return True if not errors else  ErrorHandler().get_error(406, errors)
-
-
     def get_suggestions(self, name, context, session):
         """Returns names suggestions to given context from given initial name."""
 
@@ -198,3 +130,54 @@ class RepositoryBase():
         return {
             'suggestions': suggestions
         }, 200
+
+
+    def get_result_by_unique_key(self, id, context, session):
+        if Checker().can_be_integer(id):
+            return session.query(context).filter_by(id=id).first()
+        else:
+            return session.query(context).filter_by(name=id).first()
+
+    
+    def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):
+        """Checks if a given id exists as primary key of the given context (a model) and returns it.
+            Also is possible returns the complete row if get_all_fields is true."""
+
+        if (key in data):
+            if (get_all_filelds):
+                element = session.query(context).filter_by(id=int(data[key])).first()
+            else:
+                element = session.query(getattr(context, 'id')).filter_by(id=int(data[key])).first()
+                
+            if (element):
+                return element if get_all_filelds else element.id
+            else:
+                raise Exception('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))
+
+
+    def is_foreigners(self, configurations, session):
+        """Verifies if is a foreigner on any given context at configuration, if so, return errors. How to use:
+            The configuration must like: [(current_context, foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            filter = (getattr(config[2], config[1])==getattr(config[0], 'id'),)
+            element = session.query(getattr(config[2], 'id')).filter(*filter).first()
+            if element:
+                errors.append('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
+
+        return False if not errors else ErrorHandler().get_error(406, errors)
+
+
+    def add_foreign_keys(self, current_context, data, session, configurations):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+            except Exception as e:
+                errors.append(str(e))
+                
+        return True if not errors else ErrorHandler().get_error(400, errors)

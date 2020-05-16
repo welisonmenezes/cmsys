@@ -24,6 +24,7 @@ class PostController(ControllerBase):
         self.parser.add_argument('language_id')
         self.parser.add_argument('get_user')
         self.parser.add_argument('get_language')
+        self.parser.add_argument('remove_foreign_keys')
         self.args = self.parser.parse_args()
         
         if str(request.url_rule) == '/api/post/suggestions/<name>':

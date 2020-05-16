@@ -169,3 +169,25 @@ class UserRepository(RepositoryBase):
                 errors.append(str(e))
                 
         return True if not errors else ErrorHandler().get_error(400, errors)
+
+
+    def delegate_content_to_delete(self, user, session, request, context_list):
+        """Delegates user's contents to superadmin (id=1) from list of context passed 
+            by parameter context_list. Only do that if admin_new_owner is given as arg"""
+
+        errors = []
+        for content_context in context_list:
+            content = session.query(content_context).filter_by(user_id=user.id).first()
+            if content:
+                if 'admin_new_owner' in request.args and request.args['admin_new_owner'] == '1':
+                    contents = session.query(content_context).filter_by(user_id=user.id).all()
+                    for c in contents:
+                        admin = session.query(User).filter_by(id=1).first()
+                        if admin:
+                            c.user_id = admin.id
+                        else:
+                            errors.append('Could not find the super admin user.')
+                else:
+                    errors.append('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
+
+        return True if not errors else  ErrorHandler().get_error(406, errors)
