@@ -12,7 +12,7 @@ class MediaController(ControllerBase):
         self.repo = MediaRepository()
 
 
-    def get(self, id=None):
+    def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
         self.parser.add_argument('download_file')
@@ -26,6 +26,8 @@ class MediaController(ControllerBase):
 
         if str(request.url_rule) == '/api/media/preview/<id>':
             return self.repo.get_image_preview(id)
+        elif str(request.url_rule) == '/api/media/suggestions/<name>':
+            return self.repo.get_name_suggestions(name, self.args)
         elif (id and self.args['download_file'] == '1'):
             return self.repo.get_file(id, self.args)
         elif id:

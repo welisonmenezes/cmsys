@@ -63,6 +63,15 @@ class MediaRepository(RepositoryBase):
         return self.response(run, False)
 
 
+    def get_name_suggestions(self, name, args):
+        """Returns names suggestions to new Media."""
+
+        def run(session):
+            return self.get_suggestions(name, Media, session)
+
+        return self.response(run, False)
+
+
     def get_file(self, id, args):
         """Returns the file to donwload (run when download_file == 1 configured at controller)."""
 
