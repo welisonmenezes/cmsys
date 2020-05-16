@@ -1,3 +1,4 @@
+from flask import request
 from .ControllerBase import ControllerBase
 from Repositories import PostRepository
 
@@ -11,7 +12,7 @@ class PostController(ControllerBase):
         self.repo = PostRepository()
         
 
-    def get(self, id=None):
+    def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
         self.parser.add_argument('s')
@@ -24,5 +25,10 @@ class PostController(ControllerBase):
         self.parser.add_argument('get_user')
         self.parser.add_argument('get_language')
         self.args = self.parser.parse_args()
-
-        return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
+        
+        if str(request.url_rule) == '/api/post/suggestions/<name>':
+            return self.repo.get_name_suggestions(name, self.args)
+        elif id:
+            return self.repo.get_by_id(id, self.args)
+        else:
+            return self.repo.get(self.args)

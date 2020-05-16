@@ -53,6 +53,15 @@ class PostRepository(RepositoryBase):
 
         return self.response(run, False)
 
+
+    def get_name_suggestions(self, name, args):
+        """Returns names suggestions to new Media."""
+
+        def run(session):
+            return self.get_suggestions(name, Post, session)
+
+        return self.response(run, False)
+
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
@@ -82,7 +91,7 @@ class PostRepository(RepositoryBase):
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Post', post.id)
 
-            return self.validate_before(process, request.get_json(), PostValidator, session)
+            return self.validate_before(process, Helper().get_with_slug(request.get_json(), 'name'), PostValidator, session)
 
         return self.response(run, True)
 
@@ -115,7 +124,7 @@ class PostRepository(RepositoryBase):
 
                 return self.run_if_exists(fn, Post, id, session)
 
-            return self.validate_before(process, request.get_json(), PostValidator, session, id=id)
+            return self.validate_before(process, Helper().get_with_slug(request.get_json(), 'name'), PostValidator, session, id=id)
 
         return self.response(run, True)
 

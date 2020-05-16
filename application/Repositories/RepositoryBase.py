@@ -183,7 +183,7 @@ class RepositoryBase():
         total_index = 0
         while index < 10 and total_index < 100:
             result = session.query(getattr(context, 'name')).filter_by(name=searchable_name).first()
-            suggestion_index += 1
+            
             if result:
                 searchable_name = initial_name + '-' + str(suggestion_index)
             else:
@@ -192,7 +192,8 @@ class RepositoryBase():
                     index += 1
                 else:
                     searchable_name = initial_name + '-' + str(suggestion_index)
-                
+            
+            suggestion_index += 1
             total_index += 1
 
         return {
