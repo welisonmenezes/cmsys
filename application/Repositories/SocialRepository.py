@@ -19,7 +19,7 @@ class SocialRepository(RepositoryBase):
 
             query = session.query(Social).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = SocialSchema(many=True)
+            schema = SocialSchema(many=True, exclude=self.get_exclude_fields(args, ['user', 'configuration']))
             return self.handle_success(result, schema, 'get', 'Social')
 
         return self.response(run, False)
@@ -31,7 +31,7 @@ class SocialRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Social).filter_by(id=id).first()
-            schema = SocialSchema(many=False)
+            schema = SocialSchema(many=False, exclude=self.get_exclude_fields(args, ['user', 'configuration']))
             return self.handle_success(result, schema, 'get_by_id', 'Social')
 
         return self.response(run, False)

@@ -16,6 +16,7 @@ class TemplateController(ControllerBase):
 
         self.parser.add_argument('name')
         self.parser.add_argument('s')
+        self.parser.add_argument('get_post_types')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)

@@ -22,7 +22,7 @@ class TemplateRepository(RepositoryBase):
 
             query = session.query(Template).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = TemplateSchema(many=True)
+            schema = TemplateSchema(many=True, exclude=self.get_exclude_fields(args, ['post_types']))
             return self.handle_success(result, schema, 'get', 'Template')
 
         return self.response(run, False)
@@ -34,7 +34,7 @@ class TemplateRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Template).filter_by(id=id).first()
-            schema = TemplateSchema(many=False)
+            schema = TemplateSchema(many=False, exclude=self.get_exclude_fields(args, ['post_types']))
             return self.handle_success(result, schema, 'get_by_id', 'Template')
 
         return self.response(run, False)

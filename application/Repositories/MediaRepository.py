@@ -34,7 +34,7 @@ class MediaRepository(RepositoryBase):
 
             query = session.query(Media).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = MediaSchema(many=True)
+            schema = MediaSchema(many=True, exclude=self.get_exclude_fields(args, ['user']))
             return self.handle_success(result, schema, 'get', 'Media')
 
         return self.response(run, False)
@@ -46,7 +46,7 @@ class MediaRepository(RepositoryBase):
 
         def run(session):
             result = self.get_result_by_unique_key(id, Media, session)
-            schema = MediaSchema(many=False)
+            schema = MediaSchema(many=False, exclude=self.get_exclude_fields(args, ['user']))
             data = schema.dump(result)
 
             if (data):

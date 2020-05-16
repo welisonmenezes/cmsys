@@ -17,6 +17,8 @@ class SocialController(ControllerBase):
         self.parser.add_argument('name')
         self.parser.add_argument('origin')
         self.parser.add_argument('user_id')
+        self.parser.add_argument('get_user')
+        self.parser.add_argument('get_configuration')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)

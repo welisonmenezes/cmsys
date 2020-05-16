@@ -36,7 +36,7 @@ class PostRepository(RepositoryBase):
 
             query = session.query(Post).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = PostSchema(many=True, exclude=self.get_exclude_fields(args, ['user', 'language']))
+            schema = PostSchema(many=True, exclude=self.get_exclude_fields(args, ['user', 'language', 'parent', 'children', 'post_type']))
             return self.handle_success(result, schema, 'get', 'Post')
 
         return self.response(run, False)
@@ -48,7 +48,7 @@ class PostRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Post).filter_by(id=id).first()
-            schema = PostSchema(many=False, exclude=self.get_exclude_fields(args, ['user', 'language']))
+            schema = PostSchema(many=False, exclude=self.get_exclude_fields(args, ['user', 'language', 'parent', 'children', 'post_type']))
             return self.handle_success(result, schema, 'get_by_id', 'Post')
 
         return self.response(run, False)
@@ -199,4 +199,3 @@ class PostRepository(RepositoryBase):
                 errors.append(str(e))
                 
         return True if not errors else ErrorHandler().get_error(400, errors)
-        

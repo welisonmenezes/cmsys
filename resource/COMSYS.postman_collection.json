@@ -264,7 +264,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability?description=&type=&target_id=&can_write=&can_delete=&can_read=&get_roles=1&order_by=id&order=asc",
+							"raw": "http://127.0.0.1:5000/api/capability?description=&type=&target_id=&can_write=&can_delete=&can_read=&get_roles=1&order_by=id&order=desc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -312,7 +312,7 @@
 								},
 								{
 									"key": "order",
-									"value": "asc"
+									"value": "desc"
 								}
 							]
 						}
@@ -491,7 +491,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/configuration?page=1&limit=10&order_by=id&order=desc&s=&language_id=2&get_language=0",
+							"raw": "http://127.0.0.1:5000/api/configuration?page=1&limit=10&order_by=id&order=desc&s=&language_id=&get_language=1&get_socials=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -527,11 +527,15 @@
 								},
 								{
 									"key": "language_id",
-									"value": "2"
+									"value": ""
 								},
 								{
 									"key": "get_language",
-									"value": "0"
+									"value": "1"
+								},
+								{
+									"key": "get_socials",
+									"value": "1"
 								}
 							]
 						}
@@ -929,7 +933,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=created&order=desc&type=&origin=&user_id=&created=&date_modifier=&compare_date_time_one=2020-05-02T00:00:00&compare_date_time_two=2020-05-05T00:00:00&not_between=0&s=",
+							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=created&order=desc&type=&origin=&user_id=&created=&date_modifier=&compare_date_time_one=&compare_date_time_two=&not_between=0&s=&get_user=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -981,11 +985,11 @@
 								},
 								{
 									"key": "compare_date_time_one",
-									"value": "2020-05-02T00:00:00"
+									"value": ""
 								},
 								{
 									"key": "compare_date_time_two",
-									"value": "2020-05-05T00:00:00"
+									"value": ""
 								},
 								{
 									"key": "not_between",
@@ -994,6 +998,10 @@
 								{
 									"key": "s",
 									"value": ""
+								},
+								{
+									"key": "get_user",
+									"value": "1"
 								}
 							]
 						}
@@ -1226,7 +1234,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=10&order_by=id&order=desc&s=&status=&date_modifier=&created=&not_between=&compare_date_time_one=&compare_date_time_two=&get_user=0&user_id=&parent_id=&post_type_id=&language_id=&get_language=",
+							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=10&order_by=id&order=asc&s=&status=&date_modifier=&created=&not_between=&compare_date_time_one=&compare_date_time_two=&get_user=0&user_id=&parent_id=&post_type_id=&language_id=&get_language=&get_parent=0&get_children=0&get_post_type=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1254,7 +1262,7 @@
 								},
 								{
 									"key": "order",
-									"value": "desc"
+									"value": "asc"
 								},
 								{
 									"key": "s",
@@ -1307,6 +1315,18 @@
 								{
 									"key": "get_language",
 									"value": ""
+								},
+								{
+									"key": "get_parent",
+									"value": "0"
+								},
+								{
+									"key": "get_children",
+									"value": "0"
+								},
+								{
+									"key": "get_post_type",
+									"value": "1"
 								}
 							]
 						}
@@ -1375,7 +1395,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"póstÇçâ cora\",\n\t\"title\": \"Post xxx\",\n\t\"description\": \"legal fera xxx\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"\",\n\t\"expire_on\": \"\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 2,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"póstÇçâ cora\",\n\t\"title\": \"Post xxx\",\n\t\"description\": \"legal fera xxx\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"\",\n\t\"expire_on\": \"\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 244,\n\t\"user_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post",
@@ -1441,7 +1461,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post/3",
+							"raw": "http://127.0.0.1:5000/api/post/2?remove_foreign_keys=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1453,7 +1473,13 @@
 							"path": [
 								"api",
 								"post",
-								"3"
+								"2"
+							],
+							"query": [
+								{
+									"key": "remove_foreign_keys",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1721,7 +1747,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=&page=1&limit=10&name=&get_capabilities=1&capability_description=add-by-role&order_by=id&order=asc",
+							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=&page=1&limit=10&name=&get_capabilities=1&capability_description=add-by-role&order_by=&order=asc",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1761,7 +1787,7 @@
 								},
 								{
 									"key": "order_by",
-									"value": "id"
+									"value": ""
 								},
 								{
 									"key": "order",
@@ -1944,7 +1970,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/social?page=1&limit=10&order_by=id&order=desc&name=&origin=&user_id=",
+							"raw": "http://127.0.0.1:5000/api/social?page=1&limit=10&order_by=id&order=desc&name=&origin=&user_id=&get_user=1&get_configuration=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1985,6 +2011,14 @@
 								{
 									"key": "user_id",
 									"value": ""
+								},
+								{
+									"key": "get_user",
+									"value": "1"
+								},
+								{
+									"key": "get_configuration",
+									"value": "1"
 								}
 							]
 						}
@@ -2157,7 +2191,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/template?page=1&limit=10&order_by=id&order=asc&s=4&name=",
+							"raw": "http://127.0.0.1:5000/api/template?page=1&limit=10&order_by=id&order=asc&s=&name=&get_post_types=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2189,11 +2223,15 @@
 								},
 								{
 									"key": "s",
-									"value": "4"
+									"value": ""
 								},
 								{
 									"key": "name",
 									"value": ""
+								},
+								{
+									"key": "get_post_types",
+									"value": "1"
 								}
 							]
 						}
@@ -2378,7 +2416,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=registered&order=asc&s=&email=gi&status=&role_id=&registered=&date_modifier=equal&get_role=1&get_socials=1&compare_date_time_one=2020-05-06T00:00:00&compare_date_time_two=2020-05-08T00:00:00&not_between=1",
+							"raw": "http://127.0.0.1:5000/api/user?page=1&limit=10&order_by=&order=&s=&email=&status=&role_id=&registered=&date_modifier=&compare_date_time_one=&compare_date_time_two=&not_between=&get_medias=&get_page=&get_avatar=&get_role=&get_socials=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2402,11 +2440,11 @@
 								},
 								{
 									"key": "order_by",
-									"value": "registered"
+									"value": ""
 								},
 								{
 									"key": "order",
-									"value": "asc"
+									"value": ""
 								},
 								{
 									"key": "s",
@@ -2414,7 +2452,7 @@
 								},
 								{
 									"key": "email",
-									"value": "gi"
+									"value": ""
 								},
 								{
 									"key": "status",
@@ -2430,27 +2468,39 @@
 								},
 								{
 									"key": "date_modifier",
-									"value": "equal"
-								},
-								{
-									"key": "get_role",
-									"value": "1"
-								},
-								{
-									"key": "get_socials",
-									"value": "1"
+									"value": ""
 								},
 								{
 									"key": "compare_date_time_one",
-									"value": "2020-05-06T00:00:00"
+									"value": ""
 								},
 								{
 									"key": "compare_date_time_two",
-									"value": "2020-05-08T00:00:00"
+									"value": ""
 								},
 								{
 									"key": "not_between",
-									"value": "1"
+									"value": ""
+								},
+								{
+									"key": "get_medias",
+									"value": ""
+								},
+								{
+									"key": "get_page",
+									"value": ""
+								},
+								{
+									"key": "get_avatar",
+									"value": ""
+								},
+								{
+									"key": "get_role",
+									"value": ""
+								},
+								{
+									"key": "get_socials",
+									"value": ""
 								}
 							]
 						}

@@ -22,6 +22,7 @@ class MediaController(ControllerBase):
         self.parser.add_argument('origin')
         self.parser.add_argument('created')
         self.parser.add_argument('user_id')
+        self.parser.add_argument('get_user')
         self.args = self.parser.parse_args()
 
         if str(request.url_rule) == '/api/media/preview/<id>':
