@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import PostType, PostTypeSchema, Template, Post
+from Models import PostType, PostTypeSchema, Template, Post, Nest
 from Validators import PostTypeValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -97,6 +97,8 @@ class PostTypeRepository(RepositoryBase):
                 is_foreigners = self.is_foreigners([(post_type, 'post_type_id', Post)], session)
                 if is_foreigners != False:
                     return is_foreigners
+
+                session.query(Nest).filter_by(post_type_id=post_type.id).delete(synchronize_session='evaluate')
 
                 session.delete(post_type)
                 session.commit()

@@ -1,7 +1,9 @@
 from .RepositoryBase import RepositoryBase
-from Models import Nest, NestSchema
+from Models import Nest, NestSchema, Post, PostType
 from Validators import NestValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
+
+# TODO: dont allow add to nest post_type_id field a post_type whose type be different than nested-page
 
 class NestRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -48,10 +50,13 @@ class NestRepository(RepositoryBase):
                     name = data['name'],
                     description = data['description'],
                     limit = data['limit'],
-                    has_pagination = data['has_pagination'],
-                    post_id = data['post_id'],
-                    post_type_id = data['post_type_id']
+                    has_pagination = data['has_pagination']
                 )
+
+                fk_was_added = self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
+                if fk_was_added != True:
+                    return fk_was_added
+
                 session.add(nest)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Nest', nest.id)
@@ -74,8 +79,11 @@ class NestRepository(RepositoryBase):
                     nest.description = data['description']
                     nest.limit = data['limit']
                     nest.has_pagination = data['has_pagination']
-                    nest.post_id = data['post_id']
-                    nest.post_type_id = data['post_type_id']
+
+                    fk_was_added = self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
+                    if fk_was_added != True:
+                        return fk_was_added
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Nest', nest.id)
 
