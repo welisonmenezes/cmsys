@@ -3,6 +3,7 @@ from .CapabilityValidator import *
 from .ConfigurationValidator import *
 from .LanguageValidator import *
 from .MediaValidator import *
+from .NestValidator import *
 from .PostValidator import *
 from .PostTypeValidator import *
 from .RoleValidator import *
