@@ -175,25 +175,24 @@ class RepositoryBase():
     def get_suggestions(self, name, context, session):
         """Returns names suggestions to given context from given initial name."""
 
-        initial_name = name
-        searchable_name = name
-        suggestion_index = 0
+        initial_name = searchable_name = name
+        suggestion_index = index = total_index = 0
         suggestions = []
-        index = 0
-        total_index = 0
+        
         while index < 10 and total_index < 100:
             result = session.query(getattr(context, 'name')).filter_by(name=searchable_name).first()
             
             if result:
+                suggestion_index += 1
                 searchable_name = initial_name + '-' + str(suggestion_index)
             else:
                 if not searchable_name in suggestions:
                     suggestions.append(searchable_name)
                     index += 1
+                    suggestion_index += 1
                 else:
                     searchable_name = initial_name + '-' + str(suggestion_index)
             
-            suggestion_index += 1
             total_index += 1
 
         return {
