@@ -67,7 +67,7 @@ class PostRepository(RepositoryBase):
         """Creates a new row based on the data received by the request object."""
 
         def run(session):
-
+            
             def process(session, data):
 
                 post = Post(
@@ -119,6 +119,9 @@ class PostRepository(RepositoryBase):
                     if fk_was_added != True:
                         return fk_was_added
 
+                    if post.parent_id and int(post.parent_id) == int(id):
+                        return ErrorHandler().get_error(400, 'The Post cannot be parent of yourself.')
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Post', post.id)
 
@@ -169,31 +172,6 @@ class PostRepository(RepositoryBase):
                         continue
 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
-
-            except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
-
-
-    def set_foreign_keys_as_null(self, instance, request, session, configurations):
-        """Sets the given foreign key at the given Model as None to allow delete the given instance.
-            Note that this only occurs if the 'remove_foreign_key' passed by request param was equals 1.
-            How to use: The configuration must like: [(foreign_key_at_target_context, target_context)]"""
-
-        errors = []
-        for config in configurations:
-            try:
-                    if 'remove_foreign_keys' in request.args and request.args['remove_foreign_keys'] == '1':
-                        filter = (getattr(config[1], config[0])==instance.id,)
-                        elements = session.query(config[1]).filter(*filter).all()
-                        for element in elements:
-                            setattr(element, config[0], None)
-                    else:
-                        filter = (getattr(config[1], config[0])==instance.id,)
-                        element = session.query(getattr(config[1], 'id')).filter(*filter).first()
-                        if element:
-                            errors.append('You cannot delete this ' + instance.__class__.__name__ + ' because it has a related ' + config[1].__tablename__)
 
             except Exception as e:
                 errors.append(str(e))
