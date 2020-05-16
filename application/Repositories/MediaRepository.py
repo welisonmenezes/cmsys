@@ -106,6 +106,7 @@ class MediaRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
+                
                 try:
                     file_details = Helper().get_file_details_from_request(data)
                 except Exception as e:
@@ -129,7 +130,7 @@ class MediaRepository(RepositoryBase):
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Media', media.id)
 
-            return self.validate_before(process, request.get_json(), MediaValidator, session)
+            return self.validate_before(process, Helper().get_with_slug(request.get_json(), 'name'), MediaValidator, session)
 
         return self.response(run, True)
 
@@ -167,7 +168,7 @@ class MediaRepository(RepositoryBase):
 
                 return self.run_if_exists(fn, Media, id, session)
 
-            return self.validate_before(process, request.get_json(), MediaValidator, session, id=id)
+            return self.validate_before(process, Helper().get_with_slug(request.get_json(), 'name'), MediaValidator, session, id=id)
 
         return self.response(run, True)
 

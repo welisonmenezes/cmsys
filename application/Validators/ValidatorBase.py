@@ -83,9 +83,9 @@ class ValidatorBase():
                 if ('id' in extra_args):
                     if (getattr(el, key) == self.request[key]):
                         if (not extra_args['id'] or int(extra_args['id']) != int(el.id)):
-                            self.handle_validation_error('The field \'' + key + '\' already exists in database.')
+                            self.handle_validation_error('The value \'' + self.request[key] + '\' already exists in the database.')
                 else:        
-                    self.handle_validation_error('The field \'' + key + '\' already exists in database.')
+                    self.handle_validation_error('The value \'' + self.request[key] + '\' already exists in the database.')
 
     
     def is_file(self, key, config):

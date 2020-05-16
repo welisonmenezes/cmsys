@@ -1,5 +1,6 @@
 import datetime
 import base64
+from slugify import slugify
 from app import app_config
 from Decorators import SingletonDecorator
 
@@ -85,3 +86,12 @@ class Helper():
         """Returns the value if it is not empty, otherwise, returns None."""
 
         return None if value == '' else value
+
+
+    def get_with_slug(self, data, key):
+        """Return the given dict data with value of the given key with slugfy applied."""
+
+        if 'name' in data:
+            data['name'] = slugify(data['name'])
+        
+        return data
