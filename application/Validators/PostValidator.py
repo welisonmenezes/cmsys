@@ -51,7 +51,8 @@ class PostValidator(ValidatorBase):
             'expire_on': {
                 'key_required': True,
                 'max_length': 19,
-                'is_datetime': True
+                'is_datetime': True,
+                'compare_dates': 'publish_on'
             },
             'parent_id': {
                 'is_integer': True

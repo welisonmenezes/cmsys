@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Post, PostSchema, PostType, Language
+from Models import Post, PostSchema, PostType, Language, User
 from Validators import PostValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 

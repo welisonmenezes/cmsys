@@ -107,6 +107,16 @@ class ValidatorBase():
             if not Checker().is_datetime(self.request[key]):
                 self.handle_validation_error('Datetime invalid at field: ' + key + '.')
 
+    
+    def compare_dates(self, key, config):
+        if 'compare_dates' in config and config['compare_dates'] != '':
+            if key in self.request and config['compare_dates'] in self.request:
+                publish_date = self.request[config['compare_dates']]
+                expire_date = self.request[key]
+                if publish_date != '' and expire_date != '':
+                    if not Checker().is_first_date_smaller(publish_date, expire_date):
+                        self.handle_validation_error('The \'' + config['compare_dates']  + '\' date must be smaller than \'' + key + '\' date at least at a hour.')
+
 
     def max_file_size(self, key, config):
         """Validates if the field has valid base64 size."""
@@ -170,6 +180,7 @@ class ValidatorBase():
                 self.valid_file_extension(key, config)
                 self.valid_values(key, config)
                 self.is_datetime(key, config)
+                self.compare_dates(key, config)
 
         return not self.has_error
 
