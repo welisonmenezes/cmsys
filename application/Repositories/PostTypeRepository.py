@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import PostType, PostTypeSchema, Template
+from Models import PostType, PostTypeSchema, Template, Post
 from Validators import PostTypeValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -94,7 +94,9 @@ class PostTypeRepository(RepositoryBase):
 
             def fn(session, post_type):
 
-                # TODO: forbid delete post type witch has a related post
+                is_foreigners = self.is_foreigners([(post_type, 'post_type_id', Post)], session)
+                if is_foreigners != False:
+                    return is_foreigners
 
                 session.delete(post_type)
                 session.commit()
