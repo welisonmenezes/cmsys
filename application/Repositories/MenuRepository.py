@@ -1,7 +1,9 @@
 from .RepositoryBase import RepositoryBase
-from Models import Menu, MenuSchema
+from Models import Menu, MenuSchema, Language
 from Validators import MenuValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
+
+# TODO: implemnt menu/sector relationship.
 
 class MenuRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -13,13 +15,16 @@ class MenuRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Menu, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_equals_filter('language_id')
+
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
             query = session.query(Menu).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = MenuSchema(many=True)
+            schema = MenuSchema(many=True, exclude=self.get_exclude_fields(args, ['language']))
             return self.handle_success(result, schema, 'get', 'Menu')
 
         return self.response(run, False)
@@ -31,7 +36,7 @@ class MenuRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Menu).filter_by(id=id).first()
-            schema = MenuSchema(many=False)
+            schema = MenuSchema(many=False, exclude=self.get_exclude_fields(args, ['language']))
             return self.handle_success(result, schema, 'get_by_id', 'Menu')
 
         return self.response(run, False)
@@ -47,9 +52,13 @@ class MenuRepository(RepositoryBase):
                 menu = Menu(
                     name = data['name'],
                     order = data['order'],
-                    description = data['description'],
-                    language_id = data['language_id']
+                    description = data['description']
                 )
+
+                fk_was_added = self.add_foreign_keys(menu, data, session, [('language_id', Language)])
+                if fk_was_added != True:
+                    return fk_was_added
+
                 session.add(menu)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Menu', menu.id)
@@ -71,7 +80,11 @@ class MenuRepository(RepositoryBase):
                     menu.name = data['name']
                     menu.order = data['order']
                     menu.description = data['description']
-                    menu.language_id = data['language_id']
+
+                    fk_was_added = self.add_foreign_keys(menu, data, session, [('language_id', Language)])
+                    if fk_was_added != True:
+                        return fk_was_added
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Menu', menu.id)
 
@@ -88,6 +101,10 @@ class MenuRepository(RepositoryBase):
         def run(session):
 
             def fn(session, menu):
+
+                # TODO: when delete menu, also delete all its children
+                # TODO: when delete menu, also delte all its sector relationship
+
                 session.delete(menu)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Menu', id)

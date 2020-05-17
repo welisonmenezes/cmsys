@@ -186,9 +186,9 @@ class Menu(Base):
     # foreignKeys
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
+    language = relationship('Language', foreign_keys='Menu.language_id')
     # sectors = relationship('Sector', secondary=Sector_Menu)
     # items = relationship('MenuItem')
-    # language = relationship('Language', foreign_keys='Menu.language_id')
 
 
 class MenuItem(Base):

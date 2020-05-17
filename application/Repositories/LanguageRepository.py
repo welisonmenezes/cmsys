@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Language, LanguageSchema, Configuration, Post
+from Models import Language, LanguageSchema, Configuration, Post, Menu
 from Validators import LanguageValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -98,7 +98,8 @@ class LanguageRepository(RepositoryBase):
 
                 is_foreigners = self.is_foreigners([
                     (language, 'language_id', Configuration),
-                    (language, 'language_id', Post)
+                    (language, 'language_id', Post),
+                    (language, 'language_id', Menu)
                 ], session)
                 
                 if is_foreigners != False:
