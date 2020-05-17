@@ -49,6 +49,12 @@ class MediaSchema(ma.Schema):
         fields = ('id', 'name', 'description', 'type', 'extension', 'origin', 'created', 'user_id', 'user')
 
 
+class MenuSchema(ma.Schema):
+    language = fields.Nested('LanguageSchema', many=False)
+    class Meta:
+        fields = ('id', 'name', 'order', 'description', 'language_id', 'language')
+
+
 class NestSchema(ma.Schema):
     post_type = fields.Nested('PostTypeSchema', many=False, exclude=exclude_post_type)
     post = fields.Nested('PostSchema', many=False, exclude=exclude_post)

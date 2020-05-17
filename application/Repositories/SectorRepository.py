@@ -13,9 +13,11 @@ class SectorRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Sector, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
             query = session.query(Sector).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -84,6 +86,9 @@ class SectorRepository(RepositoryBase):
         def run(session):
 
             def fn(session, sector):
+
+                # TODO: forbid delete if it has a menu related.
+
                 session.delete(sector)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Sector', id)

@@ -4,6 +4,7 @@ from .CommentRepository import *
 from .ConfigurationRepository import *
 from .LanguageRepository import *
 from .MediaRepository import *
+from .MenuRepository import *
 from .NestRepository import *
 from .PostRepository import *
 from .PostTypeRepository import *
