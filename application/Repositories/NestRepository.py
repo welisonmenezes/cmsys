@@ -3,8 +3,6 @@ from Models import Nest, NestSchema, Post, PostType
 from Validators import NestValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
-# TODO: dont allow add to nest post_type_id field a post_type whose type be different than nested-page
-
 class NestRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Nest."""
@@ -107,3 +105,25 @@ class NestRepository(RepositoryBase):
             return self.run_if_exists(fn, Nest, id, session)
 
         return self.response(run, True)
+
+
+    def add_foreign_keys(self, current_context, data, session, configurations):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                if config[0] == 'post_type_id':
+                    """If the post_type is not of type nested-page so return an error."""
+
+                    el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+                    if el and el.type != 'nested-page':
+                        errors.append('The Post_Type must have the type \'nested-page\'.')
+                        continue
+
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+            except Exception as e:
+                errors.append(str(e))
+                
+        return True if not errors else ErrorHandler().get_error(400, errors)
