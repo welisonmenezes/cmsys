@@ -1,5 +1,6 @@
 from .BlacklistRepository import *
 from .CapabilityRepository import *
+from .CommentRepository import *
 from .ConfigurationRepository import *
 from .LanguageRepository import *
 from .MediaRepository import *

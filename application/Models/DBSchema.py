@@ -18,6 +18,12 @@ class CapabilitySchema(ma.Schema):
         fields = ('id', 'description', 'type', 'target_id', 'can_write', 'can_write', 'can_read', 'can_delete', 'roles')
 
 
+class CommentSchema(ma.Schema):
+    #roles = fields.Nested('RoleSchema', many=True, exclude=('capabilities',))
+    class Meta:
+        fields = ('id', 'comment', 'status', 'origin_ip', 'origin_agent', 'created', 'parent_id', 'user_id', 'post_id', 'language_id')
+
+
 class ConfigurationSchema(ma.Schema):
     language = fields.Nested('LanguageSchema', many=False)
     socials = fields.Nested('LanguageSchema', many=True)
