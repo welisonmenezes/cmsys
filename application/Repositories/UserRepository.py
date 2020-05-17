@@ -1,6 +1,6 @@
 from app import bcrypt
 from .RepositoryBase import RepositoryBase
-from Models import User, UserSchema, Media, Post, Role, Social
+from Models import User, UserSchema, Media, Post, Role, Social, Comment
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper, Checker
 
@@ -129,11 +129,11 @@ class UserRepository(RepositoryBase):
 
             def fn(session, user):
                 
-                # TODO: check if user has comments (delete comments and sets the children as no parent)
-
                 image_was_deleted = self.delegate_content_to_delete(user,session, request, (Media, Post))
                 if image_was_deleted != True:
                     return image_was_deleted
+
+                self.delete_user_comments(user, session)
 
                 session.query(Social).filter_by(user_id=user.id).delete(synchronize_session='evaluate')
 
@@ -191,3 +191,14 @@ class UserRepository(RepositoryBase):
                     errors.append('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
 
         return True if not errors else  ErrorHandler().get_error(406, errors)
+
+
+    def delete_user_comments(self, user, session):
+        """Delete the user comments."""
+
+        comment = session.query(Comment.id).filter_by(user_id=user.id).first()
+        if comment:
+            comments = session.query(Comment).filter_by(user_id=user.id).all()
+            for comm in comments:
+                self.set_children_as_null_to_delete(comm, Comment, session)
+                session.delete(comm)

@@ -119,7 +119,7 @@ class CommentRepository(RepositoryBase):
 
             def fn(session, comment):
 
-                # TODO: if comment has children delete all or forbid
+                self.set_children_as_null_to_delete(comment, Comment, session)
 
                 session.delete(comment)
                 session.commit()

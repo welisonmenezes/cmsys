@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Post, PostSchema, PostType, Language, User, Nest
+from Models import Post, PostSchema, PostType, Language, User, Nest, Comment
 from Validators import PostValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
@@ -140,11 +140,12 @@ class PostRepository(RepositoryBase):
             def fn(session, post):
 
                 # TODO: forbid delete post that is term page (or update the term page)
-                # TODO: forbid delete post that has comments (or delete its comments)
 
                 can_delete = self.set_foreign_keys_as_null(post, request, session, [('page_id', User), ('parent_id', Post)])
                 if can_delete != True:
                     return can_delete
+
+                session.query(Comment).filter_by(post_id=post.id).delete(synchronize_session='evaluate')
 
                 session.query(Nest).filter_by(post_id=post.id).delete(synchronize_session='evaluate')
 

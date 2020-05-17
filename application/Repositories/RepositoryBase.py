@@ -206,3 +206,11 @@ class RepositoryBase():
                 errors.append(str(e))
                 
         return True if not errors else ErrorHandler().get_error(400, errors)
+
+
+    def set_children_as_null_to_delete(self, instance, context, session):
+        """Sets the children of the given instance as null to we can delete it."""
+
+        child = session.query(getattr(context, 'id')).filter_by(parent_id=instance.id).first()
+        if child:
+            children = session.query(context).filter_by(parent_id=instance.id).update(values={'parent_id': None}, synchronize_session='evaluate')
