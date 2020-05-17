@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Comment, CommentSchema
+from Models import Comment, CommentSchema, User, Post, Language
 from Validators import CommentValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
@@ -65,12 +65,13 @@ class CommentRepository(RepositoryBase):
                     status = data['status'],
                     origin_ip = data['origin_ip'],
                     origin_agent = data['origin_agent'],
-                    created = Helper().get_current_datetime(),
-                    #parent_id = data['parent_id'],
-                    user_id = data['user_id'],
-                    post_id = data['post_id'],
-                    language_id = data['language_id']
+                    created = Helper().get_current_datetime()
                 )
+
+                fk_was_added = self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
+                if fk_was_added != True:
+                    return fk_was_added
+
                 session.add(comment)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Comment', comment.id)
@@ -93,10 +94,14 @@ class CommentRepository(RepositoryBase):
                     comment.status = data['status']
                     comment.origin_ip = data['origin_ip']
                     comment.origin_agent = data['origin_agent']
-                    #comment.parent_id = data['parent_id']
-                    comment.user_id = data['user_id']
-                    comment.post_id = data['post_id']
-                    comment.language_id = data['language_id']
+
+                    fk_was_added = self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
+                    if fk_was_added != True:
+                        return fk_was_added
+
+                    if comment.parent_id and int(comment.parent_id) == int(id):
+                        return ErrorHandler().get_error(400, 'The Comment cannot be parent of yourself.')
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Comment', comment.id)
 
@@ -113,6 +118,9 @@ class CommentRepository(RepositoryBase):
         def run(session):
 
             def fn(session, comment):
+
+                # TODO: if comment has children delete all or forbid
+
                 session.delete(comment)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Comment', id)
