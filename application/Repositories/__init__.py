@@ -8,6 +8,7 @@ from .NestRepository import *
 from .PostRepository import *
 from .PostTypeRepository import *
 from .RoleRepository import *
+from .SectorRepository import *
 from .SocialRepository import *
 from .TemplateRepository import *
 from .UserRepository import *

@@ -9,6 +9,7 @@ from .NestController import *
 from .PostController import *
 from .PostTypeController import *
 from .RoleController import *
+from .SectorController import *
 from .SocialController import *
 from .TemplateController import *
 from .UserController import *
@@ -30,6 +31,7 @@ def start_controllers(app, api):
     api.add_resource(PostController, '/post', '/post/<id>', '/post/suggestions/<name>')
     api.add_resource(PostTypeController, '/post-type', '/post-type/<int:id>')
     api.add_resource(RoleController, '/role', '/role/<int:id>')
+    api.add_resource(SectorController, '/sector', '/sector/<int:id>')
     api.add_resource(SocialController, '/social', '/social/<int:id>')
     api.add_resource(TemplateController, '/template', '/template/<int:id>')
     api.add_resource(UserController, '/user', '/user/<int:id>')

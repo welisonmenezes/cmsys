@@ -388,7 +388,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comment\": \"bom\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"xparent_id\": \"\",\n\t\"user_id\": 10,\n\t\"post_id\": 10,\n\t\"language_id\": 2\n}"
+							"raw": "{\n\t\"comment\": \"bom\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"xparent_id\": 8,\n\t\"user_id\": 1,\n\t\"post_id\": 17,\n\t\"language_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/comment",
@@ -421,10 +421,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comment\": \"bom edited\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"xparent_id\": \"\",\n\t\"user_id\": 10,\n\t\"post_id\": 10,\n\t\"language_id\": 2\n}"
+							"raw": "{\n\t\"comment\": \"bom edited\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"parent_id\": 1,\n\t\"user_id\": 10,\n\t\"post_id\": 10,\n\t\"language_id\": 2\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/comment/6",
+							"raw": "http://127.0.0.1:5000/api/comment/1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -436,7 +436,7 @@
 							"path": [
 								"api",
 								"comment",
-								"6"
+								"1"
 							]
 						}
 					},
@@ -454,7 +454,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/comment/6",
+							"raw": "http://127.0.0.1:5000/api/comment/11",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -466,7 +466,7 @@
 							"path": [
 								"api",
 								"comment",
-								"6"
+								"11"
 							]
 						}
 					},
@@ -1877,7 +1877,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Legal ferxxa ânUs\",\n\t\"title\": \"Post caça\",\n\t\"description\": \"lorem ipsum\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"Legal ferxxa ânUsx\",\n\t\"title\": \"Post caça\",\n\t\"description\": \"lorem ipsum\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post",
@@ -1943,7 +1943,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post/16?remove_foreign_keys=",
+							"raw": "http://127.0.0.1:5000/api/post/17?remove_foreign_keys=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1955,7 +1955,7 @@
 							"path": [
 								"api",
 								"post",
-								"16"
+								"17"
 							],
 							"query": [
 								{
@@ -2406,6 +2406,207 @@
 								"api",
 								"role",
 								"18"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Sector",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/sector?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"sector"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/sector?page=1&limit=10&order_by=id&order=desc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"sector"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/sector/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"sector",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"sector 4\",\n\t\"description\": \"lorem sector 4\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/sector",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"sector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"sector 1\",\n\t\"description\": \"lorem sector 1 edited\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/sector/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"sector",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/sector/4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"sector",
+								"4"
 							]
 						}
 					},
@@ -3040,7 +3241,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"Mariax\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 31,\n\t\"page_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"fdfdf\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"xavatar_id\": 31,\n\t\"xpage_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user",
@@ -3106,7 +3307,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/10?admin_new_owner=0",
+							"raw": "http://127.0.0.1:5000/api/user/28?admin_new_owner=0",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3118,7 +3319,7 @@
 							"path": [
 								"api",
 								"user",
-								"10"
+								"28"
 							],
 							"query": [
 								{

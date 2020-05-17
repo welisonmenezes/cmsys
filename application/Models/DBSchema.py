@@ -82,6 +82,11 @@ class RoleSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'description', 'can_access_admin', 'capabilities')
 
+    
+class SectorSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'description')
+
 
 class SocialSchema(ma.Schema):
     user = fields.Nested('UserSchema', many=False, exclude=exclude_user)
