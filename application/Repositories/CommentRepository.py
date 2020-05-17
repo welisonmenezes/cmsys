@@ -13,13 +13,29 @@ class CommentRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Comment, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_like_filter('comment')
+            fb.set_equals_filter('status')
+            fb.set_like_filter('origin_ip')
+            fb.set_like_filter('origin_agent')
+            fb.set_equals_filter('parent_id')
+            fb.set_equals_filter('user_id')
+            fb.set_equals_filter('post_id')
+            fb.set_equals_filter('language_id')
+            
+            try:
+                fb.set_date_filter('created', date_modifier=args['date_modifier'])
+                fb.set_between_dates_filter(
+                    'created',
+                    compare_date_time_one=args['compare_date_time_one'],
+                    compare_date_time_two=args['compare_date_time_two'],
+                    not_between=args['not_between']
+                )
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
             query = session.query(Comment).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = CommentSchema(many=True)
+            schema = CommentSchema(many=True, exclude=self.get_exclude_fields(args, ['user', 'language', 'parent', 'children', 'post']))
             return self.handle_success(result, schema, 'get', 'Comment')
 
         return self.response(run, False)
@@ -31,7 +47,7 @@ class CommentRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Comment).filter_by(id=id).first()
-            schema = CommentSchema(many=False)
+            schema = CommentSchema(many=False, exclude=self.get_exclude_fields(args, ['user', 'language', 'parent', 'children', 'post']))
             return self.handle_success(result, schema, 'get_by_id', 'Comment')
 
         return self.response(run, False)

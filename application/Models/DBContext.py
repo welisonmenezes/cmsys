@@ -59,11 +59,11 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
-    # parent = relationship('Comment', foreign_keys='Comment.parent_id')
-    # children = relationship('Comment', remote_side='Comment.id')
-    # user = relationship('User', foreign_keys='Comment.user_id')
-    # post = relationship('Post', foreign_keys='Comment.post_id')
-    # language = relationship('Language', foreign_keys='Comment.language_id')
+    user = relationship('User', foreign_keys='Comment.user_id')
+    language = relationship('Language', foreign_keys='Comment.language_id')
+    post = relationship('Post', foreign_keys='Comment.post_id')
+    parent = relationship('Comment', foreign_keys='Comment.parent_id', remote_side='Comment.id')
+    children = relationship('Comment')
 
 
 class Configuration(Base):

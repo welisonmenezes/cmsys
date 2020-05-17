@@ -6,6 +6,8 @@ ma = Marshmallow(app)
 
 exclude_post = ('user', 'language', 'parent', 'children', 'post_type', 'nests')
 exclude_post_type = ('template', 'nests',)
+exclude_user = ('role', 'socials', 'password', 'medias', 'avatar')
+exclude_comment = ('parent', 'children', 'language', 'user', 'post')
 
 class BlacklistSchema(ma.Schema):
     class Meta:
@@ -19,9 +21,14 @@ class CapabilitySchema(ma.Schema):
 
 
 class CommentSchema(ma.Schema):
-    #roles = fields.Nested('RoleSchema', many=True, exclude=('capabilities',))
+    user = fields.Nested('UserSchema', many=False, exclude=exclude_user)
+    language = fields.Nested('LanguageSchema', many=False)
+    post = fields.Nested('PostSchema', many=False, exclude=exclude_post)
+    parent = fields.Nested('CommentSchema', many=False, exclude=exclude_comment)
+    children = fields.Nested('CommentSchema', many=True, exclude=exclude_comment)
     class Meta:
-        fields = ('id', 'comment', 'status', 'origin_ip', 'origin_agent', 'created', 'parent_id', 'user_id', 'post_id', 'language_id')
+        fields = ('id', 'comment', 'status', 'origin_ip', 'origin_agent', 'created', 'post',
+        'parent_id', 'user_id', 'post_id', 'language_id', 'user', 'language', 'parent', 'children')
 
 
 class ConfigurationSchema(ma.Schema):
@@ -37,7 +44,7 @@ class LanguageSchema(ma.Schema):
 
 
 class MediaSchema(ma.Schema):
-    user = fields.Nested('UserSchema', many=False, exclude=('role', 'password'))
+    user = fields.Nested('UserSchema', many=False, exclude=exclude_user)
     class Meta:
         fields = ('id', 'name', 'description', 'type', 'extension', 'origin', 'created', 'user_id', 'user')
 
@@ -50,7 +57,7 @@ class NestSchema(ma.Schema):
 
 
 class PostSchema(ma.Schema):
-    user = fields.Nested('UserSchema', many=False, exclude=('role', 'password'))
+    user = fields.Nested('UserSchema', many=False, exclude=exclude_user)
     language = fields.Nested('LanguageSchema', many=False)
     parent = fields.Nested('PostSchema', many=False, exclude=exclude_post)
     children = fields.Nested('PostSchema', many=True, exclude=exclude_post)
@@ -77,7 +84,7 @@ class RoleSchema(ma.Schema):
 
 
 class SocialSchema(ma.Schema):
-    user = fields.Nested('UserSchema', many=False, exclude=('role', 'socials', 'password'))
+    user = fields.Nested('UserSchema', many=False, exclude=exclude_user)
     configuration = fields.Nested('ConfigurationSchema', many=False, exclude=('socials', 'language'))
     class Meta:
         fields = ('id', 'name', 'url', 'target', 'description', 'origin', 'configuration_id', 'user_id', 'user', 'configuration')

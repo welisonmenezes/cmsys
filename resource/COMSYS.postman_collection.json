@@ -260,7 +260,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/comment?page=1&limit=10&order_by=&order=",
+							"raw": "http://127.0.0.1:5000/api/comment?page=1&limit=10&order_by=&order=&comment=&status=&origin_ip=&origin_agent=&created=&date_modifier=&compare_date_time_one=&compare_date_time_two=&not_between=&get_user=&get_language=&get_parent=&get_children=&get_post=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -288,6 +288,62 @@
 								},
 								{
 									"key": "order",
+									"value": ""
+								},
+								{
+									"key": "comment",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "origin_ip",
+									"value": ""
+								},
+								{
+									"key": "origin_agent",
+									"value": ""
+								},
+								{
+									"key": "created",
+									"value": ""
+								},
+								{
+									"key": "date_modifier",
+									"value": ""
+								},
+								{
+									"key": "compare_date_time_one",
+									"value": ""
+								},
+								{
+									"key": "compare_date_time_two",
+									"value": ""
+								},
+								{
+									"key": "not_between",
+									"value": ""
+								},
+								{
+									"key": "get_user",
+									"value": ""
+								},
+								{
+									"key": "get_language",
+									"value": ""
+								},
+								{
+									"key": "get_parent",
+									"value": ""
+								},
+								{
+									"key": "get_children",
+									"value": ""
+								},
+								{
+									"key": "get_post",
 									"value": ""
 								}
 							]
