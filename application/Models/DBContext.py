@@ -188,7 +188,7 @@ class Menu(Base):
     # relationships
     language = relationship('Language', foreign_keys='Menu.language_id')
     sectors = relationship('Sector', secondary=Sector_Menu)
-    # items = relationship('MenuItem')
+    items = relationship('MenuItem')
 
 
 class MenuItem(Base):
@@ -204,9 +204,9 @@ class MenuItem(Base):
     parent_id = Column(Integer, ForeignKey('Menu_Item.id'), nullable=True)
     menu_id = Column(Integer, ForeignKey('Menu.id'), nullable=False)
     # relationships
-    # parent = relationship('MenuItem', foreign_keys='MenuItem.parent_id')
-    # children = relationship('MenuItem', remote_side='MenuItem.id')
-    # menu = relationship('Menu', foreign_keys='MenuItem.menu_id')
+    parent = relationship('MenuItem', foreign_keys='MenuItem.parent_id', remote_side='MenuItem.id')
+    children = relationship('MenuItem')
+    menu = relationship('Menu', foreign_keys='MenuItem.menu_id')
 
 
 class Nest(Base):

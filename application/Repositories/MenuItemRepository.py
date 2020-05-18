@@ -13,13 +13,16 @@ class MenuItemRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(MenuItem, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_equals_filter('type')
+            fb.set_equals_filter('behavior')
+            fb.set_equals_filter('url')
+            fb.set_equals_filter('menu_id')
+            fb.set_equals_filter('parent_id')
+            fb.set_like_filter('title')
 
             query = session.query(MenuItem).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = MenuItemSchema(many=True)
+            schema = MenuItemSchema(many=True, exclude=self.get_exclude_fields(args, ['parent', 'children', 'menu']))
             return self.handle_success(result, schema, 'get', 'MenuItem')
 
         return self.response(run, False)
@@ -31,7 +34,7 @@ class MenuItemRepository(RepositoryBase):
 
         def run(session):
             result = session.query(MenuItem).filter_by(id=id).first()
-            schema = MenuItemSchema(many=False)
+            schema = MenuItemSchema(many=False, exclude=self.get_exclude_fields(args, ['parent', 'children', 'menu']))
             return self.handle_success(result, schema, 'get_by_id', 'MenuItem')
 
         return self.response(run, False)
@@ -54,6 +57,10 @@ class MenuItemRepository(RepositoryBase):
                     #parent_id = data['parent_id'],
                     menu_id = data['menu_id']
                 )
+
+                # TODO: implement menu item relationship
+                # TODO: the child of menu item must have the same menu id
+
                 session.add(menu_item)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'MenuItem', menu_item.id)
@@ -96,6 +103,9 @@ class MenuItemRepository(RepositoryBase):
         def run(session):
 
             def fn(session, menu_item):
+
+                # TODO: if delete menu item delete also its children
+
                 session.delete(menu_item)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'MenuItem', id)

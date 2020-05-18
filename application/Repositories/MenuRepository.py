@@ -22,7 +22,7 @@ class MenuRepository(RepositoryBase):
 
             query = session.query(Menu).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = MenuSchema(many=True, exclude=self.get_exclude_fields(args, ['language', 'sectors']))
+            schema = MenuSchema(many=True, exclude=self.get_exclude_fields(args, ['language', 'sectors', 'items']))
             return self.handle_success(result, schema, 'get', 'Menu')
 
         return self.response(run, False)
@@ -34,7 +34,7 @@ class MenuRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Menu).filter_by(id=id).first()
-            schema = MenuSchema(many=False, exclude=self.get_exclude_fields(args, ['language', 'sectors']))
+            schema = MenuSchema(many=False, exclude=self.get_exclude_fields(args, ['language', 'sectors', 'items']))
             return self.handle_success(result, schema, 'get_by_id', 'Menu')
 
         return self.response(run, False)

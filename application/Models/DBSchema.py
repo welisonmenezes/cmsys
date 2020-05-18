@@ -8,6 +8,7 @@ exclude_post = ('user', 'language', 'parent', 'children', 'post_type', 'nests')
 exclude_post_type = ('template', 'nests',)
 exclude_user = ('role', 'socials', 'password', 'medias', 'avatar')
 exclude_comment = ('parent', 'children', 'language', 'user', 'post')
+exclude_menu_item = ('parent', 'children', 'menu')
 
 class BlacklistSchema(ma.Schema):
     class Meta:
@@ -52,13 +53,17 @@ class MediaSchema(ma.Schema):
 class MenuSchema(ma.Schema):
     language = fields.Nested('LanguageSchema', many=False)
     sectors = fields.Nested('SectorSchema', many=True, exclude=('menus',))
+    items = fields.Nested('MenuItemSchema', many=True, exclude=('menu', 'parent', 'children'))
     class Meta:
-        fields = ('id', 'name', 'order', 'description', 'language_id', 'language', 'sectors')
+        fields = ('id', 'name', 'order', 'description', 'language_id', 'language', 'sectors', 'items')
 
 
 class MenuItemSchema(ma.Schema):
+    parent = fields.Nested('MenuItemSchema', many=False, exclude=exclude_menu_item)
+    children = fields.Nested('MenuItemSchema', many=True, exclude=exclude_menu_item)
+    menu = fields.Nested('MenuSchema', many=False, exclude=('language',))
     class Meta:
-        fields = ('id', 'type', 'behavior', 'url', 'target_id', 'title', 'order', 'parent_id', 'menu_id')
+        fields = ('id', 'type', 'behavior', 'url', 'target_id', 'title', 'order', 'parent_id', 'menu_id', 'parent', 'children', 'menu')
 
 
 class NestSchema(ma.Schema):

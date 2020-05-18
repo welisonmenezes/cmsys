@@ -14,9 +14,15 @@ class MenuItemController(ControllerBase):
     def get(self, id=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        # self.parser.add_argument('value')
-        # self.parser.add_argument('type')
-        # self.parser.add_argument('target')
+        self.parser.add_argument('type')
+        self.parser.add_argument('behavior')
+        self.parser.add_argument('url')
+        self.parser.add_argument('title')
+        self.parser.add_argument('parent_id')
+        self.parser.add_argument('menu_id')
+        self.parser.add_argument('get_menu')
+        self.parser.add_argument('get_parent')
+        self.parser.add_argument('get_children')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
