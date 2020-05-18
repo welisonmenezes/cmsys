@@ -214,3 +214,49 @@ class RepositoryBase():
         child = session.query(getattr(context, 'id')).filter_by(parent_id=instance.id).first()
         if child:
             children = session.query(context).filter_by(parent_id=instance.id).update(values={'parent_id': None}, synchronize_session='evaluate')
+
+
+    def add_many_to_many_relationship(self, key, instance, data, context_target, session):
+        """"""
+
+        if (key in data and isinstance(data[key], list)):
+            for related in data[key]:
+                if (related and Checker().can_be_integer(related)):
+                    registered_related = session.query(context_target).filter_by(id=int(related)).first()
+                    if (registered_related):
+                        getattr(instance, key).append(registered_related)
+                        #role.capabilities.append(registered_related)
+                    else:
+                        return ErrorHandler().get_error(400, 'XXX ' + str(related) + ' does not exists.')
+                        
+        return True
+
+
+
+    def edit_many_to_many_relationship(self, key, instance, data, context_target, session):
+        """"""
+
+        old_relateds = []
+        new_old_relateds = []
+
+        if (getattr(instance, key)):
+            for related in getattr(instance, key):
+                old_relateds.append(related.id)
+
+        if (key in data and isinstance(data[key], list)):
+            for related in data[key]:
+                if (related and Checker().can_be_integer(related)):
+                    new_old_relateds.append(related)
+
+        related_to_delete = list(set(old_relateds) - set(new_old_relateds))
+        related_to_add = list(set(new_old_relateds) - set(old_relateds))
+
+        for related in related_to_delete:
+            registered_related = session.query(context_target).filter_by(id=int(related)).first()
+            if (registered_related):
+                getattr(instance, key).remove(registered_related)
+        
+        for related in related_to_add:
+            registered_related = session.query(context_target).filter_by(id=int(related)).first()
+            if (registered_related):
+                getattr(instance, key).append(registered_related)

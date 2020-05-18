@@ -51,8 +51,9 @@ class MediaSchema(ma.Schema):
 
 class MenuSchema(ma.Schema):
     language = fields.Nested('LanguageSchema', many=False)
+    sectors = fields.Nested('SectorSchema', many=True, exclude=('menus',))
     class Meta:
-        fields = ('id', 'name', 'order', 'description', 'language_id', 'language')
+        fields = ('id', 'name', 'order', 'description', 'language_id', 'language', 'sectors')
 
 
 class NestSchema(ma.Schema):
@@ -90,8 +91,9 @@ class RoleSchema(ma.Schema):
 
     
 class SectorSchema(ma.Schema):
+    menus = fields.Nested('MenuSchema', many=True, exclude=('sectors',))
     class Meta:
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'menus')
 
 
 class SocialSchema(ma.Schema):

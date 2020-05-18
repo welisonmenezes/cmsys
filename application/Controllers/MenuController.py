@@ -17,6 +17,7 @@ class MenuController(ControllerBase):
         self.parser.add_argument('s')
         self.parser.add_argument('language_id')
         self.parser.add_argument('get_language')
+        self.parser.add_argument('get_sectors')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)

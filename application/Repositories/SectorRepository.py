@@ -21,7 +21,7 @@ class SectorRepository(RepositoryBase):
 
             query = session.query(Sector).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = SectorSchema(many=True)
+            schema = SectorSchema(many=True, exclude=self.get_exclude_fields(args, ['menus']))
             return self.handle_success(result, schema, 'get', 'Sector')
 
         return self.response(run, False)
@@ -33,7 +33,7 @@ class SectorRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Sector).filter_by(id=id).first()
-            schema = SectorSchema(many=False)
+            schema = SectorSchema(many=False, exclude=self.get_exclude_fields(args, ['menus']))
             return self.handle_success(result, schema, 'get_by_id', 'Sector')
 
         return self.response(run, False)

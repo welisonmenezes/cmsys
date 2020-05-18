@@ -15,6 +15,7 @@ class SectorController(ControllerBase):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
         self.parser.add_argument('s')
+        self.parser.add_argument('get_menus')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)

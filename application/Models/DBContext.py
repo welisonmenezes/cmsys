@@ -187,7 +187,7 @@ class Menu(Base):
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
     language = relationship('Language', foreign_keys='Menu.language_id')
-    # sectors = relationship('Sector', secondary=Sector_Menu)
+    sectors = relationship('Sector', secondary=Sector_Menu)
     # items = relationship('MenuItem')
 
 
@@ -287,7 +287,7 @@ class Sector(Base):
     name = Column(String(100), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
     # relationships
-    #menus = relationship('Menu', secondary=Sector_Menu)
+    menus = relationship('Menu', secondary=Sector_Menu)
 
 
 class Social(Base):

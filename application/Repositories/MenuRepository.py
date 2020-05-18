@@ -1,9 +1,7 @@
 from .RepositoryBase import RepositoryBase
-from Models import Menu, MenuSchema, Language
+from Models import Menu, MenuSchema, Language, Sector
 from Validators import MenuValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
-
-# TODO: implemnt menu/sector relationship.
 
 class MenuRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -24,7 +22,7 @@ class MenuRepository(RepositoryBase):
 
             query = session.query(Menu).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = MenuSchema(many=True, exclude=self.get_exclude_fields(args, ['language']))
+            schema = MenuSchema(many=True, exclude=self.get_exclude_fields(args, ['language', 'sectors']))
             return self.handle_success(result, schema, 'get', 'Menu')
 
         return self.response(run, False)
@@ -36,7 +34,7 @@ class MenuRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Menu).filter_by(id=id).first()
-            schema = MenuSchema(many=False, exclude=self.get_exclude_fields(args, ['language']))
+            schema = MenuSchema(many=False, exclude=self.get_exclude_fields(args, ['language', 'sectors']))
             return self.handle_success(result, schema, 'get_by_id', 'Menu')
 
         return self.response(run, False)
@@ -58,6 +56,10 @@ class MenuRepository(RepositoryBase):
                 fk_was_added = self.add_foreign_keys(menu, data, session, [('language_id', Language)])
                 if fk_was_added != True:
                     return fk_was_added
+
+                add_sectors = self.add_many_to_many_relationship('sectors', menu, data, Sector, session)
+                if (add_sectors != True):
+                    return add_sectors
 
                 session.add(menu)
                 session.commit()
@@ -84,6 +86,8 @@ class MenuRepository(RepositoryBase):
                     fk_was_added = self.add_foreign_keys(menu, data, session, [('language_id', Language)])
                     if fk_was_added != True:
                         return fk_was_added
+
+                    add_sectors = self.edit_many_to_many_relationship('sectors', menu, data, Sector, session)
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Menu', menu.id)

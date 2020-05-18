@@ -53,9 +53,9 @@ class RoleRepository(RepositoryBase):
                     can_access_admin = data['can_access_admin'],
                 )
 
-                add_capabilite = self.add_capabilities(role, data, session)
-                if (add_capabilite != True):
-                    return add_capabilite
+                add_capabilities = self.add_many_to_many_relationship('capabilities', role, data, Capability, session)
+                if (add_capabilities != True):
+                    return add_capabilities
 
                 session.add(role)
                 session.commit()
@@ -81,10 +81,8 @@ class RoleRepository(RepositoryBase):
 
                     self.edit_capabilities(role, data, session)
 
-                    add_capabilite = self.add_capabilities(role, data, session)
-                    if (add_capabilite != True):
-                        return add_capabilite
-
+                    add_capabilities = self.edit_many_to_many_relationship('capabilities', role, data, Capability, session)
+                   
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Role', role.id)
 
@@ -113,42 +111,42 @@ class RoleRepository(RepositoryBase):
 
     # TODO: try make add_capabilities and edit_capabilities as reusable method
 
-    def add_capabilities(self, role, data, session):
-        """Adds capabilities, if it is possible, into the Role.
-            First checks if capability with an id exists at data base, if so, includes it.
-            If capability has no id, creates a new and then, include it."""
+    # def add_capabilities(self, role, data, session):
+    #     """Adds capabilities, if it is possible, into the Role.
+    #         First checks if capability with an id exists at data base, if so, includes it.
+    #         If capability has no id, creates a new and then, include it."""
 
-        if ('capabilities' in data and isinstance(data['capabilities'], list)):
-            for capability in data['capabilities']:
-                if (capability and Checker().can_be_integer(capability)):
-                    registered_capability = session.query(Capability).filter_by(id=int(capability)).first()
-                    if (registered_capability):
-                        role.capabilities.append(registered_capability)
-                    else:
-                        return ErrorHandler().get_error(400, 'Capability ' + str(capability) + ' does not exists.')
+    #     if ('capabilities' in data and isinstance(data['capabilities'], list)):
+    #         for capability in data['capabilities']:
+    #             if (capability and Checker().can_be_integer(capability)):
+    #                 registered_capability = session.query(Capability).filter_by(id=int(capability)).first()
+    #                 if (registered_capability):
+    #                     role.capabilities.append(registered_capability)
+    #                 else:
+    #                     return ErrorHandler().get_error(400, 'Capability ' + str(capability) + ' does not exists.')
                         
-        return True
+    #     return True
 
 
-    def edit_capabilities(self, role, data, session):
-        """Edit the capabilities of the Role. It Checks between sended capabilities 
-            and saved capabilities what must be deleted or added."""
+    # def edit_capabilities(self, role, data, session):
+    #     """Edit the capabilities of the Role. It Checks between sended capabilities 
+    #         and saved capabilities what must be deleted or added."""
 
-        old_capabilities = []
-        new_old_capabilities = []
+    #     old_capabilities = []
+    #     new_old_capabilities = []
 
-        if (role.capabilities):
-            for capability in role.capabilities:
-                old_capabilities.append(capability.id)
+    #     if (role.capabilities):
+    #         for capability in role.capabilities:
+    #             old_capabilities.append(capability.id)
 
-        if ('capabilities' in data and isinstance(data['capabilities'], list)):
-            for capability in data['capabilities']:
-                if (capability and Checker().can_be_integer(capability)):
-                    new_old_capabilities.append(capability)
+    #     if ('capabilities' in data and isinstance(data['capabilities'], list)):
+    #         for capability in data['capabilities']:
+    #             if (capability and Checker().can_be_integer(capability)):
+    #                 new_old_capabilities.append(capability)
 
-        capabilities_to_delete = list(set(old_capabilities) - set(new_old_capabilities))
+    #     capabilities_to_delete = list(set(old_capabilities) - set(new_old_capabilities))
 
-        for capability in capabilities_to_delete:
-            registered_capability = session.query(Capability).filter_by(id=int(capability)).first()
-            if (registered_capability):
-                role.capabilities.remove(registered_capability)
+    #     for capability in capabilities_to_delete:
+    #         registered_capability = session.query(Capability).filter_by(id=int(capability)).first()
+    #         if (registered_capability):
+    #             role.capabilities.remove(registered_capability)
