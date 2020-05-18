@@ -29,14 +29,14 @@ class FilterBuilder():
     def set_equals_filter(self, key, *args, **kwargs):
         """Sets filter that checks if the field with a given key is equals to the args with same key."""
 
-        if (self.args[key]):
+        if (key in self.args and self.args[key]):
             self.filter += (self.get_context_attr(key, kwargs) == self.args[key], )
 
     
     def set_like_filter(self, key, *args, **kwargs):
         """Sets filter that checks if the field with a given key is like to the args with same key."""
 
-        if (self.args[key]):
+        if (key in self.args and self.args[key]):
             self.filter += (self.get_context_attr(key, kwargs).like('%' + self.args[key] + '%'), )
 
     
@@ -48,7 +48,7 @@ class FilterBuilder():
             list_or = ()
             list_and = ()
 
-            if (self.args[key] and isinstance(configurations, list)):
+            if (key in self.args and self.args[key] and isinstance(configurations, list)):
 
                 for config in configurations:
                     
@@ -72,7 +72,7 @@ class FilterBuilder():
         """Sets filter that checks fields and args by same key, appling the date_modifier filter.
            The field and the arg must be an datetime data."""
         
-        if (self.args[key]):
+        if (key in self.args and self.args[key]):
             try:
                 date_time = Helper().get_date_from_string(self.args[key])
 
@@ -128,7 +128,7 @@ class FilterBuilder():
     def get_page(self):
         """Returns the current page."""
 
-        if (self.args['page'] and Checker().can_be_integer(self.args['page'])):
+        if ('page' in self.args and self.args['page'] and Checker().can_be_integer(self.args['page'])):
             self.page = int(self.args['page'])
         return self.page
 
@@ -136,7 +136,7 @@ class FilterBuilder():
     def get_limit(self):
         """Returns the configured limit."""
 
-        if (self.args['limit'] and Checker().can_be_integer(self.args['limit'])):
+        if ('limit' in self.args and self.args['limit'] and Checker().can_be_integer(self.args['limit'])):
             self.limit = int(self.args['limit'])
         return self.limit
 
@@ -145,8 +145,8 @@ class FilterBuilder():
         """Returns the correct order_by configuration.
             The args order_by and order determine how it will behave."""
 
-        if (self.args['order_by'] and self.args['order_by'] != ''):
-            if (self.args['order'] and self.args['order'] == 'desc'):
+        if ('order_by' in self.args and self.args['order_by'] and self.args['order_by'] != ''):
+            if ('order' in self.args and self.args['order'] and self.args['order'] == 'desc'):
                 order_by = [desc(getattr(self.context, self.args['order_by']))]
             else:
                 order_by = [asc(getattr(self.context, self.args['order_by']))]
