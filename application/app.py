@@ -8,11 +8,10 @@ from flask_bcrypt import Bcrypt
 # create application
 app = Flask(__name__, template_folder='Views/UI', static_folder='Views/UI/static')
 app.config.from_pyfile('config.py')
-app_config = app.config
 bcrypt = Bcrypt(app)
 
 # configurate logging
-if app_config['ENABLE_LOG_FILE']:
+if app.config['ENABLE_LOG_FILE']:
     from Utils import Logger
     Logger(app)
 

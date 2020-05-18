@@ -1,7 +1,7 @@
 import datetime
 import base64
 from slugify import slugify
-from app import app_config
+from app import app
 from Decorators import SingletonDecorator
 
 @SingletonDecorator
@@ -46,7 +46,7 @@ class Helper():
     def get_extension_by_type(self, type):
         """Returns form given type the existing extension at dictionary located at app config file."""
 
-        mime_types = app_config['VALID_MIMETYPES']
+        mime_types = app.config['VALID_MIMETYPES']
         try:
             return mime_types[type]
         except Exception:
@@ -56,14 +56,14 @@ class Helper():
     def get_valid_mimetypes(self):
         """Returns all valid mimetypes registered at app config file."""
 
-        mimitypes = app_config['VALID_MIMETYPES']
+        mimitypes = app.config['VALID_MIMETYPES']
         return mimitypes.keys()
 
 
     def get_valid_extensions(self):
         """Returns all valid extensions registered at app config file."""
 
-        extensions = app_config['VALID_MIMETYPES']
+        extensions = app.config['VALID_MIMETYPES']
         return extensions.values()
 
 

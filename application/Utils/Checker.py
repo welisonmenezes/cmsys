@@ -1,6 +1,6 @@
 import datetime
 from datetime import date, timedelta
-from app import app_config
+from app import app
 from Decorators import SingletonDecorator
 
 @SingletonDecorator
@@ -20,7 +20,7 @@ class Checker():
     def is_image_type(self, mimetype):
         """Checks if a string mimetype exists into app config as valid image mimetype."""
         
-        image_types = app_config['IMAGE_MIMETYPES'].keys()
+        image_types = app.config['IMAGE_MIMETYPES'].keys()
         return True if mimetype in image_types else False
 
 

@@ -1,6 +1,6 @@
 from flask import make_response
 import base64
-from app import app_config
+from app import app
 from .RepositoryBase import RepositoryBase
 from Models import Media, MediaSchema, User
 from Validators import MediaValidator
@@ -211,7 +211,7 @@ class MediaRepository(RepositoryBase):
     def image_not_found_response(self):
         """Provides a default image preview if the requested image preview was fail."""
 
-        notFoundImage = app_config['NOT_FOUND_IMAGE']
+        notFoundImage = app.config['NOT_FOUND_IMAGE']
         imgdata = base64.b64decode(notFoundImage)
         response = make_response(imgdata)
         response.headers.set('Content-Type', 'image/png')
