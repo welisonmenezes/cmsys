@@ -1115,7 +1115,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/language/3",
+							"raw": "http://127.0.0.1:5000/api/language/2",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1127,7 +1127,7 @@
 							"path": [
 								"api",
 								"language",
-								"3"
+								"2"
 							]
 						}
 					},
@@ -1491,7 +1491,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/menu?page=1&limit=10&order_by=&order=",
+							"raw": "http://127.0.0.1:5000/api/menu?page=1&limit=10&order_by=&order=&s=&language_id=&get_language=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1520,6 +1520,18 @@
 								{
 									"key": "order",
 									"value": ""
+								},
+								{
+									"key": "s",
+									"value": ""
+								},
+								{
+									"key": "language_id",
+									"value": ""
+								},
+								{
+									"key": "get_language",
+									"value": ""
 								}
 							]
 						}
@@ -1532,7 +1544,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/menu/1",
+							"raw": "http://127.0.0.1:5000/api/menu/6?get_sectors=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1544,7 +1556,13 @@
 							"path": [
 								"api",
 								"menu",
-								"1"
+								"6"
+							],
+							"query": [
+								{
+									"key": "get_sectors",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1563,7 +1581,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"menu 4\",\n\t\"order\": 0,\n\t\"description\": \"lorem menu\",\n\t\"language_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"menu 6\",\n\t\"order\": 0,\n\t\"description\": \"lorem menu\",\n\t\"language_id\": 1,\n\t\"sectors\": [5]\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/menu",
@@ -1596,10 +1614,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"menu 1\",\n\t\"order\": 0,\n\t\"description\": \"lorem menu edited\",\n\t\"language_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"menu 5\",\n\t\"order\": 0,\n\t\"description\": \"lorem menu edited\",\n\t\"language_id\": 2,\n\t\"sectors\": [1,2,3]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/menu/1",
+							"raw": "http://127.0.0.1:5000/api/menu/5",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1611,6 +1629,207 @@
 							"path": [
 								"api",
 								"menu",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/menu/6",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"menu",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "MenuItem",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/menu-item?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"menu-item"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/menu-item?page=1&limit=10&order_by=id&order=desc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"menu-item"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/menu-item/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"menu-item",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"type-test\",\n\t\"behavior\": \"behavior-test\",\n\t\"url\": \"url-test\",\n\t\"xtarget_id\": 0,\n\t\"title\": \"title-test 5\",\n\t\"order\": 0,\n\t\"xparent_id\": 0,\n\t\"menu_id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/menu-item",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"menu-item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"type-test\",\n\t\"behavior\": \"behavior-test\",\n\t\"url\": \"url-test\",\n\t\"xtarget_id\": 0,\n\t\"title\": \"title-test edited\",\n\t\"order\": 0,\n\t\"xparent_id\": 0,\n\t\"menu_id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/menu-item/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"menu-item",
 								"1"
 							]
 						}
@@ -1629,7 +1848,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/menu/4",
+							"raw": "http://127.0.0.1:5000/api/menu-item/5",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1640,8 +1859,8 @@
 							"port": "5000",
 							"path": [
 								"api",
-								"menu",
-								"4"
+								"menu-item",
+								"5"
 							]
 						}
 					},
@@ -2491,7 +2710,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role/8?get_capabilities=",
+							"raw": "http://127.0.0.1:5000/api/role/18?get_capabilities=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2503,12 +2722,12 @@
 							"path": [
 								"api",
 								"role",
-								"8"
+								"18"
 							],
 							"query": [
 								{
 									"key": "get_capabilities",
-									"value": ""
+									"value": "1"
 								}
 							]
 						}
@@ -2528,7 +2747,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"role-namex433x\",\n\t\"description\": \"role-description\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": []\n}"
+							"raw": "{\n\t\"name\": \"role-namex4x33x\",\n\t\"description\": \"role-description\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [2]\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/role",
@@ -2561,10 +2780,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"role-namex\",\n\t\"description\": \"roxle-description-edited\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [11, 13]\n}"
+							"raw": "{\n\t\"name\": \"role-ssnamexx\",\n\t\"description\": \"roxle-description-edited\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [4, 2]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role/17",
+							"raw": "http://127.0.0.1:5000/api/role/18",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2576,7 +2795,7 @@
 							"path": [
 								"api",
 								"role",
-								"17"
+								"18"
 							]
 						}
 					},
@@ -2702,7 +2921,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/sector/1",
+							"raw": "http://127.0.0.1:5000/api/sector/1?get_menus=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2715,6 +2934,12 @@
 								"api",
 								"sector",
 								"1"
+							],
+							"query": [
+								{
+									"key": "get_menus",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -2799,7 +3024,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/sector/4",
+							"raw": "http://127.0.0.1:5000/api/sector/5",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2811,7 +3036,7 @@
 							"path": [
 								"api",
 								"sector",
-								"4"
+								"5"
 							]
 						}
 					},
@@ -3446,7 +3671,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"fdfdf\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"xavatar_id\": 31,\n\t\"xpage_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"fdfdf\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 1,\n\t\"xavatar_id\": 31,\n\t\"xpage_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user",

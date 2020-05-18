@@ -5,6 +5,7 @@ from .ConfigurationRepository import *
 from .LanguageRepository import *
 from .MediaRepository import *
 from .MenuRepository import *
+from .MenuItemRepository import *
 from .NestRepository import *
 from .PostRepository import *
 from .PostTypeRepository import *

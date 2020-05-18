@@ -56,6 +56,11 @@ class MenuSchema(ma.Schema):
         fields = ('id', 'name', 'order', 'description', 'language_id', 'language', 'sectors')
 
 
+class MenuItemSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'type', 'behavior', 'url', 'target_id', 'title', 'order', 'parent_id', 'menu_id')
+
+
 class NestSchema(ma.Schema):
     post_type = fields.Nested('PostTypeSchema', many=False, exclude=exclude_post_type)
     post = fields.Nested('PostSchema', many=False, exclude=exclude_post)

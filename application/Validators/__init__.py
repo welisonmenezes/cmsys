@@ -5,6 +5,7 @@ from .ConfigurationValidator import *
 from .LanguageValidator import *
 from .MediaValidator import *
 from .MenuValidator import *
+from .MenuItemValidator import *
 from .NestValidator import *
 from .PostValidator import *
 from .PostTypeValidator import *
