@@ -67,8 +67,6 @@ class FilterBuilder():
         except Exception as e:
             raise Exception(str(e)) 
         
-
-
     
     def set_date_filter(self, key, *args, **kwargs):
         """Sets filter that checks fields and args by same key, appling the date_modifier filter.
