@@ -19,16 +19,19 @@ class Helper():
     
     def get_current_datetime(self):
         """Returns the current datetime"""
-        
-        from datetime import datetime
-        return datetime.now()
+
+        return datetime.datetime.now()
 
 
     def get_base64_size(self, b64string):
         """Calculates the size of a given base64 string and returns its result."""
 
-        size = (len(b64string) * 3) / 4 - b64string.count('=', -2)
-        return int(size)
+        try:
+            file_info = self.get_file_type_and_data(b64string)
+            size = (len(file_info[1]) * 3) / 4 - file_info[1].count('=', -2)
+            return int(size)
+        except Exception:
+            raise Exception('The application could not get the file size.')
 
 
     def get_file_type_and_data(self, b64string):

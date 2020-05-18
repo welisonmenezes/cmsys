@@ -2,7 +2,7 @@ import unittest
 import json
 from Utils import ErrorHandler
 
-class TestBase(unittest.TestCase):
+class ErrorHandlerTests(unittest.TestCase):
 
     def setUp(self):
         pass

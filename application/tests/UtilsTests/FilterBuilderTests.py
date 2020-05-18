@@ -3,7 +3,7 @@ import json
 from Utils import FilterBuilder
 from Models import Post, Language
 
-class TestBase(unittest.TestCase):
+class FilterBuilderTests(unittest.TestCase):
 
     def setUp(self):
         self.args = {

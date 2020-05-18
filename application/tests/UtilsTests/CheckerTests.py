@@ -15,7 +15,7 @@ def truncate_db():
     trans.commit()
 
 
-class TestBase(unittest.TestCase):
+class CheckerTests(unittest.TestCase):
 
     def setUp(self):
         pass
