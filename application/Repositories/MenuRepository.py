@@ -107,7 +107,6 @@ class MenuRepository(RepositoryBase):
             def fn(session, menu):
 
                 # TODO: when delete menu, also delete all its children
-                # TODO: when delete menu, also delte all its sector relationship
 
                 session.delete(menu)
                 session.commit()

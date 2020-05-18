@@ -106,7 +106,7 @@ class CapabilityRepository(RepositoryBase):
 
             def fn(session, capability):
                 
-                if (capability.roles):
+                if capability.roles:
                     return ErrorHandler().get_error(406, 'You cannot delete this Capability because it has a related Role.')
 
                 session.delete(capability)

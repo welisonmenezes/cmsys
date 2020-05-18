@@ -217,7 +217,8 @@ class RepositoryBase():
 
 
     def add_many_to_many_relationship(self, key, instance, data, context_target, session):
-        """"""
+        """From the given key get from the given data the list of context_target id
+            to add into the given instance"""
 
         if (key in data and isinstance(data[key], list)):
             for related in data[key]:
@@ -225,16 +226,15 @@ class RepositoryBase():
                     registered_related = session.query(context_target).filter_by(id=int(related)).first()
                     if (registered_related):
                         getattr(instance, key).append(registered_related)
-                        #role.capabilities.append(registered_related)
                     else:
                         return ErrorHandler().get_error(400, 'XXX ' + str(related) + ' does not exists.')
                         
         return True
 
 
-
     def edit_many_to_many_relationship(self, key, instance, data, context_target, session):
-        """"""
+        """From the given key get from the given data the list of context_target id
+            to add/remove into the given instance"""
 
         old_relateds = []
         new_old_relateds = []

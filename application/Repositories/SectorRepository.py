@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Sector, SectorSchema
+from Models import Sector, SectorSchema, Menu
 from Validators import SectorValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -87,7 +87,8 @@ class SectorRepository(RepositoryBase):
 
             def fn(session, sector):
 
-                # TODO: forbid delete if it has a menu related.
+                if sector.menus:
+                    return ErrorHandler().get_error(406, 'You cannot delete this Sector because it has a related Menu.')
 
                 session.delete(sector)
                 session.commit()
