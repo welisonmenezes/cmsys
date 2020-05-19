@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Grouper, GrouperSchema
+from Models import Grouper, GrouperSchema, Post
 from Validators import GrouperValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -51,10 +51,15 @@ class GrouperRepository(RepositoryBase):
                 grouper = Grouper(
                     name = data['name'],
                     description = data['description'],
-                    order = data['order'],
-                    #parent_id = data['parent_id'],
-                    post_id = data['post_id']
+                    order = data['order']
                 )
+
+                # TODO: don't allow to save if different post_id from its parent
+
+                fk_was_added = self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
+                if fk_was_added != True:
+                    return fk_was_added
+
                 session.add(grouper)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Grouper', grouper.id)
@@ -76,8 +81,11 @@ class GrouperRepository(RepositoryBase):
                     grouper.name = data['name']
                     grouper.description = data['description']
                     grouper.order = data['order']
-                    #grouper.parent_id = data['parent_id']
-                    grouper.post_id = data['post_id']
+
+                    fk_was_added = self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
+                    if fk_was_added != True:
+                        return fk_was_added
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Grouper', grouper.id)
 
@@ -94,6 +102,11 @@ class GrouperRepository(RepositoryBase):
         def run(session):
 
             def fn(session, grouper):
+
+                # TODO: when delete, also delete its children
+                # TODO: when delete, also delete its fields
+                # TODO: when delete, also delete its field (content, text or file)
+
                 session.delete(grouper)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Grouper', id)

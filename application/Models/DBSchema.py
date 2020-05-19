@@ -9,7 +9,7 @@ exclude_post_type = ('template', 'nests',)
 exclude_user = ('role', 'socials', 'password', 'medias', 'avatar')
 exclude_comment = ('parent', 'children', 'language', 'user', 'post')
 exclude_menu_item = ('parent', 'children', 'menu')
-exclude_grouper = ('parent', 'children', 'post')
+exclude_grouper = ('parent', 'post')
 
 class BlacklistSchema(ma.Schema):
     class Meta:
@@ -89,11 +89,12 @@ class PostSchema(ma.Schema):
     children = fields.Nested('PostSchema', many=True, exclude=exclude_post)
     post_type = fields.Nested('PostTypeSchema', many=False)
     nests = fields.Nested('NestSchema', many=True, exclude=('post',))
+    groupers = fields.Nested('GrouperSchema', many=True, exclude=('post', 'parent'))
     class Meta:
         fields = ('id', 'name', 'title', 'description', 'status', 'is_protected', 
         'has_comments', 'publish_on', 'expire_on', 'created', 'edited', 'parent_id', 
         'post_type_id', 'language_id', 'user_id', 'user', 'language', 'parent', 'children',
-        'post_type', 'nests')
+        'post_type', 'nests', 'groupers')
 
 
 class PostTypeSchema(ma.Schema):

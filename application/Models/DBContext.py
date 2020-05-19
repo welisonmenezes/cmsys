@@ -250,8 +250,8 @@ class Post(Base):
     user = relationship('User', foreign_keys='Post.user_id')
     language = relationship('Language', foreign_keys='Post.language_id')
     nests = relationship('Nest')
+    groupers = relationship('Grouper')
     # term = relationship('Term')
-    # groupers = relationship('Grouper')
     # comments = relationship('Comment')
     #page_owner = relationship('User', foreign_keys='User.page_id')
 

@@ -28,6 +28,7 @@ class PostController(ControllerBase):
         self.parser.add_argument('get_children')
         self.parser.add_argument('get_post_type')
         self.parser.add_argument('get_nests')
+        self.parser.add_argument('get_groupers')
         self.parser.add_argument('remove_foreign_keys')
         self.args = self.parser.parse_args()
         

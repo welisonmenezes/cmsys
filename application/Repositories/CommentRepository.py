@@ -68,6 +68,8 @@ class CommentRepository(RepositoryBase):
                     created = Helper().get_current_datetime()
                 )
 
+                # TODO: don't allow to save if different post_id and language_id from its parent
+
                 fk_was_added = self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
                 if fk_was_added != True:
                     return fk_was_added
