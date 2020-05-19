@@ -138,9 +138,9 @@ class Grouper(Base):
     parent_id = Column(Integer, ForeignKey('Grouper.id'), nullable=True)
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
-    # parent = relationship('Grouper', foreign_keys='Grouper.parent_id')
-    # children = relationship('Grouper', remote_side='Grouper.id')
-    # post = relationship('Post', foreign_keys='Grouper.post_id')
+    parent = relationship('Grouper', foreign_keys='Grouper.parent_id', remote_side='Grouper.id')
+    children = relationship('Grouper')
+    post = relationship('Post', foreign_keys='Grouper.post_id')
     # fields = relationship('Field')
     
 
