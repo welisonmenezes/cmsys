@@ -262,7 +262,7 @@ class RepositoryBase():
                 getattr(instance, key).append(registered_related)
 
 
-    def forbid_save_with_parent_reference(self, data, session, context_target, configurations):
+    def forbid_save_with_different_parent_reference(self, data, session, context_target, configurations):
         """Verify if the given data has the same foreign data that its parent. How to use:
             The configuration must like: [('parent_key','referenced_key')]"""
 

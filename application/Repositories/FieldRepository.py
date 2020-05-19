@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Field, FieldSchema
+from Models import Field, FieldSchema, Post, Grouper
 from Validators import FieldValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -57,8 +57,14 @@ class FieldRepository(RepositoryBase):
                     grouper_id = data['grouper_id'],
                     post_id = data['post_id']
                 )
+                
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('grouper_id', 'post_id')])
+                if can_add_ref != True:
+                    return can_add_ref
 
-                # TODO: implement the Field relationships transformations
+                fk_was_added = self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
+                if fk_was_added != True:
+                    return fk_was_added
 
                 session.add(field)
                 session.commit()
@@ -86,6 +92,14 @@ class FieldRepository(RepositoryBase):
                     field.post_id = data['post_id']
 
                     # TODO: when the type of a Fild was changed, delete its related child
+
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('grouper_id', 'post_id')])
+                    if can_add_ref != True:
+                        return can_add_ref
+
+                    fk_was_added = self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
+                    if fk_was_added != True:
+                        return fk_was_added
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Field', field.id)

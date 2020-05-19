@@ -83,7 +83,7 @@ class Configuration(Base):
 class Field(Base):
     __tablename__ = 'Field'
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False, unique=True)
+    name = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
     type = Column(String(15), nullable=False) # can be content, text and file
     order = Column(Integer, nullable=False)

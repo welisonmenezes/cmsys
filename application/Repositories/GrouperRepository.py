@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Grouper, GrouperSchema, Post
+from Models import Grouper, GrouperSchema, Post, Field
 from Validators import GrouperValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -54,7 +54,7 @@ class GrouperRepository(RepositoryBase):
                     order = data['order']
                 )
 
-                can_add_ref = self.forbid_save_with_parent_reference(data, session, Grouper, [('parent_id', 'post_id')])
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('parent_id', 'post_id')])
                 if can_add_ref != True:
                     return can_add_ref
 
@@ -84,7 +84,7 @@ class GrouperRepository(RepositoryBase):
                     grouper.description = data['description']
                     grouper.order = data['order']
 
-                    can_add_ref = self.forbid_save_with_parent_reference(data, session, Grouper, [('parent_id', 'post_id')])
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('parent_id', 'post_id')])
                     if can_add_ref != True:
                         return can_add_ref
 
@@ -112,8 +112,9 @@ class GrouperRepository(RepositoryBase):
 
             def fn(session, grouper):
 
-                # TODO: when delete, also delete its fields
                 # TODO: when delete, also delete its field (content, text or file)
+
+                session.query(Field).filter_by(grouper_id=id).delete(synchronize_session='evaluate')
 
                 self.delete_deep_chidren(grouper, Grouper, session)
 

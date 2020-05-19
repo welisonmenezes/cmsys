@@ -68,7 +68,7 @@ class CommentRepository(RepositoryBase):
                     created = Helper().get_current_datetime()
                 )
 
-                can_add_ref = self.forbid_save_with_parent_reference(data, session, Comment, [('parent_id', 'post_id'), ('parent_id', 'language_id')])
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Comment, [('parent_id', 'post_id'), ('parent_id', 'language_id')])
                 if can_add_ref != True:
                     return can_add_ref
 
@@ -99,7 +99,7 @@ class CommentRepository(RepositoryBase):
                     comment.origin_ip = data['origin_ip']
                     comment.origin_agent = data['origin_agent']
 
-                    can_add_ref = self.forbid_save_with_parent_reference(data, session, Comment, [('parent_id', 'post_id'), ('parent_id', 'language_id')])
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Comment, [('parent_id', 'post_id'), ('parent_id', 'language_id')])
                     if can_add_ref != True:
                         return can_add_ref
 
