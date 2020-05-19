@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import MenuItem, MenuItemSchema
+from Models import MenuItem, MenuItemSchema, Menu
 from Validators import MenuItemValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -51,15 +51,16 @@ class MenuItemRepository(RepositoryBase):
                     type = data['type'],
                     behavior = data['behavior'],
                     url = data['url'],
-                    #target_id = data['target_id'],
                     title = data['title'],
-                    order = data['order'],
-                    #parent_id = data['parent_id'],
-                    menu_id = data['menu_id']
+                    order = data['order']
                 )
 
-                # TODO: implement menu item relationship
-                # TODO: the child of menu item must have the same menu id
+                if 'target_id' in data and data['target_id'] != '':
+                    menu_item.target_id = data['target_id']
+
+                fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', Menu), ('menu_id', Menu)])
+                if fk_was_added != True:
+                    return fk_was_added
 
                 session.add(menu_item)
                 session.commit()
@@ -82,11 +83,16 @@ class MenuItemRepository(RepositoryBase):
                     menu_item.type = data['type']
                     menu_item.behavior = data['behavior']
                     menu_item.url = data['url']
-                    #menu_item.target_id = data['target_id']
                     menu_item.title = data['title']
                     menu_item.order = data['order']
-                    #menu_item.parent_id = data['parent_id']
-                    menu_item.menu_id = data['menu_id']
+
+                    if 'target_id' in data and data['target_id'] != '':
+                        menu_item.target_id = data['target_id']
+
+                    fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', Menu), ('menu_id', Menu)])
+                    if fk_was_added != True:
+                        return fk_was_added
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'MenuItem', menu_item.id)
 
@@ -104,7 +110,7 @@ class MenuItemRepository(RepositoryBase):
 
             def fn(session, menu_item):
 
-                # TODO: if delete menu item delete also its children
+                self.set_children_as_null_to_delete(menu_item, MenuItem, session)
 
                 session.delete(menu_item)
                 session.commit()

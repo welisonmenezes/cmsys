@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Menu, MenuSchema, Language, Sector
+from Models import Menu, MenuSchema, Language, Sector, MenuItem
 from Validators import MenuValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -106,7 +106,7 @@ class MenuRepository(RepositoryBase):
 
             def fn(session, menu):
 
-                # TODO: when delete menu, also delete all its children
+                session.query(MenuItem).filter_by(menu_id=menu.id).delete(synchronize_session='evaluate')
 
                 session.delete(menu)
                 session.commit()
