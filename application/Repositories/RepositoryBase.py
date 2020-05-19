@@ -276,3 +276,13 @@ class RepositoryBase():
             except Exception as e:
                 errors.append(str(e))
         return True if not errors else ErrorHandler().get_error(400, errors)
+
+
+    def delete_deep_chidren(self, parent, context, session):
+        """Delete children deeply from a given parent."""
+        
+        children = session.query(context).filter_by(parent_id=getattr(parent, 'id')).all()
+        if children:
+            for child in children:
+                self.delete_deep_chidren(child, context, session)
+                session.delete(child)

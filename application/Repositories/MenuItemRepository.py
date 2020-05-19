@@ -118,8 +118,7 @@ class MenuItemRepository(RepositoryBase):
 
             def fn(session, menu_item):
 
-                # TODO: try change the method below to one that delete its children
-                self.set_children_as_null_to_delete(menu_item, MenuItem, session)
+                self.delete_deep_chidren(menu_item, MenuItem, session)
 
                 session.delete(menu_item)
                 session.commit()

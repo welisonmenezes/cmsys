@@ -109,9 +109,10 @@ class GrouperRepository(RepositoryBase):
 
             def fn(session, grouper):
 
-                # TODO: when delete, also delete its children
                 # TODO: when delete, also delete its fields
                 # TODO: when delete, also delete its field (content, text or file)
+
+                self.delete_deep_chidren(grouper, Grouper, session)
 
                 session.delete(grouper)
                 session.commit()
