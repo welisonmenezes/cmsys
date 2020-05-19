@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Language, LanguageSchema, Configuration, Post, Menu
+from Models import Language, LanguageSchema, Configuration, Post, Menu, Comment
 from Validators import LanguageValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -92,14 +92,13 @@ class LanguageRepository(RepositoryBase):
 
             def fn(session, language):
 
-                # TODO: forbid delete language that has any related menu
-                # TODO: forbid delete language that has any related comment
                 # TODO: forbid delete language that has any related term
 
                 is_foreigners = self.is_foreigners([
                     (language, 'language_id', Configuration),
                     (language, 'language_id', Post),
-                    (language, 'language_id', Menu)
+                    (language, 'language_id', Menu),
+                    (language, 'language_id', Comment)
                 ], session)
                 
                 if is_foreigners != False:

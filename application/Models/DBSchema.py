@@ -40,6 +40,11 @@ class ConfigurationSchema(ma.Schema):
         fields = ('id', 'title', 'description', 'has_comments', 'email', 'language_id', 'language', 'socials')
 
 
+class FieldSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'description', 'type', 'order', 'grouper_id', 'post_id')
+
+
 class GrouperSchema(ma.Schema):
     post = fields.Nested('PostSchema', many=False, exclude=exclude_post)
     parent = fields.Nested('CommentSchema', many=False, exclude=exclude_grouper)

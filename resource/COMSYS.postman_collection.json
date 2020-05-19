@@ -131,7 +131,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"type\": \"ip\",\n\t\"value\": \"444.333.33.333\",\n\t\"target\": \"comment\"\n}"
+							"raw": "{\n\t\"type\": \"ipx\",\n\t\"value\": \"444.333.33.333\",\n\t\"target\": \"commentx\"\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/blacklist",
@@ -388,7 +388,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comment\": \"bom\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"xparent_id\": 8,\n\t\"user_id\": 1,\n\t\"post_id\": 17,\n\t\"language_id\": 1\n}"
+							"raw": "{\n\t\"comment\": \"bom\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"xparent_id\": 10,\n\t\"user_id\": 1,\n\t\"post_id\": 1,\n\t\"language_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/comment",
@@ -421,10 +421,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comment\": \"bom edited\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"parent_id\": 1,\n\t\"user_id\": 10,\n\t\"post_id\": 10,\n\t\"language_id\": 2\n}"
+							"raw": "{\n\t\"comment\": \"bom dfdf\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"parent_id\": 10,\n\t\"user_id\": 10,\n\t\"post_id\": 1,\n\t\"language_id\": 1\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/comment/1",
+							"raw": "http://127.0.0.1:5000/api/comment/17",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -436,7 +436,7 @@
 							"path": [
 								"api",
 								"comment",
-								"1"
+								"17"
 							]
 						}
 					},
@@ -924,6 +924,207 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "Field",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field?page=1&limit=10&order_by=&order=",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": ""
+								},
+								{
+									"key": "order",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"field name xx\",\n\t\"description\": \"field lorem x4\",\n\t\"type\": \"short-text\",\n\t\"order\": 0,\n\t\"grouper_id\": 2,\n\t\"post_id\": 2\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"field name 1 edited\",\n\t\"description\": \"field lorem 1\",\n\t\"type\": \"short-text\",\n\t\"order\": 0,\n\t\"grouper_id\": 1,\n\t\"post_id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Grouper",
 			"item": [
 				{
@@ -965,7 +1166,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/grouper?page=1&limit=10&order_by=id&order=desc",
+							"raw": "http://127.0.0.1:5000/api/grouper?page=1&limit=10&order_by=&order=&s=&parent_id=&post_id=&get_parent=&get_children=&get_post=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -989,11 +1190,35 @@
 								},
 								{
 									"key": "order_by",
-									"value": "id"
+									"value": ""
 								},
 								{
 									"key": "order",
-									"value": "desc"
+									"value": ""
+								},
+								{
+									"key": "s",
+									"value": ""
+								},
+								{
+									"key": "parent_id",
+									"value": ""
+								},
+								{
+									"key": "post_id",
+									"value": ""
+								},
+								{
+									"key": "get_parent",
+									"value": ""
+								},
+								{
+									"key": "get_children",
+									"value": ""
+								},
+								{
+									"key": "get_post",
+									"value": ""
 								}
 							]
 						}
@@ -1037,7 +1262,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"grouper 5\",\n\t\"description\": \"grouper desc 5\",\n\t\"order\": 0,\n\t\"xparent_id\": \"\",\n\t\"post_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"grouper a21\",\n\t\"description\": \"grouper desc 5\",\n\t\"order\": 0,\n\t\"xparent_id\": 11,\n\t\"post_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/grouper",
@@ -1070,10 +1295,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"grouper 1 edited\",\n\t\"description\": \"grouper desc 1 xxx\",\n\t\"order\": 0,\n\t\"xparent_id\": \"\",\n\t\"post_id\": 6\n}"
+							"raw": "{\n\t\"name\": \"grouper 8 edited\",\n\t\"description\": \"grouper desc 1 xxx\",\n\t\"order\": 0,\n\t\"parent_id\": 8,\n\t\"post_id\": 7\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/grouper/1",
+							"raw": "http://127.0.0.1:5000/api/grouper/8",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1085,7 +1310,7 @@
 							"path": [
 								"api",
 								"grouper",
-								"1"
+								"8"
 							]
 						}
 					},
@@ -1103,7 +1328,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/grouper/5",
+							"raw": "http://127.0.0.1:5000/api/grouper/13",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1115,7 +1340,7 @@
 							"path": [
 								"api",
 								"grouper",
-								"5"
+								"13"
 							]
 						}
 					},
@@ -2023,7 +2248,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"type\": \"type-test\",\n\t\"behavior\": \"behavior-test\",\n\t\"url\": \"url-test\",\n\t\"xtarget_id\": 10,\n\t\"title\": \"title-test 5\",\n\t\"order\": 0,\n\t\"xparent_id\": 1,\n\t\"menu_id\": 7\n}"
+							"raw": "{\n\t\"type\": \"type-test\",\n\t\"behavior\": \"behavior-test\",\n\t\"url\": \"url-test\",\n\t\"xtarget_id\": 10,\n\t\"title\": \"title-test 5\",\n\t\"order\": 0,\n\t\"xparent_id\": 13,\n\t\"menu_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/menu-item",
@@ -2056,10 +2281,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"type\": \"type-test\",\n\t\"behavior\": \"behavior-test\",\n\t\"url\": \"url-test\",\n\t\"xtarget_id\": 0,\n\t\"title\": \"title-test edited\",\n\t\"order\": 0,\n\t\"xparent_id\": 0,\n\t\"menu_id\": 1\n}"
+							"raw": "{\n\t\"type\": \"anchor\",\n\t\"behavior\": \"_blank\",\n\t\"url\": \"url-test\",\n\t\"xtarget_id\": 0,\n\t\"title\": \"title-test edited\",\n\t\"order\": 0,\n\t\"parent_id\": 10,\n\t\"menu_id\": 1\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/menu-item/1",
+							"raw": "http://127.0.0.1:5000/api/menu-item/10",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2071,7 +2296,7 @@
 							"path": [
 								"api",
 								"menu-item",
-								"1"
+								"10"
 							]
 						}
 					},
@@ -2089,7 +2314,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/menu-item/7",
+							"raw": "http://127.0.0.1:5000/api/menu-item/11",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2101,7 +2326,7 @@
 							"path": [
 								"api",
 								"menu-item",
-								"7"
+								"11"
 							]
 						}
 					},
@@ -2373,7 +2598,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=10&order_by=id&order=asc&s=&status=&date_modifier=&created=&not_between=&compare_date_time_one=&compare_date_time_two=&get_user=&user_id=&parent_id=&post_type_id=&language_id=&get_language=&get_parent=&get_children=&get_post_type=&get_nests=1",
+							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=10&order_by=id&order=asc&s=&status=&date_modifier=&created=&not_between=&compare_date_time_one=&compare_date_time_two=&get_user=&user_id=&parent_id=&post_type_id=&language_id=&get_language=&get_parent=&get_children=&get_post_type=&get_nests=&get_groupers=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2469,7 +2694,11 @@
 								},
 								{
 									"key": "get_nests",
-									"value": "1"
+									"value": ""
+								},
+								{
+									"key": "get_groupers",
+									"value": ""
 								}
 							]
 						}
@@ -2604,7 +2833,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post/17?remove_foreign_keys=",
+							"raw": "http://127.0.0.1:5000/api/post/18?remove_foreign_keys=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2616,12 +2845,12 @@
 							"path": [
 								"api",
 								"post",
-								"17"
+								"18"
 							],
 							"query": [
 								{
 									"key": "remove_foreign_keys",
-									"value": ""
+									"value": "1"
 								}
 							]
 						}
@@ -2988,7 +3217,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"role-namex4x33x\",\n\t\"description\": \"role-description\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [2]\n}"
+							"raw": "{\n\t\"name\": \"fdfdfd\",\n\t\"description\": \"role-description\",\n\t\"can_access_admin\": 1,\n\t\"capabilities\": [200]\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/role",
@@ -3912,7 +4141,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"fdfdf\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 1,\n\t\"xavatar_id\": 31,\n\t\"xpage_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"fdfdf\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"dffd\",\n\t\"role_id\": 2,\n\t\"xavatar_id\": 31,\n\t\"xpage_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user",

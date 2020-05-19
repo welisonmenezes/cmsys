@@ -89,6 +89,7 @@ class Field(Base):
     order = Column(Integer, nullable=False)
     # foreignKeys
     grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
     # grouper = relationship('Grouper', foreign_keys='Field.grouper_id')
     # contents = relationship('FieldContent')

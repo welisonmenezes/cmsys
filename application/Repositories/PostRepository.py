@@ -141,7 +141,7 @@ class PostRepository(RepositoryBase):
 
                 # TODO: forbid delete post that is term page (or update the term page)
 
-                can_delete = self.set_foreign_keys_as_null(post, request, session, [('page_id', User), ('parent_id', Post)])
+                can_delete = self.set_any_reference_as_null_to_delete(post, request, session, [('page_id', User), ('parent_id', Post)])
                 if can_delete != True:
                     return can_delete
 
