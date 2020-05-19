@@ -101,6 +101,9 @@ class MenuItemRepository(RepositoryBase):
                     if fk_was_added != True:
                         return fk_was_added
 
+                    if menu_item.parent_id and int(menu_item.parent_id) == int(id):
+                        return ErrorHandler().get_error(400, 'The MenuItem cannot be parent of yourself.')
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'MenuItem', menu_item.id)
 

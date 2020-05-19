@@ -92,6 +92,9 @@ class GrouperRepository(RepositoryBase):
                     if fk_was_added != True:
                         return fk_was_added
 
+                    if grouper.parent_id and int(grouper.parent_id) == int(id):
+                        return ErrorHandler().get_error(400, 'The Grouper cannot be parent of yourself.')
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Grouper', grouper.id)
 
