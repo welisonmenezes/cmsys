@@ -39,6 +39,11 @@ class ConfigurationSchema(ma.Schema):
         fields = ('id', 'title', 'description', 'has_comments', 'email', 'language_id', 'language', 'socials')
 
 
+class GrouperSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'description', 'order', 'parent_id', 'post_id')
+
+
 class LanguageSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'code', 'status', 'datetime_format')

@@ -3,6 +3,7 @@ from .BlacklistController import *
 from .CapabilityController import *
 from .CommentController import *
 from .ConfigurationController import *
+from .GrouperController import *
 from .LanguageController import *
 from .MediaController import *
 from .MenuController import *
@@ -27,6 +28,7 @@ def start_controllers(app, api):
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
     api.add_resource(CommentController, '/comment', '/comment/<int:id>')
     api.add_resource(ConfigurationController, '/configuration', '/configuration/<int:id>')
+    api.add_resource(GrouperController, '/grouper', '/grouper/<int:id>')
     api.add_resource(LanguageController, '/language', '/language/<int:id>')
     api.add_resource(MediaController, '/media', '/media/<id>', '/media/preview/<id>', '/media/suggestions/<name>')
     api.add_resource(MenuController, '/menu', '/menu/<int:id>')
