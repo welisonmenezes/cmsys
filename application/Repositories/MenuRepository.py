@@ -3,6 +3,8 @@ from Models import Menu, MenuSchema, Language, Sector, MenuItem
 from Validators import MenuValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
+# TODO: from menu to be able to save/update/delete menu items
+
 class MenuRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Menu."""

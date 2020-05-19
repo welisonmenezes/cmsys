@@ -4,6 +4,7 @@ from Models import User, UserSchema, Media, Post, Role, Social, Comment
 from Validators import UserValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper, Checker
 
+# TODO: from user to be able to save/update/delete socials
 
 class UserRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the

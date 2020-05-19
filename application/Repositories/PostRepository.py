@@ -3,6 +3,8 @@ from Models import Post, PostSchema, PostType, Language, User, Nest, Comment
 from Validators import PostValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
+# TODO: from post to be able to save/update/delete grouper and fields
+
 class PostRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Post."""

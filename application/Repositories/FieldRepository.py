@@ -13,13 +13,18 @@ class FieldRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Field, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_equals_filter('type')
+            fb.set_equals_filter('grouper_id')
+            fb.set_equals_filter('post_id')
+
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
             query = session.query(Field).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = FieldSchema(many=True)
+            schema = FieldSchema(many=True, exclude=self.get_exclude_fields(args, ['post', 'grouper']))
             return self.handle_success(result, schema, 'get', 'Field')
 
         return self.response(run, False)
@@ -31,7 +36,7 @@ class FieldRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Field).filter_by(id=id).first()
-            schema = FieldSchema(many=False)
+            schema = FieldSchema(many=False, exclude=self.get_exclude_fields(args, ['post', 'grouper']))
             return self.handle_success(result, schema, 'get_by_id', 'Field')
 
         return self.response(run, False)
@@ -52,6 +57,9 @@ class FieldRepository(RepositoryBase):
                     grouper_id = data['grouper_id'],
                     post_id = data['post_id']
                 )
+
+                # TODO: implement the Field relationships transformations
+
                 session.add(field)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Field', field.id)
@@ -76,6 +84,9 @@ class FieldRepository(RepositoryBase):
                     field.order = data['order']
                     field.grouper_id = data['grouper_id']
                     field.post_id = data['post_id']
+
+                    # TODO: when the type of a Fild was changed, delete its related child
+
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Field', field.id)
 
@@ -92,6 +103,9 @@ class FieldRepository(RepositoryBase):
         def run(session):
 
             def fn(session, field):
+
+                # TODO: when to delete a Field, delete also its children (text, content or file)
+
                 session.delete(field)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Field', id)

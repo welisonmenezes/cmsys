@@ -23,7 +23,7 @@ class GrouperRepository(RepositoryBase):
 
             query = session.query(Grouper).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = GrouperSchema(many=True, exclude=self.get_exclude_fields(args, ['parent', 'post', 'children']))
+            schema = GrouperSchema(many=True, exclude=self.get_exclude_fields(args, ['parent', 'post', 'children', 'fields']))
             return self.handle_success(result, schema, 'get', 'Grouper')
 
         return self.response(run, False)
@@ -35,7 +35,7 @@ class GrouperRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Grouper).filter_by(id=id).first()
-            schema = GrouperSchema(many=False, exclude=self.get_exclude_fields(args, ['parent', 'post', 'children']))
+            schema = GrouperSchema(many=False, exclude=self.get_exclude_fields(args, ['parent', 'post', 'children', 'fields']))
             return self.handle_success(result, schema, 'get_by_id', 'Grouper')
 
         return self.response(run, False)

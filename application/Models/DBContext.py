@@ -91,7 +91,8 @@ class Field(Base):
     grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
-    # grouper = relationship('Grouper', foreign_keys='Field.grouper_id')
+    grouper = relationship('Grouper', foreign_keys='Field.grouper_id')
+    post = relationship('Post', foreign_keys='Field.post_id')
     # contents = relationship('FieldContent')
     # texts = relationship('FieldText')
     # files = relationship('FieldFile')
@@ -142,7 +143,7 @@ class Grouper(Base):
     parent = relationship('Grouper', foreign_keys='Grouper.parent_id', remote_side='Grouper.id')
     children = relationship('Grouper')
     post = relationship('Post', foreign_keys='Grouper.post_id')
-    # fields = relationship('Field')
+    fields = relationship('Field')
     
 
 class Language(Base):

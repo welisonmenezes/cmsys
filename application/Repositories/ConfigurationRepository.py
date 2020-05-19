@@ -3,6 +3,8 @@ from Models import Configuration, ConfigurationSchema, Language
 from Validators import ConfigurationValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
+# TODO: from configuration to be able to save/update/delete socials
+
 class ConfigurationRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Configuration."""

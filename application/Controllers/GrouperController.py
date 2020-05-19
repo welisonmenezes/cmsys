@@ -20,6 +20,7 @@ class GrouperController(ControllerBase):
         self.parser.add_argument('get_parent')
         self.parser.add_argument('get_children')
         self.parser.add_argument('get_post')
+        self.parser.add_argument('get_fields')
         self.args = self.parser.parse_args()
 
         return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
