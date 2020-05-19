@@ -13,7 +13,8 @@ class BlacklistValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 50,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['email', 'ip', 'domain']
             },
             'value': {
                 'key_required': True,
@@ -24,7 +25,8 @@ class BlacklistValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 100,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['comment', 'login', 'private-access', 'public-access']
             }
         }
 

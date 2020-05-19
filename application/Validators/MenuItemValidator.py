@@ -13,13 +13,15 @@ class MenuItemValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 50,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['anchor', 'post', 'term', 'external']
             },
             'behavior': {
                 'key_required': True,
                 'field_required': True,
                 'max_length': 50,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['', '_blank', '_self', '_parent', '_top']
             },
             'url': {
                 'key_required': True,

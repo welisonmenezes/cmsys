@@ -7,6 +7,8 @@ class CapabilityValidator(ValidatorBase):
     def __init__(self, obj_data):
         """Gets the object data that will be validated and initializes the configurations."""
 
+        # TODO: fill capabilities types
+
         self.request = obj_data
 
         self.validate_config = {
@@ -20,7 +22,8 @@ class CapabilityValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 50,
-                'min_length': 1
+                'min_length': 1,
+                #'valid_values': []
             },
             'target_id': {
                 'key_required': True,

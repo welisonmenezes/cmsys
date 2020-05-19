@@ -44,7 +44,8 @@ class UserValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 15,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['pending', 'active', 'draft', 'trash']
             },
             'role_id': {
                 'key_required': True,

@@ -23,7 +23,8 @@ class SocialValidator(ValidatorBase):
             },
             'target': {
                 'key_required': True,
-                'max_length': 15
+                'max_length': 15,
+                'valid_values': ['', '_blank', '_self', '_parent', '_top']
             },
             'description': {
                 'key_required': True,

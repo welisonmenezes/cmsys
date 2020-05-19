@@ -39,7 +39,8 @@ class MediaValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 50,
-                'min_length': 1
+                'min_length': 1,
+                'valid_values': ['media', 'post', 'user']
             },
             'user_id': {
                 'key_required': True,
