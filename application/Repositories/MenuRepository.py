@@ -53,8 +53,6 @@ class MenuRepository(RepositoryBase):
                     description = data['description']
                 )
 
-                # TODO: don't allow to save if different menu_id from its parent
-
                 fk_was_added = self.add_foreign_keys(menu, data, session, [('language_id', Language)])
                 if fk_was_added != True:
                     return fk_was_added

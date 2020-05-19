@@ -68,7 +68,9 @@ class CommentRepository(RepositoryBase):
                     created = Helper().get_current_datetime()
                 )
 
-                # TODO: don't allow to save if different post_id and language_id from its parent
+                can_add_ref = self.forbid_save_with_parent_reference(data, session, Comment, [('parent_id', 'post_id'), ('parent_id', 'language_id')])
+                if can_add_ref != True:
+                    return can_add_ref
 
                 fk_was_added = self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
                 if fk_was_added != True:
@@ -96,6 +98,10 @@ class CommentRepository(RepositoryBase):
                     comment.status = data['status']
                     comment.origin_ip = data['origin_ip']
                     comment.origin_agent = data['origin_agent']
+
+                    can_add_ref = self.forbid_save_with_parent_reference(data, session, Comment, [('parent_id', 'post_id'), ('parent_id', 'language_id')])
+                    if can_add_ref != True:
+                        return can_add_ref
 
                     fk_was_added = self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
                     if fk_was_added != True:

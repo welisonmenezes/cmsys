@@ -1,4 +1,5 @@
 from .ValidatorBase import ValidatorBase
+from Models import Session, Grouper
 
 class GrouperValidator(ValidatorBase):
     """Configures the Grouper validator to the parent class applies the validators correctly."""
@@ -13,7 +14,8 @@ class GrouperValidator(ValidatorBase):
                 'key_required': True,
                 'field_required': True,
                 'max_length': 100,
-                'min_length': 1
+                'min_length': 1,
+                'is_unique': True
             },
             'description': {
                 'key_required': True,
@@ -38,5 +40,5 @@ class GrouperValidator(ValidatorBase):
         self.errors = []
         self.has_error = False
         self.complete_key_list = True
-        self.model = None
-        self.session = None
+        self.model = Grouper
+        self.session = Session

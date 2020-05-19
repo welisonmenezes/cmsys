@@ -55,10 +55,14 @@ class MenuItemRepository(RepositoryBase):
                     order = data['order']
                 )
 
+                can_add_ref = self.forbid_save_with_parent_reference(data, session, MenuItem, [('parent_id', 'menu_id')])
+                if can_add_ref != True:
+                    return can_add_ref
+
                 if 'target_id' in data and data['target_id'] != '':
                     menu_item.target_id = data['target_id']
 
-                fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', Menu), ('menu_id', Menu)])
+                fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', MenuItem), ('menu_id', Menu)])
                 if fk_was_added != True:
                     return fk_was_added
 
@@ -86,10 +90,14 @@ class MenuItemRepository(RepositoryBase):
                     menu_item.title = data['title']
                     menu_item.order = data['order']
 
+                    can_add_ref = self.forbid_save_with_parent_reference(data, session, MenuItem, [('parent_id', 'menu_id')])
+                    if can_add_ref != True:
+                        return can_add_ref
+
                     if 'target_id' in data and data['target_id'] != '':
                         menu_item.target_id = data['target_id']
 
-                    fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', Menu), ('menu_id', Menu)])
+                    fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', MenuItem), ('menu_id', Menu)])
                     if fk_was_added != True:
                         return fk_was_added
 
@@ -110,6 +118,7 @@ class MenuItemRepository(RepositoryBase):
 
             def fn(session, menu_item):
 
+                # TODO: try change the method below to one that delete its children
                 self.set_children_as_null_to_delete(menu_item, MenuItem, session)
 
                 session.delete(menu_item)

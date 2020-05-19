@@ -227,7 +227,7 @@ class RepositoryBase():
                     if (registered_related):
                         getattr(instance, key).append(registered_related)
                     else:
-                        return ErrorHandler().get_error(400, 'XXX ' + str(related) + ' does not exists.')
+                        return ErrorHandler().get_error(400, context_target.__tablename__ + ' ' + str(related) + ' does not exists.')
                         
         return True
 
@@ -260,3 +260,19 @@ class RepositoryBase():
             registered_related = session.query(context_target).filter_by(id=int(related)).first()
             if (registered_related):
                 getattr(instance, key).append(registered_related)
+
+
+    def forbid_save_with_parent_reference(self, data, session, context_target, configurations):
+        """Verify if the given data has the same foreign data that its parent. How to use:
+            The configuration must like: [('parent_key','referenced_key')]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                if config[0] in data and config[1] in data:
+                    parent = session.query(getattr(context_target, config[1])).filter_by(id=int(data[config[0]])).first()
+                    if parent and parent[0] != int(data[config[1]]):
+                        errors.append('The ' + config[1] + ' must the same as your father\'s, witch is: ' + str(parent[0]) + '.')
+            except Exception as e:
+                errors.append(str(e))
+        return True if not errors else ErrorHandler().get_error(400, errors)
