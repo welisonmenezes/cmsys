@@ -1,7 +1,7 @@
 
 import unittest
 from app import app
-from .UtilsTests import CheckerTests, ErrorHandlerTests, FilterBuilderTests, HelperTests
+from .UtilsTests import CheckerTests, ErrorHandlerTests, FilterBuilderTests, HelperTests, PaginateTestes
 
 def load_tests(loader, tests, pattern):
     if app.config['SQLALCHEMY_DATABASE_URI'] != 'mysql+pymysql://root:@localhost/cmsys_tests':
@@ -12,4 +12,5 @@ def load_tests(loader, tests, pattern):
     suite.addTests(loader.loadTestsFromModule(ErrorHandlerTests))
     suite.addTests(loader.loadTestsFromModule(FilterBuilderTests))
     suite.addTests(loader.loadTestsFromModule(HelperTests))
+    suite.addTests(loader.loadTestsFromModule(PaginateTestes))
     return suite
