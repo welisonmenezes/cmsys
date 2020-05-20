@@ -3,6 +3,7 @@ from .CapabilityValidator import *
 from .CommentValidator import *
 from .ConfigurationValidator import *
 from .FieldValidator import *
+from .FieldFileValidator import *
 from .GrouperValidator import *
 from .LanguageValidator import *
 from .MediaValidator import *

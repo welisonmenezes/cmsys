@@ -3,6 +3,7 @@ from .CapabilityRepository import *
 from .CommentRepository import *
 from .ConfigurationRepository import *
 from .FieldRepository import *
+from .FieldFileRepository import *
 from .GrouperRepository import *
 from .LanguageRepository import *
 from .MediaRepository import *

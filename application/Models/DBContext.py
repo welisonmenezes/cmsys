@@ -104,6 +104,8 @@ class FieldContent(Base):
     content = Column(Text(4294000000), nullable=False)
     # foreignKeys
     field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
     #field = relationship('Field', foreign_keys='FieldContent.field_id')
 
@@ -111,10 +113,11 @@ class FieldContent(Base):
 class FieldFile(Base):
     __tablename__ = 'Field_File'
     id = Column(Integer, primary_key=True)
-    content = Column(String(255), nullable=False)
     # foreignKeys
     field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
     media_id = Column(Integer, ForeignKey('Media.id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
     #field = relationship('Field', foreign_keys='FieldFile.field_id')
     #media = relationship('Media', foreign_keys='FieldFile.media_id')
@@ -126,6 +129,8 @@ class FieldText(Base):
     content = Column(String(255), nullable=False)
     # foreignKeys
     field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
     #field = relationship('Field', foreign_keys='FieldText.field_id')
 
