@@ -93,9 +93,9 @@ class Field(Base):
     # relationships
     grouper = relationship('Grouper', foreign_keys='Field.grouper_id')
     post = relationship('Post', foreign_keys='Field.post_id')
+    field_file = relationship('FieldFile', uselist=False)
     # contents = relationship('FieldContent')
     # texts = relationship('FieldText')
-    # files = relationship('FieldFile')
 
 
 class FieldContent(Base):
@@ -119,8 +119,8 @@ class FieldFile(Base):
     grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
     post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
     # relationships
-    #field = relationship('Field', foreign_keys='FieldFile.field_id')
-    #media = relationship('Media', foreign_keys='FieldFile.media_id')
+    field = relationship('Field', foreign_keys='FieldFile.field_id')
+    media = relationship('Media', foreign_keys='FieldFile.media_id')
 
 
 class FieldText(Base):

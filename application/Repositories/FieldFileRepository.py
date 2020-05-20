@@ -12,13 +12,11 @@ class FieldFileRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def run(session):
-
-            # TODO: implement filed file filters.
-
             fb = FilterBuilder(FieldFile, args)
-            # fb.set_equals_filter('type')
-            # fb.set_equals_filter('target')
-            # fb.set_like_filter('value')
+            fb.set_equals_filter('field_id')
+            fb.set_equals_filter('media_id')
+            fb.set_equals_filter('grouper_id')
+            fb.set_equals_filter('post_id')
 
             query = session.query(FieldFile).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

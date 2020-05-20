@@ -44,13 +44,15 @@ class ConfigurationSchema(ma.Schema):
 class FieldSchema(ma.Schema):
     post = fields.Nested('PostSchema', many=False, exclude=('user', 'language', 'parent', 'children', 'post_type', 'nests', 'groupers'))
     grouper = fields.Nested('GrouperSchema', many=False, exclude=('parent', 'post', 'children'))
+    field_file = fields.Nested('FieldFileSchema', many=False)
     class Meta:
-        fields = ('id', 'name', 'description', 'type', 'order', 'grouper_id', 'post_id', 'post', 'grouper')
+        fields = ('id', 'name', 'description', 'type', 'order', 'grouper_id', 'post_id', 'post', 'grouper', 'field_file')
 
 
 class FieldFileSchema(ma.Schema):
+    media = fields.Nested('MediaSchema', many=False, exclude=('user',))
     class Meta:
-        fields = ('id', 'field_id', 'grouper_id', 'post_id')
+        fields = ('id', 'field_id', 'grouper_id', 'post_id', 'media')
 
 
 class GrouperSchema(ma.Schema):
