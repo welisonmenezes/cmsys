@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import FieldFile, FieldFileSchema
+from Models import FieldFile, FieldFileSchema, Field, Media, Post, Grouper
 from Validators import FieldFileValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -45,15 +45,15 @@ class FieldFileRepository(RepositoryBase):
 
             def process(session, data):
 
-                field_file = FieldFile(
-                    field_id = data['field_id'],
-                    media_id = data['media_id'],
-                    grouper_id = data['grouper_id'],
-                    post_id = data['post_id']
-                )
+                field_file = FieldFile()
 
-                # TODO: implement field file transform relationships
-                # TODO: forbid save/update if post_id and grouper_id was different than field
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
+                if can_add_ref != True:
+                    return can_add_ref
+
+                fk_was_added = self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])
+                if fk_was_added != True:
+                    return fk_was_added
 
                 session.add(field_file)
                 session.commit()
@@ -73,10 +73,15 @@ class FieldFileRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, field_file):
-                    field_file.field_id = data['field_id']
-                    field_file.media_id = data['media_id']
-                    field_file.grouper_id = data['grouper_id']
-                    field_file.post_id = data['post_id']
+
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
+                    if can_add_ref != True:
+                        return can_add_ref
+
+                    fk_was_added = self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])
+                    if fk_was_added != True:
+                        return fk_was_added
+                        
                     session.commit()
                     return self.handle_success(None, None, 'update', 'FieldFile', field_file.id)
 

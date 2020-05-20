@@ -262,15 +262,15 @@ class RepositoryBase():
                 getattr(instance, key).append(registered_related)
 
 
-    def forbid_save_with_different_parent_reference(self, data, session, context_target, configurations):
+    def forbid_save_with_different_parent_reference(self, data, session, configurations):
         """Verify if the given data has the same foreign data that its parent. How to use:
-            The configuration must like: [('parent_key','referenced_key')]"""
+            The configuration must like: [('parent_key','referenced_key', 'context_target')]"""
 
         errors = []
         for config in configurations:
             try:
                 if config[0] in data and config[1] in data:
-                    parent = session.query(getattr(context_target, config[1])).filter_by(id=int(data[config[0]])).first()
+                    parent = session.query(getattr(config[2], config[1])).filter_by(id=int(data[config[0]])).first()
                     if parent and parent[0] != int(data[config[1]]):
                         errors.append('The ' + config[1] + ' must the same as your father\'s, witch is: ' + str(parent[0]) + '.')
             except Exception as e:

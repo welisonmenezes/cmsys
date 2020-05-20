@@ -54,7 +54,7 @@ class GrouperRepository(RepositoryBase):
                     order = data['order']
                 )
 
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('parent_id', 'post_id')])
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
                 if can_add_ref != True:
                     return can_add_ref
 
@@ -84,7 +84,7 @@ class GrouperRepository(RepositoryBase):
                     grouper.description = data['description']
                     grouper.order = data['order']
 
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('parent_id', 'post_id')])
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
                     if can_add_ref != True:
                         return can_add_ref
 

@@ -58,7 +58,7 @@ class FieldRepository(RepositoryBase):
                     post_id = data['post_id']
                 )
                 
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('grouper_id', 'post_id')])
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
                 if can_add_ref != True:
                     return can_add_ref
 
@@ -93,7 +93,7 @@ class FieldRepository(RepositoryBase):
 
                     # TODO: when the type of a Fild was changed, delete its related child
 
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, Grouper, [('grouper_id', 'post_id')])
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
                     if can_add_ref != True:
                         return can_add_ref
 

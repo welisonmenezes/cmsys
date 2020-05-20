@@ -55,7 +55,7 @@ class MenuItemRepository(RepositoryBase):
                     order = data['order']
                 )
 
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, MenuItem, [('parent_id', 'menu_id')])
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
                 if can_add_ref != True:
                     return can_add_ref
 
@@ -90,7 +90,7 @@ class MenuItemRepository(RepositoryBase):
                     menu_item.title = data['title']
                     menu_item.order = data['order']
 
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, MenuItem, [('parent_id', 'menu_id')])
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
                     if can_add_ref != True:
                         return can_add_ref
 
