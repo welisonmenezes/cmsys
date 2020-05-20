@@ -1149,6 +1149,207 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "FieldContent",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field-content?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field-content"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field-content?page=1&limit=10&order_by=&order=",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field-content"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": ""
+								},
+								{
+									"key": "order",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field-content/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field-content",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"content\": \"content 5\",\n\t\"field_id\": 1,\n\t\"grouper_id\": 1,\n\t\"post_id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field-content",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"content\": \"content 1 edited\",\n\t\"field_id\": 1,\n\t\"grouper_id\": 1,\n\t\"post_id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field-content/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field-content",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/field-content/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"field-content",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "FieldFile",
 			"item": [
 				{
@@ -1190,7 +1391,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/field-file?page=1&limit=10&order_by=&order=",
+							"raw": "http://127.0.0.1:5000/api/field-file?page=1&limit=10&order_by=&order=&field_id=&media_id=&grouper_id=&post_id=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1218,6 +1419,22 @@
 								},
 								{
 									"key": "order",
+									"value": ""
+								},
+								{
+									"key": "field_id",
+									"value": ""
+								},
+								{
+									"key": "media_id",
+									"value": ""
+								},
+								{
+									"key": "grouper_id",
+									"value": ""
+								},
+								{
+									"key": "post_id",
 									"value": ""
 								}
 							]
@@ -1295,7 +1512,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"field_id\": 1,\n\t\"media_id\": 13,\n\t\"grouper_id\": 1,\n\t\"post_id\": 1\n}"
+							"raw": "{\n\t\"field_id\": 1,\n\t\"media_id\": 13,\n\t\"grouper_id\": 2,\n\t\"post_id\": 7\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/field-file/2",
@@ -1391,7 +1608,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/grouper?page=1&limit=10&order_by=&order=&s=&parent_id=&post_id=&get_parent=&get_children=&get_post=&get_fields=",
+							"raw": "http://127.0.0.1:5000/api/grouper?page=1&limit=10&order_by=&order=&s=&parent_id=&post_id=&get_parent=&get_children=&get_post=&get_fields=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1447,7 +1664,7 @@
 								},
 								{
 									"key": "get_fields",
-									"value": ""
+									"value": "1"
 								}
 							]
 						}

@@ -4,6 +4,7 @@ from .CapabilityController import *
 from .CommentController import *
 from .ConfigurationController import *
 from .FieldController import *
+from .FieldContentController import *
 from .FieldFileController import *
 from .GrouperController import *
 from .LanguageController import *
@@ -31,6 +32,7 @@ def start_controllers(app, api):
     api.add_resource(CommentController, '/comment', '/comment/<int:id>')
     api.add_resource(ConfigurationController, '/configuration', '/configuration/<int:id>')
     api.add_resource(FieldController, '/field', '/field/<int:id>')
+    api.add_resource(FieldContentController, '/field-content', '/field-content/<int:id>')
     api.add_resource(FieldFileController, '/field-file', '/field-file/<int:id>')
     api.add_resource(GrouperController, '/grouper', '/grouper/<int:id>')
     api.add_resource(LanguageController, '/language', '/language/<int:id>')
