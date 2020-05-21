@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Capability, CapabilitySchema
 from Validators import CapabilityValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class CapabilityRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -42,14 +42,8 @@ class CapabilityRepository(RepositoryBase):
 
             def process(session, data):
                 self.raise_if_has_identical_capability(data, session)
-                capability = Capability(
-                    description = data['description'],
-                    type = data['type'],
-                    target_id = data['target_id'],
-                    can_write = data['can_write'],
-                    can_read = data['can_read'],
-                    can_delete = data['can_delete']
-                )
+                capability = Capability()
+                Helper().fill_object_from_data(capability, data, ['description', 'type', 'target_id', 'can_write', 'can_read', 'can_delete'])
                 session.add(capability)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Capability', capability.id)
@@ -69,12 +63,7 @@ class CapabilityRepository(RepositoryBase):
 
                 def fn(session, capability):
                     self.raise_if_has_identical_capability(data, session, id)
-                    capability.description = data['description']
-                    capability.type = data['type']
-                    capability.target_id = data['target_id']
-                    capability.can_write = data['can_write']
-                    capability.can_read = data['can_read']
-                    capability.can_delete = data['can_delete']
+                    Helper().fill_object_from_data(capability, data, ['description', 'type', 'target_id', 'can_write', 'can_read', 'can_delete'])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Capability', capability.id)
                 

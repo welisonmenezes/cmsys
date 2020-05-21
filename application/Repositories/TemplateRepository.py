@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Template, TemplateSchema, PostType
 from Validators import TemplateValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class TemplateRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -45,11 +45,8 @@ class TemplateRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                template = Template(
-                    name = data['name'],
-                    description = data['description'],
-                    value = data['value']
-                )
+                template = Template()
+                Helper().fill_object_from_data(template, data, ['name', 'description', 'value'])
                 session.add(template)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Template', template.id)
@@ -68,9 +65,7 @@ class TemplateRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, template):
-                    template.name = data['name']
-                    template.description = data['description']
-                    template.value = data['value']
+                    Helper().fill_object_from_data(template, data, ['name', 'description', 'value'])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Template', template.id)
 

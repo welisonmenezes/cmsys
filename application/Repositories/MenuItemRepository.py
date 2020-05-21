@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import MenuItem, MenuItemSchema, Menu
 from Validators import MenuItemValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class MenuItemRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -41,13 +41,8 @@ class MenuItemRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                menu_item = MenuItem(
-                    type = data['type'],
-                    behavior = data['behavior'],
-                    url = data['url'],
-                    title = data['title'],
-                    order = data['order']
-                )
+                menu_item = MenuItem()
+                Helper().fill_object_from_data(menu_item, data, ['type', 'behavior', 'url', 'title', 'order'])
                 self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
 
                 if 'target_id' in data and data['target_id'] != '':
@@ -73,11 +68,7 @@ class MenuItemRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, menu_item):
-                    menu_item.type = data['type']
-                    menu_item.behavior = data['behavior']
-                    menu_item.url = data['url']
-                    menu_item.title = data['title']
-                    menu_item.order = data['order']
+                    Helper().fill_object_from_data(menu_item, data, ['type', 'behavior', 'url', 'title', 'order'])
                     self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
 
                     if 'target_id' in data and data['target_id'] != '':

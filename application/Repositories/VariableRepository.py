@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Variable, VariableSchema
 from Validators import VariableValidator
-from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class VariableRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -45,10 +45,8 @@ class VariableRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                variable = Variable(
-                    key = data['key'],
-                    value = data['value']
-                )
+                variable = Variable()
+                Helper().fill_object_from_data(variable, data, ['key', 'value'])
                 session.add(variable)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Variable', variable.id)
@@ -67,8 +65,7 @@ class VariableRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, variable):
-                    variable.key = data['key']
-                    variable.value = data['value']
+                    Helper().fill_object_from_data(variable, data, ['key', 'value'])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Variable', variable.id)
 

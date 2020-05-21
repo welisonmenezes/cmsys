@@ -47,7 +47,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/blacklist?value=22&type=&target=&page=1&limit=10&order_by=id&order=desc",
+							"raw": "http://127.0.0.1:5000/api/blacklist?value=&type=&target=&page=1&limit=10&order_by=&order=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -63,7 +63,7 @@
 							"query": [
 								{
 									"key": "value",
-									"value": "22"
+									"value": ""
 								},
 								{
 									"key": "type",
@@ -83,11 +83,11 @@
 								},
 								{
 									"key": "order_by",
-									"value": "id"
+									"value": ""
 								},
 								{
 									"key": "order",
-									"value": "desc"
+									"value": ""
 								}
 							]
 						}
@@ -189,13 +189,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/blacklist/17",
 							"protocol": "http",
@@ -210,6 +204,231 @@
 								"api",
 								"blacklist",
 								"17"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Capability",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10&get_roles=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"capability"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "get_roles",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/capability?description=&type=&target_id=&can_write=&can_delete=&can_read=&get_roles=&order_by=&order=",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"capability"
+							],
+							"query": [
+								{
+									"key": "description",
+									"value": ""
+								},
+								{
+									"key": "type",
+									"value": ""
+								},
+								{
+									"key": "target_id",
+									"value": ""
+								},
+								{
+									"key": "can_write",
+									"value": ""
+								},
+								{
+									"key": "can_delete",
+									"value": ""
+								},
+								{
+									"key": "can_read",
+									"value": ""
+								},
+								{
+									"key": "get_roles",
+									"value": ""
+								},
+								{
+									"key": "order_by",
+									"value": ""
+								},
+								{
+									"key": "order",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/capability/23?get_roles=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"capability",
+								"23"
+							],
+							"query": [
+								{
+									"key": "get_roles",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"description new controller\",\n\t\"type\": \"bbbxxs\",\n\t\"target_id\": 2,\n\t\"can_write\": 1,\n\t\"can_read\": 1,\n\t\"can_delete\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/capability",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"capability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"description xxxx\",\n\t\"type\": \"types edxited\",\n\t\"target_id\": 1,\n\t\"can_write\": 1,\n\t\"can_read\": 1,\n\t\"can_delete\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/capability/20",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"capability",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/capability/30",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"capability",
+								"30"
 							]
 						}
 					},
@@ -260,7 +479,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/comment?page=1&limit=10&order_by=&order=&comment=&status=&origin_ip=&origin_agent=&created=&date_modifier=&compare_date_time_one=&compare_date_time_two=&not_between=&get_user=&get_language=&get_parent=&get_children=&get_post=",
+							"raw": "http://127.0.0.1:5000/api/comment?page=1&limit=10&order_by=&order=&comment=&status=&origin_ip=&origin_agent=&created=&date_modifier=&compare_date_time_one=&compare_date_time_two=&not_between=&get_user=&get_language=&get_parent=&get_children=&get_post=&parent_id=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -345,6 +564,10 @@
 								{
 									"key": "get_post",
 									"value": ""
+								},
+								{
+									"key": "parent_id",
+									"value": ""
 								}
 							]
 						}
@@ -388,7 +611,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comment\": \"bom\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"xparent_id\": 10,\n\t\"user_id\": 1,\n\t\"post_id\": 1,\n\t\"language_id\": 1\n}"
+							"raw": "{\n\t\"comment\": \"bom\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"parent_id\": 10,\n\t\"user_id\": 1,\n\t\"post_id\": 1,\n\t\"language_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/comment",
@@ -424,7 +647,7 @@
 							"raw": "{\n\t\"comment\": \"bom dfdf\",\n\t\"status\": \"publish\",\n\t\"origin_ip\": \"111.555.333.44\",\n\t\"origin_agent\": \"agent-here Firefox\",\n\t\"parent_id\": 10,\n\t\"user_id\": 10,\n\t\"post_id\": 1,\n\t\"language_id\": 1\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/comment/17",
+							"raw": "http://127.0.0.1:5000/api/comment/20",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -436,7 +659,7 @@
 							"path": [
 								"api",
 								"comment",
-								"17"
+								"20"
 							]
 						}
 					},
@@ -446,13 +669,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/comment/11",
 							"protocol": "http",
@@ -467,237 +684,6 @@
 								"api",
 								"comment",
 								"11"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Capability",
-			"item": [
-				{
-					"name": "get",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability?page=1&limit=10&get_roles=1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"capability"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								},
-								{
-									"key": "get_roles",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "filter",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability?description=&type=&target_id=&can_write=&can_delete=&can_read=&get_roles=1&order_by=id&order=desc",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"capability"
-							],
-							"query": [
-								{
-									"key": "description",
-									"value": ""
-								},
-								{
-									"key": "type",
-									"value": ""
-								},
-								{
-									"key": "target_id",
-									"value": ""
-								},
-								{
-									"key": "can_write",
-									"value": ""
-								},
-								{
-									"key": "can_delete",
-									"value": ""
-								},
-								{
-									"key": "can_read",
-									"value": ""
-								},
-								{
-									"key": "get_roles",
-									"value": "1"
-								},
-								{
-									"key": "order_by",
-									"value": "id"
-								},
-								{
-									"key": "order",
-									"value": "desc"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get-by-id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability/23?get_roles=1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"capability",
-								"23"
-							],
-							"query": [
-								{
-									"key": "get_roles",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "post",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"description\": \"description new controller\",\n\t\"type\": \"bbbxxs\",\n\t\"target_id\": 2,\n\t\"can_write\": 1,\n\t\"can_read\": 1,\n\t\"can_delete\": 1\n}"
-						},
-						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"capability"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "put",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"description\": \"description xxxx\",\n\t\"type\": \"type edxited\",\n\t\"target_id\": 1,\n\t\"can_write\": 1,\n\t\"can_read\": 1,\n\t\"can_delete\": 1\n}"
-						},
-						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability/4",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"capability",
-								"4"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:5000/api/capability/30",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"api",
-								"capability",
-								"30"
 							]
 						}
 					},
@@ -748,7 +734,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/configuration?page=1&limit=10&order_by=id&order=desc&s=&language_id=&get_language=1&get_socials=1",
+							"raw": "http://127.0.0.1:5000/api/configuration?page=1&limit=10&order_by=id&order=desc&s=&language_id=&get_language=&get_socials=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -788,11 +774,11 @@
 								},
 								{
 									"key": "get_language",
-									"value": "1"
+									"value": ""
 								},
 								{
 									"key": "get_socials",
-									"value": "1"
+									"value": ""
 								}
 							]
 						}
@@ -894,13 +880,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/configuration/9",
 							"protocol": "http",
@@ -1119,13 +1099,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/field/5",
 							"protocol": "http",
@@ -1190,7 +1164,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/field-content?page=1&limit=10&order_by=&order=",
+							"raw": "http://127.0.0.1:5000/api/field-content?page=1&limit=10&order_by=&order=&content=&field_id=&grouper_id=&post_id=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1218,6 +1192,22 @@
 								},
 								{
 									"key": "order",
+									"value": ""
+								},
+								{
+									"key": "content",
+									"value": ""
+								},
+								{
+									"key": "field_id",
+									"value": ""
+								},
+								{
+									"key": "grouper_id",
+									"value": ""
+								},
+								{
+									"key": "post_id",
 									"value": ""
 								}
 							]
@@ -1262,7 +1252,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"content\": \"content 5\",\n\t\"field_id\": 1,\n\t\"grouper_id\": 1,\n\t\"post_id\": 1\n}"
+							"raw": "{\n\t\"content\": \"content 5\",\n\t\"field_id\": 1,\n\t\"grouper_id\": 2,\n\t\"post_id\": 7\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/field-content",
@@ -1295,10 +1285,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"content\": \"content 1 edited\",\n\t\"field_id\": 1,\n\t\"grouper_id\": 1,\n\t\"post_id\": 1\n}"
+							"raw": "{\n\t\"content\": \"content 1 fdfdf\",\n\t\"field_id\": 4,\n\t\"grouper_id\": 2,\n\t\"post_id\": 6\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/field-content/1",
+							"raw": "http://127.0.0.1:5000/api/field-content/6",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1310,7 +1300,7 @@
 							"path": [
 								"api",
 								"field-content",
-								"1"
+								"6"
 							]
 						}
 					},
@@ -1320,13 +1310,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/field-content/5",
 							"protocol": "http",
@@ -1537,13 +1521,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/field-file/6",
 							"protocol": "http",
@@ -1608,7 +1586,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/grouper?page=1&limit=10&order_by=&order=&s=&parent_id=&post_id=&get_parent=&get_children=&get_post=&get_fields=1",
+							"raw": "http://127.0.0.1:5000/api/grouper?page=1&limit=10&order_by=&order=&s=&parent_id=&post_id=&get_parent=&get_children=&get_post=&get_fields=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1664,7 +1642,7 @@
 								},
 								{
 									"key": "get_fields",
-									"value": "1"
+									"value": ""
 								}
 							]
 						}
@@ -1766,13 +1744,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/grouper/8",
 							"protocol": "http",
@@ -1837,7 +1809,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/language?page=1&limit=10&order_by=id&order=desc&name=&code=&status=inactive",
+							"raw": "http://127.0.0.1:5000/api/language?page=1&limit=10&order_by=id&order=desc&name=&code=&status=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1877,7 +1849,7 @@
 								},
 								{
 									"key": "status",
-									"value": "inactive"
+									"value": ""
 								}
 							]
 						}
@@ -1979,13 +1951,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/language/2",
 							"protocol": "http",
@@ -2062,7 +2028,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=created&order=desc&type=&origin=&user_id=&created=&date_modifier=&compare_date_time_one=&compare_date_time_two=&not_between=0&s=&get_user=1",
+							"raw": "http://127.0.0.1:5000/api/media?page=1&limit=10&order_by=created&order=desc&type=&origin=&user_id=&created=&date_modifier=&compare_date_time_one=&compare_date_time_two=&not_between=&s=&get_user=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2122,7 +2088,7 @@
 								},
 								{
 									"key": "not_between",
-									"value": "0"
+									"value": ""
 								},
 								{
 									"key": "s",
@@ -2130,7 +2096,7 @@
 								},
 								{
 									"key": "get_user",
-									"value": "1"
+									"value": ""
 								}
 							]
 						}
@@ -2202,7 +2168,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/image/21",
+							"raw": "http://127.0.0.1:5000/api/media/preview/36",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2213,8 +2179,9 @@
 							"port": "5000",
 							"path": [
 								"api",
-								"image",
-								"21"
+								"media",
+								"preview",
+								"36"
 							]
 						}
 					},
@@ -2292,15 +2259,9 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/media/34",
+							"raw": "http://127.0.0.1:5000/api/media/31",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2312,7 +2273,7 @@
 							"path": [
 								"api",
 								"media",
-								"34"
+								"31"
 							]
 						}
 					},
@@ -2420,7 +2381,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/menu/6?get_sectors=1",
+							"raw": "http://127.0.0.1:5000/api/menu/1?get_sectors=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2432,7 +2393,7 @@
 							"path": [
 								"api",
 								"menu",
-								"6"
+								"1"
 							],
 							"query": [
 								{
@@ -2457,7 +2418,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"menu xx\",\n\t\"order\": 0,\n\t\"description\": \"lorem menu\",\n\t\"language_id\": 1,\n\t\"sectors\": []\n}"
+							"raw": "{\n\t\"name\": \"menu xx\",\n\t\"order\": 0,\n\t\"description\": \"lorem menu\",\n\t\"language_id\": 1,\n\t\"sectors\": [70]\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/menu",
@@ -2515,13 +2476,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/menu/7",
 							"protocol": "http",
@@ -2752,13 +2707,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/menu-item/11",
 							"protocol": "http",
@@ -2823,7 +2772,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/nest?page=1&limit=10&order_by=id&order=desc&s=&post_id=&post_type_id=&get_post=0&get_post_type=1",
+							"raw": "http://127.0.0.1:5000/api/nest?page=1&limit=10&order_by=id&order=desc&s=&post_id=&post_type_id=&get_post=&get_post_type=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2867,11 +2816,11 @@
 								},
 								{
 									"key": "get_post",
-									"value": "0"
+									"value": ""
 								},
 								{
 									"key": "get_post_type",
-									"value": "1"
+									"value": ""
 								}
 							]
 						}
@@ -2948,7 +2897,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"nest 1 edited\",\n\t\"description\": \"lorem nest ipsum\",\n\t\"limit\": 10,\n\t\"has_pagination\": 1,\n\t\"post_id\": 1,\n\t\"post_type_id\": 4\n}"
+							"raw": "{\n\t\"name\": \"nest 1 edited\",\n\t\"description\": \"lorem nest ipsum\",\n\t\"limit\": 10,\n\t\"has_pagination\": 1,\n\t\"post_id\": 1,\n\t\"post_type_id\": 10\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/nest/1",
@@ -2973,13 +2922,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/nest/4",
 							"protocol": "http",
@@ -3246,7 +3189,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Legal fera\tcacadfdfdf ffdfdf\",\n\t\"title\": \"titlex 2\",\n\t\"description\": \"zzz 2\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 1,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"parent_id\": 14,\n\t\"post_type_id\": 2,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"Legal fera\",\n\t\"title\": \"titlex 2\",\n\t\"description\": \"zzz 2\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 1,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"parent_id\": 10,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post/14",
@@ -3271,15 +3214,9 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post/18?remove_foreign_keys=1",
+							"raw": "http://127.0.0.1:5000/api/post/14?remove_foreign_keys=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3291,7 +3228,7 @@
 							"path": [
 								"api",
 								"post",
-								"18"
+								"14"
 							],
 							"query": [
 								{
@@ -3494,13 +3431,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post-type/11",
 							"protocol": "http",
@@ -3569,7 +3500,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=&page=1&limit=10&name=&get_capabilities=1&capability_description=add-by-role&order_by=&order=asc",
+							"raw": "http://127.0.0.1:5000/api/role?can_access_admin=&page=1&limit=10&name=&get_capabilities=&capability_description=&order_by=&order=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3601,11 +3532,11 @@
 								},
 								{
 									"key": "get_capabilities",
-									"value": "1"
+									"value": ""
 								},
 								{
 									"key": "capability_description",
-									"value": "add-by-role"
+									"value": ""
 								},
 								{
 									"key": "order_by",
@@ -3613,7 +3544,7 @@
 								},
 								{
 									"key": "order",
-									"value": "asc"
+									"value": ""
 								}
 							]
 						}
@@ -3721,13 +3652,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/role/18",
 							"protocol": "http",
@@ -3792,7 +3717,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/sector?page=1&limit=10&order_by=&order=&s=edited",
+							"raw": "http://127.0.0.1:5000/api/sector?page=1&limit=10&order_by=&order=&s=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3824,7 +3749,7 @@
 								},
 								{
 									"key": "s",
-									"value": "edited"
+									"value": ""
 								}
 							]
 						}
@@ -3932,13 +3857,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/sector/5",
 							"protocol": "http",
@@ -4003,7 +3922,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/social?page=1&limit=10&order_by=id&order=desc&name=&origin=&user_id=&get_user=1&get_configuration=1",
+							"raw": "http://127.0.0.1:5000/api/social?page=1&limit=10&order_by=id&order=desc&name=&origin=&user_id=&get_user=&get_configuration=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -4047,11 +3966,11 @@
 								},
 								{
 									"key": "get_user",
-									"value": "1"
+									"value": ""
 								},
 								{
 									"key": "get_configuration",
-									"value": "1"
+									"value": ""
 								}
 							]
 						}
@@ -4095,7 +4014,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"name-test-3\",\n\t\"url\": \"url-test\",\n\t\"target\": \"target-test\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"configuration\",\n\t\"configuration_id\": 2,\n\t\"user_id\": 16\n}"
+							"raw": "{\n\t\"name\": \"name-test-3\",\n\t\"url\": \"url-test\",\n\t\"target\": \"_blank\",\n\t\"description\": \"description-test\",\n\t\"origin\": \"configuration\",\n\t\"configuration_id\": 2,\n\t\"xuser_id\": 16\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/social",
@@ -4153,13 +4072,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/social/10",
 							"protocol": "http",
@@ -4224,7 +4137,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/template?page=1&limit=10&order_by=id&order=asc&s=&name=&get_post_types=1",
+							"raw": "http://127.0.0.1:5000/api/template?page=1&limit=10&order_by=id&order=asc&s=&get_post_types=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -4259,12 +4172,8 @@
 									"value": ""
 								},
 								{
-									"key": "name",
-									"value": ""
-								},
-								{
 									"key": "get_post_types",
-									"value": "1"
+									"value": ""
 								}
 							]
 						}
@@ -4366,13 +4275,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/template/7",
 							"protocol": "http",
@@ -4587,7 +4490,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"fdfdf\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"dffd\",\n\t\"role_id\": 2,\n\t\"xavatar_id\": 31,\n\t\"xpage_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"my-login\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"maria\",\n\t\"first_name\": \"Maria\",\n\t\"last_name\": \"Silva\",\n\t\"email\": \"ms@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 2,\n\t\"avatar_id\": 31,\n\t\"xpage_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user",
@@ -4645,15 +4548,9 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/28?admin_new_owner=0",
+							"raw": "http://127.0.0.1:5000/api/user/30?admin_new_owner=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -4665,12 +4562,12 @@
 							"path": [
 								"api",
 								"user",
-								"28"
+								"30"
 							],
 							"query": [
 								{
 									"key": "admin_new_owner",
-									"value": "0"
+									"value": "1"
 								}
 							]
 						}
@@ -4848,13 +4745,7 @@
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/variable/10",
 							"protocol": "http",

@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Menu, MenuSchema, Language, Sector, MenuItem
 from Validators import MenuValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 # TODO: from menu to be able to save/update/delete menu items
 
@@ -48,11 +48,8 @@ class MenuRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                menu = Menu(
-                    name = data['name'],
-                    order = data['order'],
-                    description = data['description']
-                )
+                menu = Menu()
+                Helper().fill_object_from_data(menu, data, ['name', 'order', 'description'])
                 self.add_foreign_keys(menu, data, session, [('language_id', Language)])
                 self.add_many_to_many_relationship('sectors', menu, data, Sector, session)
                 session.add(menu)
@@ -73,9 +70,7 @@ class MenuRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, menu):
-                    menu.name = data['name']
-                    menu.order = data['order']
-                    menu.description = data['description']
+                    Helper().fill_object_from_data(menu, data, ['name', 'order', 'description'])
                     self.add_foreign_keys(menu, data, session, [('language_id', Language)])
                     self.edit_many_to_many_relationship('sectors', menu, data, Sector, session)
                     session.commit()

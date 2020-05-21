@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Configuration, ConfigurationSchema, Language
 from Validators import ConfigurationValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 # TODO: from configuration to be able to save/update/delete socials
 
@@ -48,12 +48,8 @@ class ConfigurationRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                configuration = Configuration(
-                    title = data['title'],
-                    description = data['description'],
-                    has_comments = data['has_comments'],
-                    email = data['email']
-                )
+                configuration = Configuration()
+                Helper().fill_object_from_data(configuration, data, ['title', 'description', 'has_comments', 'email'])
                 self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
                 session.add(configuration)
                 session.commit()
@@ -73,10 +69,7 @@ class ConfigurationRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, configuration):
-                    configuration.title = data['title']
-                    configuration.description = data['description']
-                    configuration.has_comments = data['has_comments']
-                    configuration.email = data['email']
+                    Helper().fill_object_from_data(configuration, data, ['title', 'description', 'has_comments', 'email'])
                     self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Configuration', configuration.id)

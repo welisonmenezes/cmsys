@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Sector, SectorSchema, Menu
 from Validators import SectorValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class SectorRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -45,10 +45,8 @@ class SectorRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                sector = Sector(
-                    name = data['name'],
-                    description = data['description']
-                )
+                sector = Sector()
+                Helper().fill_object_from_data(sector, data, ['name', 'description'])
                 session.add(sector)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Sector', sector.id)
@@ -67,8 +65,7 @@ class SectorRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, sector):
-                    sector.name = data['name']
-                    sector.description = data['description']
+                    Helper().fill_object_from_data(sector, data, ['name', 'description'])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Sector', sector.id)
 

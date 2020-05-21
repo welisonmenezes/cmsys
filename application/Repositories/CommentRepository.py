@@ -52,13 +52,9 @@ class CommentRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                comment = Comment(
-                    comment = data['comment'],
-                    status = data['status'],
-                    origin_ip = data['origin_ip'],
-                    origin_agent = data['origin_agent'],
-                    created = Helper().get_current_datetime()
-                )
+                comment = Comment()
+                Helper().fill_object_from_data(comment, data, ['comment', 'status', 'origin_ip', 'origin_agent'])
+                comment.created = Helper().get_current_datetime()
                 self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Comment), ('parent_id', 'language_id', Comment)])
                 self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
                 session.add(comment)
@@ -79,10 +75,7 @@ class CommentRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, comment):
-                    comment.comment = data['comment']
-                    comment.status = data['status']
-                    comment.origin_ip = data['origin_ip']
-                    comment.origin_agent = data['origin_agent']
+                    Helper().fill_object_from_data(comment, data, ['comment', 'status', 'origin_ip', 'origin_agent'])
                     self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Comment), ('parent_id', 'language_id', Comment)])
                     self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
                     

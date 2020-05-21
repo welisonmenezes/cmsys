@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Field, FieldSchema, Post, Grouper
 from Validators import FieldValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class FieldRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -46,14 +46,8 @@ class FieldRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                field = Field(
-                    name = data['name'],
-                    description = data['description'],
-                    type = data['type'],
-                    order = data['order'],
-                    grouper_id = data['grouper_id'],
-                    post_id = data['post_id']
-                )
+                field = Field()
+                Helper().fill_object_from_data(field, data, ['name', 'description', 'type', 'order', 'grouper_id', 'post_id'])
                 self.raise_if_has_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
                 self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
                 session.add(field)
@@ -74,12 +68,7 @@ class FieldRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, field):
-                    field.name = data['name']
-                    field.description = data['description']
-                    field.type = data['type']
-                    field.order = data['order']
-                    field.grouper_id = data['grouper_id']
-                    field.post_id = data['post_id']
+                    Helper().fill_object_from_data(field, data, ['name', 'description', 'type', 'order', 'grouper_id', 'post_id'])
 
                     # TODO: when the type of a Fild was changed, delete its related child
 

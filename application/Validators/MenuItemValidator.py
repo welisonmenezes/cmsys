@@ -21,7 +21,7 @@ class MenuItemValidator(ValidatorBase):
                 'field_required': True,
                 'max_length': 50,
                 'min_length': 1,
-                'valid_values': ['', '_blank', '_self', '_parent', '_top']
+                'valid_values': ['_blank', '_self', '_parent', '_top']
             },
             'url': {
                 'key_required': True,

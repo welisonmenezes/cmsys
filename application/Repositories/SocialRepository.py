@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Social, SocialSchema, Configuration, User
 from Validators import SocialValidator
-from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class SocialRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -41,13 +41,8 @@ class SocialRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                social = Social(
-                    name = data['name'],
-                    url = data['url'],
-                    target = data['target'],
-                    description = data['description'],
-                    origin = data['origin']
-                )
+                social = Social()
+                Helper().fill_object_from_data(social, data, ['name', 'url', 'target', 'description', 'origin'])
                 self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
                 session.add(social)
                 session.commit()
@@ -67,11 +62,7 @@ class SocialRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, social):
-                    social.name = data['name']
-                    social.url = data['url']
-                    social.target = data['target']
-                    social.origin = data['origin']
-                    social.description = data['description']
+                    Helper().fill_object_from_data(social, data, ['name', 'url', 'target', 'description', 'origin'])
                     self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Social', social.id)

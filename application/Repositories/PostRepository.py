@@ -69,18 +69,12 @@ class PostRepository(RepositoryBase):
 
                 # The child post_type must be equals the parent post type
 
-                post = Post(
-                    name = data['name'],
-                    title = data['title'],
-                    description = data['description'],
-                    status = data['status'],
-                    is_protected = data['is_protected'],
-                    has_comments = data['has_comments'],
-                    publish_on = Helper().get_null_if_empty(data['publish_on']),
-                    expire_on = Helper().get_null_if_empty(data['expire_on']),
-                    created = Helper().get_current_datetime(),
-                    edited = Helper().get_current_datetime()
-                )
+                post = Post()
+                Helper().fill_object_from_data(post, data, ['name', 'title', 'description', 'status', 'is_protected', 'has_comments'])
+                post.publish_on = Helper().get_null_if_empty(data['publish_on'])
+                post.expire_on = Helper().get_null_if_empty(data['expire_on'])
+                post.created = Helper().get_current_datetime()
+                post.edited = Helper().get_current_datetime()
                 self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
                 session.add(post)
                 session.commit()
@@ -100,12 +94,7 @@ class PostRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, post):
-                    post.name = data['name']
-                    post.title = data['title']
-                    post.description = data['description']
-                    post.status = data['status']
-                    post.is_protected = data['is_protected']
-                    post.has_comments = data['has_comments']
+                    Helper().fill_object_from_data(post, data, ['name', 'title', 'description', 'status', 'is_protected', 'has_comments'])
                     post.publish_on = Helper().get_null_if_empty(data['publish_on'])
                     post.expire_on = Helper().get_null_if_empty(data['expire_on'])
                     post.edited = Helper().get_current_datetime()

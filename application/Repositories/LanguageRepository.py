@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Language, LanguageSchema, Configuration, Post, Menu, Comment
 from Validators import LanguageValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class LanguageRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -41,12 +41,8 @@ class LanguageRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                language = Language(
-                    name = data['name'],
-                    code = data['code'],
-                    status = data['status'],
-                    datetime_format = data['datetime_format']
-                )
+                language = Language()
+                Helper().fill_object_from_data(language, data, ['name', 'code', 'status', 'datetime_format'])
                 session.add(language)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Language', language.id)
@@ -65,10 +61,7 @@ class LanguageRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, language):
-                    language.name = data['name']
-                    language.code = data['code']
-                    language.status = data['status']
-                    language.datetime_format = data['datetime_format']
+                    Helper().fill_object_from_data(language, data, ['name', 'code', 'status', 'datetime_format'])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Language', language.id)
 

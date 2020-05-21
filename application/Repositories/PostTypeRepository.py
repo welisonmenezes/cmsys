@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import PostType, PostTypeSchema, Template, Post, Nest
 from Validators import PostTypeValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class PostTypeRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -41,10 +41,8 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                post_type = PostType(
-                    name = data['name'],
-                    type = data['type']
-                )
+                post_type = PostType()
+                Helper().fill_object_from_data(post_type, data, ['name', 'type'])
                 self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
                 session.add(post_type)
                 session.commit()
@@ -64,8 +62,7 @@ class PostTypeRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, post_type):
-                    post_type.name = data['name']
-                    post_type.type = data['type']
+                    Helper().fill_object_from_data(post_type, data, ['name', 'type'])
                     self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'PostType', post_type.id)

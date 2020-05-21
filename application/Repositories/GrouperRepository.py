@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Grouper, GrouperSchema, Post, Field
 from Validators import GrouperValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class GrouperRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -46,11 +46,8 @@ class GrouperRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                grouper = Grouper(
-                    name = data['name'],
-                    description = data['description'],
-                    order = data['order']
-                )
+                grouper = Grouper()
+                Helper().fill_object_from_data(grouper, data, ['name', 'description', 'order'])
                 self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
                 self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
                 session.add(grouper)
@@ -71,9 +68,7 @@ class GrouperRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, grouper):
-                    grouper.name = data['name']
-                    grouper.description = data['description']
-                    grouper.order = data['order']
+                    Helper().fill_object_from_data(grouper, data, ['name', 'description', 'order'])
                     self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
                     self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
 

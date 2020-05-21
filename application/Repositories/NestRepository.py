@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Nest, NestSchema, Post, PostType
 from Validators import NestValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class NestRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -46,12 +46,8 @@ class NestRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                nest = Nest(
-                    name = data['name'],
-                    description = data['description'],
-                    limit = data['limit'],
-                    has_pagination = data['has_pagination']
-                )
+                nest = Nest()
+                Helper().fill_object_from_data(nest, data, ['name', 'description', 'limit', 'has_pagination'])
                 self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
                 session.add(nest)
                 session.commit()
@@ -71,10 +67,7 @@ class NestRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, nest):
-                    nest.name = data['name']
-                    nest.description = data['description']
-                    nest.limit = data['limit']
-                    nest.has_pagination = data['has_pagination']
+                    Helper().fill_object_from_data(nest, data, ['name', 'description', 'limit', 'has_pagination'])
                     self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Nest', nest.id)

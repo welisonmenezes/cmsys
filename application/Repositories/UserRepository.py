@@ -60,16 +60,10 @@ class UserRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                user = User(
-                    login = data['login'],
-                    password = bcrypt.generate_password_hash(data['password']),
-                    nickname = data['nickname'],
-                    first_name = data['first_name'],
-                    last_name = data['last_name'],
-                    email = data['email'],
-                    status = data['status'],
-                    registered = Helper().get_current_datetime()
-                )
+                user = User()
+                Helper().fill_object_from_data(user, data, ['login', 'nickname', 'first_name', 'last_name', 'email', 'status'])
+                user.password = bcrypt.generate_password_hash(data['password'])
+                user.registered = Helper().get_current_datetime()
                 self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
                 session.add(user)
                 session.commit()
@@ -89,13 +83,7 @@ class UserRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, user):
-                    user.login = data['login']
-                    user.nickname = data['nickname']
-                    user.first_name = data['first_name']
-                    user.last_name = data['last_name']
-                    user.email = data['email']
-                    user.status = data['status']
-                    user.registered = Helper().get_current_datetime()
+                    Helper().fill_object_from_data(user, data, ['login', 'nickname', 'first_name', 'last_name', 'email', 'status'])
 
                     if data['password'] != '' and not bcrypt.check_password_hash(user.password, data['password']):
                         user.password = bcrypt.generate_password_hash(data['password'])

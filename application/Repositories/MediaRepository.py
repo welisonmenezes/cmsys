@@ -110,17 +110,12 @@ class MediaRepository(RepositoryBase):
                     return ErrorHandler().get_error(400, e)
 
                 media = Media(
-                    name = data['name'],
-                    description = data['description'],
                     type = file_details['type'],
-                    extension = data['extension'],
                     file = file_details['data'],
-                    origin = data['origin'],
                     created = Helper().get_current_datetime()
                 )
-
+                Helper().fill_object_from_data(media, data, ['name', 'description', 'extension', 'origin'])
                 self.add_foreign_keys(media, data, session, [('user_id', User)])
-
                 session.add(media)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Media', media.id)
@@ -139,22 +134,18 @@ class MediaRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, media):
-                    media.name = data['name']
-                    media.description = data['description']
-                    media.origin = data['origin']
-
+                    Helper().fill_object_from_data(media, data, ['name', 'description', 'extension', 'origin'])
                     self.add_foreign_keys(media, data, session, [('user_id', User)])
 
-                    if (data['file'] and data['file'] != ''):
+                    if 'file' in data and data['file'] != '':
+
                         try:
                             file_details = Helper().get_file_details_from_request(data)
                         except Exception as e:
                             return ErrorHandler().get_error(400, e)
 
                         media.type = file_details['type']
-                        media.extension = data['extension']
                         media.file = file_details['data']
-                        media.created = Helper().get_current_datetime()
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Media', media.id)

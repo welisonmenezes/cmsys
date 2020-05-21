@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Role, RoleSchema, Capability
 from Validators import RoleValidator, CapabilityValidator
-from Utils import Paginate, ErrorHandler, Checker, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class RoleRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -46,11 +46,8 @@ class RoleRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                role = Role(
-                    name = data['name'],
-                    description = data['description'],
-                    can_access_admin = data['can_access_admin'],
-                )
+                role = Role()
+                Helper().fill_object_from_data(role, data, ['name', 'description', 'can_access_admin'])
                 self.add_many_to_many_relationship('capabilities', role, data, Capability, session)
                 session.add(role)
                 session.commit()
@@ -70,10 +67,7 @@ class RoleRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, role):
-                    role.name = data['name']
-                    role.description = data['description']
-                    role.can_access_admin = data['can_access_admin']
-                    self.edit_capabilities(role, data, session)
+                    Helper().fill_object_from_data(role, data, ['name', 'description', 'can_access_admin'])
                     self.edit_many_to_many_relationship('capabilities', role, data, Capability, session)
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Role', role.id)

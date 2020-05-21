@@ -108,3 +108,11 @@ class Helper():
 
         if get_return:
             return parser.parse_args()
+
+
+    def fill_object_from_data(self, instance, data, keys):
+        """Add to the given object instance the given data values that corresponding with the given keys."""
+
+        for key in keys:
+            if hasattr(instance, key) and key in data:
+                setattr(instance, key, data[key])

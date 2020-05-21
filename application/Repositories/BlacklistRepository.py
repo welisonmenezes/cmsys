@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Blacklist, BlacklistSchema
 from Validators import BlacklistValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class BlacklistRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -41,11 +41,8 @@ class BlacklistRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                blacklist = Blacklist(
-                    type = data['type'],
-                    value = data['value'],
-                    target = data['target']
-                )
+                blacklist = Blacklist()
+                Helper().fill_object_from_data(blacklist, data, ['type', 'value', 'target'])
                 session.add(blacklist)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Blacklist', blacklist.id)
@@ -64,9 +61,7 @@ class BlacklistRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, blacklist):
-                    blacklist.type = data['type']
-                    blacklist.value = data['value']
-                    blacklist.target = data['target']
+                    Helper().fill_object_from_data(blacklist, data, ['type', 'value', 'target'])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Blacklist', blacklist.id)
 

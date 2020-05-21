@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import FieldContent, FieldContentSchema, Field, Grouper, Post
 from Validators import FieldContentValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
 
 class FieldContentRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -41,9 +41,8 @@ class FieldContentRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-                field_content = FieldContent(
-                    content = data['content']
-                )
+                field_content = FieldContent()
+                Helper().fill_object_from_data(field_content, data, ['content'])
                 self.raise_if_has_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
                 self.add_foreign_keys(field_content, data, session, [('field_id', Field), ('grouper_id', Grouper), ('post_id', Post)])
                 session.add(field_content)
@@ -64,7 +63,7 @@ class FieldContentRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, field_content):
-                    field_content.content = data['content']
+                    Helper().fill_object_from_data(field_content, data, ['content'])
                     self.raise_if_has_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
                     self.add_foreign_keys(field_content, data, session, [('field_id', Field), ('grouper_id', Grouper), ('post_id', Post)])
                     session.commit()
