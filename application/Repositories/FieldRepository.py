@@ -46,7 +46,6 @@ class FieldRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 field = Field(
                     name = data['name'],
                     description = data['description'],
@@ -55,15 +54,8 @@ class FieldRepository(RepositoryBase):
                     grouper_id = data['grouper_id'],
                     post_id = data['post_id']
                 )
-                
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
-                if can_add_ref != True:
-                    return can_add_ref
-
-                fk_was_added = self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.raise_if_has_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
+                self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
                 session.add(field)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Field', field.id)
@@ -91,14 +83,8 @@ class FieldRepository(RepositoryBase):
 
                     # TODO: when the type of a Fild was changed, delete its related child
 
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
-                    if can_add_ref != True:
-                        return can_add_ref
-
-                    fk_was_added = self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
+                    self.raise_if_has_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
+                    self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Field', field.id)
 

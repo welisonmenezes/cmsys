@@ -67,6 +67,8 @@ class PostRepository(RepositoryBase):
             
             def process(session, data):
 
+                # The child post_type must be equals the parent post type
+
                 post = Post(
                     name = data['name'],
                     title = data['title'],
@@ -79,11 +81,7 @@ class PostRepository(RepositoryBase):
                     created = Helper().get_current_datetime(),
                     edited = Helper().get_current_datetime()
                 )
-
-                fk_was_added = self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
                 session.add(post)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Post', post.id)
@@ -96,9 +94,9 @@ class PostRepository(RepositoryBase):
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
-
+        
         def run(session):
-
+            
             def process(session, data):
                 
                 def fn(session, post):
@@ -111,10 +109,7 @@ class PostRepository(RepositoryBase):
                     post.publish_on = Helper().get_null_if_empty(data['publish_on'])
                     post.expire_on = Helper().get_null_if_empty(data['expire_on'])
                     post.edited = Helper().get_current_datetime()
-
-                    fk_was_added = self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
-                    if fk_was_added != True:
-                        return fk_was_added
+                    self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
 
                     if post.parent_id and int(post.parent_id) == int(id):
                         return ErrorHandler().get_error(400, 'The Post cannot be parent of yourself.')
@@ -141,14 +136,9 @@ class PostRepository(RepositoryBase):
                 # TODO: delete field when delete a post
                 # TODO: delete grouper when delete a post
 
-                can_delete = self.set_any_reference_as_null_to_delete(post, request, session, [('page_id', User), ('parent_id', Post)])
-                if can_delete != True:
-                    return can_delete
-
+                self.set_any_reference_as_null_to_delete(post, request, session, [('page_id', User), ('parent_id', Post)])
                 session.query(Comment).filter_by(post_id=post.id).delete(synchronize_session='evaluate')
-
                 session.query(Nest).filter_by(post_id=post.id).delete(synchronize_session='evaluate')
-
                 session.delete(post)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Post', id)
@@ -162,7 +152,6 @@ class PostRepository(RepositoryBase):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
-        errors = []
         for config in configurations:
             try:
                 if config[0] == 'parent_id':
@@ -170,12 +159,9 @@ class PostRepository(RepositoryBase):
 
                     el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
                     if el and el.post_type and el.post_type.type != 'post-page':
-                        errors.append('The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'post-page\'.')
-                        continue
+                        raise AttributeError('The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'post-page\'.')
 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 
             except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
+                raise Exception(e)

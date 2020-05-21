@@ -15,7 +15,6 @@ class MenuItemRepository(RepositoryBase):
             fb = FilterBuilder(MenuItem, args)
             fb.set_equals_filters(['type', 'behavior', 'url', 'menu_id', 'parent_id'])
             fb.set_like_filters(['title'])
-
             query = session.query(MenuItem).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = MenuItemSchema(many=True, exclude=self.get_exclude_fields(args, ['parent', 'children', 'menu']))
@@ -42,7 +41,6 @@ class MenuItemRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 menu_item = MenuItem(
                     type = data['type'],
                     behavior = data['behavior'],
@@ -50,17 +48,12 @@ class MenuItemRepository(RepositoryBase):
                     title = data['title'],
                     order = data['order']
                 )
-
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
-                if can_add_ref != True:
-                    return can_add_ref
+                self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
 
                 if 'target_id' in data and data['target_id'] != '':
                     menu_item.target_id = data['target_id']
 
-                fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', MenuItem), ('menu_id', Menu)])
-                if fk_was_added != True:
-                    return fk_was_added
+                self.add_foreign_keys(menu_item, data, session, [('parent_id', MenuItem), ('menu_id', Menu)])
 
                 session.add(menu_item)
                 session.commit()
@@ -85,17 +78,12 @@ class MenuItemRepository(RepositoryBase):
                     menu_item.url = data['url']
                     menu_item.title = data['title']
                     menu_item.order = data['order']
-
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
-                    if can_add_ref != True:
-                        return can_add_ref
+                    self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'menu_id', MenuItem)])
 
                     if 'target_id' in data and data['target_id'] != '':
                         menu_item.target_id = data['target_id']
 
-                    fk_was_added = self.add_foreign_keys(menu_item, data, session, [('parent_id', MenuItem), ('menu_id', Menu)])
-                    if fk_was_added != True:
-                        return fk_was_added
+                    self.add_foreign_keys(menu_item, data, session, [('parent_id', MenuItem), ('menu_id', Menu)])
 
                     if menu_item.parent_id and int(menu_item.parent_id) == int(id):
                         return ErrorHandler().get_error(400, 'The MenuItem cannot be parent of yourself.')
@@ -116,9 +104,7 @@ class MenuItemRepository(RepositoryBase):
         def run(session):
 
             def fn(session, menu_item):
-
                 self.delete_deep_chidren(menu_item, MenuItem, session)
-
                 session.delete(menu_item)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'MenuItem', id)

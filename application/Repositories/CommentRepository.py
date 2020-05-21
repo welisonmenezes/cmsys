@@ -52,7 +52,6 @@ class CommentRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 comment = Comment(
                     comment = data['comment'],
                     status = data['status'],
@@ -60,15 +59,8 @@ class CommentRepository(RepositoryBase):
                     origin_agent = data['origin_agent'],
                     created = Helper().get_current_datetime()
                 )
-
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'post_id', Comment), ('parent_id', 'language_id', Comment)])
-                if can_add_ref != True:
-                    return can_add_ref
-
-                fk_was_added = self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Comment), ('parent_id', 'language_id', Comment)])
+                self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
                 session.add(comment)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Comment', comment.id)
@@ -91,15 +83,9 @@ class CommentRepository(RepositoryBase):
                     comment.status = data['status']
                     comment.origin_ip = data['origin_ip']
                     comment.origin_agent = data['origin_agent']
-
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'post_id', Comment), ('parent_id', 'language_id', Comment)])
-                    if can_add_ref != True:
-                        return can_add_ref
-
-                    fk_was_added = self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
+                    self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Comment), ('parent_id', 'language_id', Comment)])
+                    self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
+                    
                     if comment.parent_id and int(comment.parent_id) == int(id):
                         return ErrorHandler().get_error(400, 'The Comment cannot be parent of yourself.')
 
@@ -119,9 +105,7 @@ class CommentRepository(RepositoryBase):
         def run(session):
 
             def fn(session, comment):
-
                 self.set_children_as_null_to_delete(comment, Comment, session)
-
                 session.delete(comment)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Comment', id)

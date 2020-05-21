@@ -51,11 +51,7 @@ class RoleRepository(RepositoryBase):
                     description = data['description'],
                     can_access_admin = data['can_access_admin'],
                 )
-
-                add_capabilities = self.add_many_to_many_relationship('capabilities', role, data, Capability, session)
-                if (add_capabilities != True):
-                    return add_capabilities
-
+                self.add_many_to_many_relationship('capabilities', role, data, Capability, session)
                 session.add(role)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Role', role.id)
@@ -77,11 +73,8 @@ class RoleRepository(RepositoryBase):
                     role.name = data['name']
                     role.description = data['description']
                     role.can_access_admin = data['can_access_admin']
-
                     self.edit_capabilities(role, data, session)
-
-                    add_capabilities = self.edit_many_to_many_relationship('capabilities', role, data, Capability, session)
-                   
+                    self.edit_many_to_many_relationship('capabilities', role, data, Capability, session)
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Role', role.id)
 

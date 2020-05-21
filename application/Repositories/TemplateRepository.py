@@ -45,7 +45,6 @@ class TemplateRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 template = Template(
                     name = data['name'],
                     description = data['description'],
@@ -88,11 +87,7 @@ class TemplateRepository(RepositoryBase):
         def run(session):
 
             def fn(session, template):
-
-                is_foreigners = self.is_foreigners([(template, 'template_id', PostType)], session)
-                if is_foreigners != False:
-                    return is_foreigners
-
+                self.is_foreigners([(template, 'template_id', PostType)], session)
                 session.delete(template)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Template', id)

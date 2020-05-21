@@ -48,21 +48,13 @@ class MenuRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 menu = Menu(
                     name = data['name'],
                     order = data['order'],
                     description = data['description']
                 )
-
-                fk_was_added = self.add_foreign_keys(menu, data, session, [('language_id', Language)])
-                if fk_was_added != True:
-                    return fk_was_added
-
-                add_sectors = self.add_many_to_many_relationship('sectors', menu, data, Sector, session)
-                if (add_sectors != True):
-                    return add_sectors
-
+                self.add_foreign_keys(menu, data, session, [('language_id', Language)])
+                self.add_many_to_many_relationship('sectors', menu, data, Sector, session)
                 session.add(menu)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Menu', menu.id)
@@ -84,13 +76,8 @@ class MenuRepository(RepositoryBase):
                     menu.name = data['name']
                     menu.order = data['order']
                     menu.description = data['description']
-
-                    fk_was_added = self.add_foreign_keys(menu, data, session, [('language_id', Language)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
-                    add_sectors = self.edit_many_to_many_relationship('sectors', menu, data, Sector, session)
-
+                    self.add_foreign_keys(menu, data, session, [('language_id', Language)])
+                    self.edit_many_to_many_relationship('sectors', menu, data, Sector, session)
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Menu', menu.id)
 
@@ -107,9 +94,7 @@ class MenuRepository(RepositoryBase):
         def run(session):
 
             def fn(session, menu):
-
                 session.query(MenuItem).filter_by(menu_id=menu.id).delete(synchronize_session='evaluate')
-
                 session.delete(menu)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Menu', id)

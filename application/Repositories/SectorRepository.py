@@ -45,7 +45,6 @@ class SectorRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 sector = Sector(
                     name = data['name'],
                     description = data['description']
@@ -86,7 +85,7 @@ class SectorRepository(RepositoryBase):
         def run(session):
 
             def fn(session, sector):
-
+                
                 if sector.menus:
                     return ErrorHandler().get_error(406, 'You cannot delete this Sector because it has a related Menu.')
 

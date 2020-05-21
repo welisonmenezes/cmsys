@@ -119,9 +119,7 @@ class MediaRepository(RepositoryBase):
                     created = Helper().get_current_datetime()
                 )
 
-                fk_was_added = self.add_foreign_keys(media, data, session, [('user_id', User)])
-                if fk_was_added != True:
-                    return fk_was_added
+                self.add_foreign_keys(media, data, session, [('user_id', User)])
 
                 session.add(media)
                 session.commit()
@@ -145,9 +143,7 @@ class MediaRepository(RepositoryBase):
                     media.description = data['description']
                     media.origin = data['origin']
 
-                    fk_was_added = self.add_foreign_keys(media, data, session, [('user_id', User)])
-                    if fk_was_added != True:
-                        return fk_was_added
+                    self.add_foreign_keys(media, data, session, [('user_id', User)])
 
                     if (data['file'] and data['file'] != ''):
                         try:
@@ -179,9 +175,7 @@ class MediaRepository(RepositoryBase):
 
                 # TODO: check if media can be deleted (if any post is related to the media, it cannot be deleted)
 
-                is_foreigners = self.is_foreigners([(media, 'avatar_id', User)], session)
-                if is_foreigners != False:
-                    return is_foreigners
+                self.is_foreigners([(media, 'avatar_id', User)], session)
 
                 session.delete(media)
                 session.commit()

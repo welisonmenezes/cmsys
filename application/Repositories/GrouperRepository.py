@@ -46,21 +46,13 @@ class GrouperRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 grouper = Grouper(
                     name = data['name'],
                     description = data['description'],
                     order = data['order']
                 )
-
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
-                if can_add_ref != True:
-                    return can_add_ref
-
-                fk_was_added = self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
+                self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
                 session.add(grouper)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Grouper', grouper.id)
@@ -82,14 +74,8 @@ class GrouperRepository(RepositoryBase):
                     grouper.name = data['name']
                     grouper.description = data['description']
                     grouper.order = data['order']
-
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
-                    if can_add_ref != True:
-                        return can_add_ref
-
-                    fk_was_added = self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
-                    if fk_was_added != True:
-                        return fk_was_added
+                    self.raise_if_has_different_parent_reference(data, session, [('parent_id', 'post_id', Grouper)])
+                    self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
 
                     if grouper.parent_id and int(grouper.parent_id) == int(id):
                         return ErrorHandler().get_error(400, 'The Grouper cannot be parent of yourself.')
@@ -114,9 +100,7 @@ class GrouperRepository(RepositoryBase):
                 # TODO: when delete, also delete its field (content, text or file)
 
                 session.query(Field).filter_by(grouper_id=id).delete(synchronize_session='evaluate')
-
                 self.delete_deep_chidren(grouper, Grouper, session)
-
                 session.delete(grouper)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Grouper', id)

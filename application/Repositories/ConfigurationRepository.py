@@ -48,18 +48,13 @@ class ConfigurationRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 configuration = Configuration(
                     title = data['title'],
                     description = data['description'],
                     has_comments = data['has_comments'],
                     email = data['email']
                 )
-
-                fk_was_added = self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
                 session.add(configuration)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Configuration', configuration.id)
@@ -82,11 +77,7 @@ class ConfigurationRepository(RepositoryBase):
                     configuration.description = data['description']
                     configuration.has_comments = data['has_comments']
                     configuration.email = data['email']
-                    
-                    fk_was_added = self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
+                    self.add_foreign_keys(configuration, data, session, [('language_id', Language)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Configuration', configuration.id)
                 

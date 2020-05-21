@@ -15,7 +15,6 @@ class PostTypeRepository(RepositoryBase):
             fb = FilterBuilder(PostType, args)
             fb.set_like_filters(['name'])
             fb.set_equals_filters(['type'])
-
             query = session.query(PostType).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = PostTypeSchema(many=True, exclude=self.get_exclude_fields(args, ['template', 'nests']))
@@ -42,16 +41,11 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 post_type = PostType(
                     name = data['name'],
                     type = data['type']
                 )
-
-                fk_was_added = self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
                 session.add(post_type)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'PostType', post_type.id)
@@ -72,11 +66,7 @@ class PostTypeRepository(RepositoryBase):
                 def fn(session, post_type):
                     post_type.name = data['name']
                     post_type.type = data['type']
-
-                    fk_was_added = self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
+                    self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'PostType', post_type.id)
 
@@ -93,13 +83,8 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
 
             def fn(session, post_type):
-
-                is_foreigners = self.is_foreigners([(post_type, 'post_type_id', Post)], session)
-                if is_foreigners != False:
-                    return is_foreigners
-
+                self.is_foreigners([(post_type, 'post_type_id', Post)], session)
                 session.query(Nest).filter_by(post_type_id=post_type.id).delete(synchronize_session='evaluate')
-
                 session.delete(post_type)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'PostType', id)

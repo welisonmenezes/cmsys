@@ -15,7 +15,6 @@ class LanguageRepository(RepositoryBase):
             fb = FilterBuilder(Language, args)
             fb.set_like_filters(['name', 'code'])
             fb.set_equals_filters(['status'])
-
             query = session.query(Language).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = LanguageSchema(many=True)
@@ -42,7 +41,6 @@ class LanguageRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 language = Language(
                     name = data['name'],
                     code = data['code'],
@@ -83,25 +81,22 @@ class LanguageRepository(RepositoryBase):
 
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
-
+        
         if id == 1:
             return ErrorHandler().get_error(400, 'The Primary Language cannot be be deleted.')
-
+        
         def run(session):
 
             def fn(session, language):
 
                 # TODO: forbid delete language that has any related term
 
-                is_foreigners = self.is_foreigners([
+                self.is_foreigners([
                     (language, 'language_id', Configuration),
                     (language, 'language_id', Post),
                     (language, 'language_id', Menu),
                     (language, 'language_id', Comment)
                 ], session)
-                
-                if is_foreigners != False:
-                    return is_foreigners
 
                 session.delete(language)
                 session.commit()

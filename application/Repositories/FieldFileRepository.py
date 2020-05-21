@@ -14,7 +14,6 @@ class FieldFileRepository(RepositoryBase):
         def run(session):
             fb = FilterBuilder(FieldFile, args)
             fb.set_equals_filters(['field_id', 'media_id', 'grouper_id', 'post_id'])
-
             query = session.query(FieldFile).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = FieldFileSchema(many=True)
@@ -41,17 +40,9 @@ class FieldFileRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 field_file = FieldFile()
-
-                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
-                if can_add_ref != True:
-                    return can_add_ref
-
-                fk_was_added = self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.raise_if_has_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
+                self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])
                 session.add(field_file)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'FieldFile', field_file.id)
@@ -70,15 +61,8 @@ class FieldFileRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, field_file):
-
-                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
-                    if can_add_ref != True:
-                        return can_add_ref
-
-                    fk_was_added = self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])
-                    if fk_was_added != True:
-                        return fk_was_added
-                        
+                    self.raise_if_has_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
+                    self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])  
                     session.commit()
                     return self.handle_success(None, None, 'update', 'FieldFile', field_file.id)
 

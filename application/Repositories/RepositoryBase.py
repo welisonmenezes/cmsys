@@ -159,28 +159,21 @@ class RepositoryBase():
         """Verifies if is a foreigner on any given context at configuration, if so, return errors. How to use:
             The configuration must like: [(current_context, foreign_key_at_target_context, target_context)]"""
 
-        errors = []
         for config in configurations:
             filter = (getattr(config[2], config[1])==getattr(config[0], 'id'),)
             element = session.query(getattr(config[2], 'id')).filter(*filter).first()
             if element:
-                errors.append('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
-
-        return False if not errors else ErrorHandler().get_error(406, errors)
-
+                raise AttributeError('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
 
     def add_foreign_keys(self, current_context, data, session, configurations):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
-        errors = []
         for config in configurations:
             try:
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
             except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
+                raise Exception(e)
 
 
     def set_any_reference_as_null_to_delete(self, instance, request, session, configurations):
@@ -188,7 +181,6 @@ class RepositoryBase():
             Note that this only occurs if the 'remove_foreign_key' passed by request param was equals 1.
             How to use: The configuration must like: [(foreign_key_at_target_context, target_context)]"""
 
-        errors = []
         for config in configurations:
             try:
                 if 'remove_foreign_keys' in request.args and request.args['remove_foreign_keys'] == '1':
@@ -200,12 +192,10 @@ class RepositoryBase():
                     filter = (getattr(config[1], config[0])==instance.id,)
                     element = session.query(getattr(config[1], 'id')).filter(*filter).first()
                     if element:
-                        errors.append('You cannot delete this ' + instance.__class__.__name__ + ' because it has a related ' + config[1].__tablename__)
+                        raise AttributeError('You cannot delete this ' + instance.__class__.__name__ + ' because it has a related ' + config[1].__tablename__)
 
             except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
+                raise Exception(e)
 
 
     def set_children_as_null_to_delete(self, instance, context, session):
@@ -227,9 +217,7 @@ class RepositoryBase():
                     if (registered_related):
                         getattr(instance, key).append(registered_related)
                     else:
-                        return ErrorHandler().get_error(400, context_target.__tablename__ + ' ' + str(related) + ' does not exists.')
-                        
-        return True
+                        raise AttributeError(context_target.__tablename__ + ' ' + str(related) + ' does not exists.')
 
 
     def edit_many_to_many_relationship(self, key, instance, data, context_target, session):
@@ -262,20 +250,18 @@ class RepositoryBase():
                 getattr(instance, key).append(registered_related)
 
 
-    def forbid_save_with_different_parent_reference(self, data, session, configurations):
+    def raise_if_has_different_parent_reference(self, data, session, configurations):
         """Verify if the given data has the same foreign data that its parent. How to use:
             The configuration must like: [('parent_key','referenced_key', 'context_target')]"""
 
-        errors = []
         for config in configurations:
             try:
                 if config[0] in data and config[1] in data:
                     parent = session.query(getattr(config[2], config[1])).filter_by(id=int(data[config[0]])).first()
                     if parent and parent[0] != int(data[config[1]]):
-                        errors.append('The ' + config[1] + ' must the same as your father\'s, witch is: ' + str(parent[0]) + '.')
+                        raise AttributeError('The ' + config[1] + ' must the same as your father\'s, witch is: ' + str(parent[0]) + '.')
             except Exception as e:
-                errors.append(str(e))
-        return True if not errors else ErrorHandler().get_error(400, errors)
+                raise Exception(e)
 
 
     def delete_deep_chidren(self, parent, context, session):

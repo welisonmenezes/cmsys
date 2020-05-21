@@ -15,7 +15,6 @@ class SocialRepository(RepositoryBase):
             fb = FilterBuilder(Social, args)
             fb.set_like_filters(['name'])
             fb.set_equals_filters(['origin', 'user_id'])
-
             query = session.query(Social).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = SocialSchema(many=True, exclude=self.get_exclude_fields(args, ['user', 'configuration']))
@@ -49,11 +48,7 @@ class SocialRepository(RepositoryBase):
                     description = data['description'],
                     origin = data['origin']
                 )
-
-                fk_was_added = self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
-                if fk_was_added != True:
-                    return fk_was_added
-                
+                self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
                 session.add(social)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Social', social.id)
@@ -77,11 +72,7 @@ class SocialRepository(RepositoryBase):
                     social.target = data['target']
                     social.origin = data['origin']
                     social.description = data['description']
-
-                    fk_was_added = self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
+                    self.add_foreign_keys(social, data, session, [('configuration_id', Configuration), ('user_id', User)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Social', social.id)
 
@@ -111,22 +102,17 @@ class SocialRepository(RepositoryBase):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
-        errors = []
         for config in configurations:
             try:
                 setattr(current_context, config[0], None)
 
                 if getattr(current_context, 'origin') == 'configuration' and config[0] == 'user_id' and 'user_id' in data:
-                    errors.append('If the \'origin\' is \'configuration\' you dont have to send the \'user_id\'.')
-                    continue
+                    raise AttributeError('If the \'origin\' is \'configuration\' you dont have to send the \'user_id\'.')
 
                 if getattr(current_context, 'origin') == 'user' and config[0] == 'configuration_id' and 'configuration_id' in data:
-                    errors.append('If the \'origin\' is \'user\' you dont have to send the \'configuration_id\'.')
-                    continue
+                    raise AttributeError('If the \'origin\' is \'user\' you dont have to send the \'configuration_id\'.')
                 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 
             except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
+                raise Exception(e)

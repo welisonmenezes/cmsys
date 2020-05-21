@@ -46,18 +46,13 @@ class NestRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
                 nest = Nest(
                     name = data['name'],
                     description = data['description'],
                     limit = data['limit'],
                     has_pagination = data['has_pagination']
                 )
-
-                fk_was_added = self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
                 session.add(nest)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Nest', nest.id)
@@ -80,11 +75,7 @@ class NestRepository(RepositoryBase):
                     nest.description = data['description']
                     nest.limit = data['limit']
                     nest.has_pagination = data['has_pagination']
-
-                    fk_was_added = self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
+                    self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Nest', nest.id)
 
@@ -114,7 +105,6 @@ class NestRepository(RepositoryBase):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
-        errors = []
         for config in configurations:
             try:
                 if config[0] == 'post_type_id':
@@ -122,11 +112,8 @@ class NestRepository(RepositoryBase):
 
                     el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
                     if el and el.type != 'nested-page':
-                        errors.append('The Post_Type must have the type \'nested-page\'.')
-                        continue
+                        raise AttributeError('The Post_Type must have the type \'nested-page\'.')
 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
             except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
+                raise Exception(e)

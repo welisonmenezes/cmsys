@@ -15,7 +15,6 @@ class CapabilityRepository(RepositoryBase):
             fb = FilterBuilder(Capability, args)
             fb.set_equals_filters(['type', 'target_id', 'can_write', 'can_read', 'can_delete'])
             fb.set_like_filters(['description'])
-            
             query = session.query(Capability).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = CapabilitySchema(many=True, exclude=self.get_exclude_fields(args, ['roles']))
@@ -42,11 +41,7 @@ class CapabilityRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
-                identical_capability = self.verify_identical_capability(data, session)
-                if identical_capability != False:
-                    return ErrorHandler().get_error(400, 'The capability ' + str(identical_capability.id) + ' has exactly the same configurations.')
-
+                self.raise_if_has_identical_capability(data, session)
                 capability = Capability(
                     description = data['description'],
                     type = data['type'],
@@ -55,7 +50,6 @@ class CapabilityRepository(RepositoryBase):
                     can_read = data['can_read'],
                     can_delete = data['can_delete']
                 )
-
                 session.add(capability)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Capability', capability.id)
@@ -74,11 +68,7 @@ class CapabilityRepository(RepositoryBase):
             def process(session, data):
 
                 def fn(session, capability):
-
-                    identical_capability = self.verify_identical_capability(data, session, id)
-                    if identical_capability != False:
-                        return ErrorHandler().get_error(400, 'The capability ' + str(identical_capability.id) + ' has exactly the same configurations.')
-
+                    self.raise_if_has_identical_capability(data, session, id)
                     capability.description = data['description']
                     capability.type = data['type']
                     capability.target_id = data['target_id']
@@ -101,10 +91,8 @@ class CapabilityRepository(RepositoryBase):
         def run(session):
 
             def fn(session, capability):
-                
                 if capability.roles:
                     return ErrorHandler().get_error(406, 'You cannot delete this Capability because it has a related Role.')
-
                 session.delete(capability)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Capability', id)
@@ -114,7 +102,7 @@ class CapabilityRepository(RepositoryBase):
         return self.response(run, True)
 
 
-    def verify_identical_capability(self, data, session, id=None):	
+    def raise_if_has_identical_capability(self, data, session, id=None):	
         """Verifies if already exists another capability with exactly same values, if so, returns this."""	
 
         filter = (	
@@ -130,4 +118,7 @@ class CapabilityRepository(RepositoryBase):
 
         capability = session.query(Capability).filter(*filter).first()	
 
-        return capability if capability else False
+        if not capability:
+            return capability
+        else:
+            raise AttributeError('The capability ' + str(capability.id) + ' has exactly the same configurations.')

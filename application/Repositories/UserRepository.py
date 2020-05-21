@@ -70,11 +70,7 @@ class UserRepository(RepositoryBase):
                     status = data['status'],
                     registered = Helper().get_current_datetime()
                 )
-                
-                fk_was_added = self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
-                if fk_was_added != True:
-                    return fk_was_added
-
+                self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
                 session.add(user)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'User', user.id)
@@ -104,10 +100,7 @@ class UserRepository(RepositoryBase):
                     if data['password'] != '' and not bcrypt.check_password_hash(user.password, data['password']):
                         user.password = bcrypt.generate_password_hash(data['password'])
 
-                    fk_was_added = self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
-                    if fk_was_added != True:
-                        return fk_was_added
-
+                    self.add_foreign_keys(user, data, session, [('role_id', Role), ('page_id', Post), ('avatar_id', Media)])
                     session.commit()
                     return self.handle_success(None, None, 'update', 'User', user.id)
 
@@ -127,15 +120,9 @@ class UserRepository(RepositoryBase):
         def run(session):
 
             def fn(session, user):
-                
-                image_was_deleted = self.delegate_content_to_delete(user,session, request, (Media, Post))
-                if image_was_deleted != True:
-                    return image_was_deleted
-
+                self.delegate_content_to_delete(user,session, request, (Media, Post))
                 self.delete_user_comments(user, session)
-
                 session.query(Social).filter_by(user_id=user.id).delete(synchronize_session='evaluate')
-
                 session.delete(user)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'User', id)
@@ -149,32 +136,26 @@ class UserRepository(RepositoryBase):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
-        errors = []
         for config in configurations:
             try:
                 if getattr(current_context, 'id') == 1 and config[0] == 'role_id':
-                    errors.append('You cannot change the role of the primary user admin.')
-                    continue
+                    raise AttributeError('You cannot change the role of the primary user admin.')
 
                 if config[0] == 'avatar_id' and config[0] in data:
                     image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
                     if not image or not Checker().is_image_type(image.type):
-                        errors.append('The user avatar must be an image file.')
-                        continue
+                        raise AttributeError('The user avatar must be an image file.')
                 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 
             except Exception as e:
-                errors.append(str(e))
-                
-        return True if not errors else ErrorHandler().get_error(400, errors)
+                raise Exception(e)
 
 
     def delegate_content_to_delete(self, user, session, request, context_list):
         """Delegates user's contents to superadmin (id=1) from list of context passed 
             by parameter context_list. Only do that if admin_new_owner is given as arg"""
 
-        errors = []
         for content_context in context_list:
             content = session.query(content_context).filter_by(user_id=user.id).first()
             if content:
@@ -185,11 +166,9 @@ class UserRepository(RepositoryBase):
                         if admin:
                             c.user_id = admin.id
                         else:
-                            errors.append('Could not find the super admin user.')
+                            raise AttributeError('Could not find the super admin user.')
                 else:
-                    errors.append('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
-
-        return True if not errors else  ErrorHandler().get_error(406, errors)
+                    raise AttributeError('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
 
 
     def delete_user_comments(self, user, session):
