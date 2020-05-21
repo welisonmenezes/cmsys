@@ -98,3 +98,13 @@ class Helper():
             data['name'] = slugify(data['name'])
         
         return data
+
+
+    def add_request_data(self, parser, parameters, get_return=True):
+        """Add parameter from an given parameters list to the given parser."""
+
+        for parameter in parameters:
+            parser.add_argument(parameter)
+
+        if get_return:
+            return parser.parse_args()

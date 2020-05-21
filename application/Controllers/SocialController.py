@@ -1,5 +1,6 @@
 from .ControllerBase import ControllerBase
 from Repositories import SocialRepository
+from Utils import Helper
 
 class SocialController(ControllerBase):
     """This flask_restful API's Resource works like a controller to SocialRepository."""
@@ -8,10 +9,5 @@ class SocialController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(SocialController, self).__init__()
-        self.parser.add_argument('name')
-        self.parser.add_argument('origin')
-        self.parser.add_argument('user_id')
-        self.parser.add_argument('get_user')
-        self.parser.add_argument('get_configuration')
-        self.args = self.parser.parse_args()
+        self.args = Helper().add_request_data(self.parser, ['name', 'origin', 'user_id', 'get_user', 'get_configuration'])
         self.repo = SocialRepository()

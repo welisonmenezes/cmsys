@@ -1,5 +1,6 @@
 from .ControllerBase import ControllerBase
 from Repositories import MenuRepository
+from Utils import Helper
 
 class MenuController(ControllerBase):
     """This flask_restful API's Resource works like a controller to MenuRepository."""
@@ -8,10 +9,5 @@ class MenuController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(MenuController, self).__init__()
-        self.parser.add_argument('s')
-        self.parser.add_argument('language_id')
-        self.parser.add_argument('get_language')
-        self.parser.add_argument('get_sectors')
-        self.parser.add_argument('get_items')
-        self.args = self.parser.parse_args()
+        self.args = Helper().add_request_data(self.parser, ['s', 'language_id', 'get_language', 'get_sectors', 'get_items'])
         self.repo = MenuRepository()

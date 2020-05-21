@@ -1,6 +1,7 @@
 from flask import request
 from .ControllerBase import ControllerBase
 from Repositories import MediaRepository
+from Utils import Helper
 
 class MediaController(ControllerBase):
     """This flask_restful API's Resource works like a controller to MediaRepository."""
@@ -15,15 +16,8 @@ class MediaController(ControllerBase):
     def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        self.parser.add_argument('download_file')
-        self.parser.add_argument('return_file_data')
-        self.parser.add_argument('s')
-        self.parser.add_argument('type')
-        self.parser.add_argument('origin')
-        self.parser.add_argument('created')
-        self.parser.add_argument('user_id')
-        self.parser.add_argument('get_user')
-        self.args = self.parser.parse_args()
+        self.args = Helper().add_request_data(self.parser, [
+            'download_file', 'return_file_data', 's', 'type', 'origin', 'created', 'user_id', 'get_user'])
 
         if str(request.url_rule) == '/api/media/preview/<id>':
             return self.repo.get_image_preview(id)

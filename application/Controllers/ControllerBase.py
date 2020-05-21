@@ -1,6 +1,6 @@
 from flask import  request, jsonify
 from flask_restful import Resource, reqparse
-from Utils import ErrorHandler
+from Utils import ErrorHandler, Helper
 
 class ControllerBase(Resource):
     """The base class that will provide basics configurations and methods to its children.
@@ -13,17 +13,13 @@ class ControllerBase(Resource):
     def __init__(self):
         """Starts the basics request params which are common to many controllers"""
 
-        self.repo = None # must be passed by child controller (namaly, an RepositoryBase child)
+        self.repo = None # must be passed by child controller (nemaly, an RepositoryBase child)
         self.request = request
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument('page')
-        self.parser.add_argument('limit')
-        self.parser.add_argument('order')
-        self.parser.add_argument('order_by')
-        self.parser.add_argument('date_modifier')
-        self.parser.add_argument('compare_date_time_one')
-        self.parser.add_argument('compare_date_time_two')
-        self.parser.add_argument('not_between')
+        Helper().add_request_data(self.parser, [
+            'page', 'limit', 'order', 'order_by', 'date_modifier', 
+            'compare_date_time_one', 'compare_date_time_two', 'not_between'],
+        False)
 
     
     def get(self, id=None):

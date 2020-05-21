@@ -1,5 +1,6 @@
 from .ControllerBase import ControllerBase
 from Repositories import GrouperRepository
+from Utils import Helper
 
 class GrouperController(ControllerBase):
     """This flask_restful API's Resource works like a controller to GrouperRepository."""
@@ -8,12 +9,5 @@ class GrouperController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(GrouperController, self).__init__()
-        self.parser.add_argument('s')
-        self.parser.add_argument('parent_id')
-        self.parser.add_argument('post_id')
-        self.parser.add_argument('get_parent')
-        self.parser.add_argument('get_children')
-        self.parser.add_argument('get_post')
-        self.parser.add_argument('get_fields')
-        self.args = self.parser.parse_args()
+        self.args = Helper().add_request_data(self.parser, ['s', 'parent_id', 'post_id', 'get_parent', 'get_children', 'get_post', 'get_fields'])
         self.repo = GrouperRepository()

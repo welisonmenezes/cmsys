@@ -1,5 +1,6 @@
 from .ControllerBase import ControllerBase
 from Repositories import FieldFileRepository
+from Utils import Helper
 
 class FieldFileController(ControllerBase):
     """This flask_restful API's Resource works like a controller to FieldFileRepository."""
@@ -8,9 +9,5 @@ class FieldFileController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(FieldFileController, self).__init__()
-        self.parser.add_argument('field_id')
-        self.parser.add_argument('media_id')
-        self.parser.add_argument('grouper_id')
-        self.parser.add_argument('post_id')
-        self.args = self.parser.parse_args()
+        self.args = Helper().add_request_data(self.parser, ['field_id', 'media_id', 'grouper_id', 'post_id'])
         self.repo = FieldFileRepository()

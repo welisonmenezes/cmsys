@@ -1,5 +1,6 @@
 from .ControllerBase import ControllerBase
 from Repositories import SectorRepository
+from Utils import Helper
 
 class SectorController(ControllerBase):
     """This flask_restful API's Resource works like a controller to SectorRepository."""
@@ -8,7 +9,5 @@ class SectorController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(SectorController, self).__init__()
-        self.parser.add_argument('s')
-        self.parser.add_argument('get_menus')
-        self.args = self.parser.parse_args()
+        self.args = Helper().add_request_data(self.parser, ['s', 'get_menus'])
         self.repo = SectorRepository()

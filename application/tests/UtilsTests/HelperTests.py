@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import json
 import datetime
 import base64
@@ -87,6 +88,27 @@ class HelperTests(unittest.TestCase):
         payload = 'joao-cacou-a-ra-a-noite'
         response = Helper().get_with_slug(data, 'name')['name']
         self.assertEqual(payload, response, 'Helper().get_with_slug does not return \'joao-cacou-a-ra-a-noite\'.')
+
+    
+    @patch('flask_restful.reqparse.RequestParser')
+    def test_Helper_add_request_data(self, parse_args_mock):
+        request = []
+
+        def parse_args(req=None):
+            return request
+
+        def add_argument(*args, **kwargs):
+            request.append(args)
+
+        parse_args_mock.parse_args = parse_args
+        parse_args_mock.add_argument = add_argument
+        parser = parse_args_mock
+        args = Helper().add_request_data(parser, ['key-1', 'key-2'])
+
+        payload = str([('key-1',), ('key-2',)])
+        response = str(args)
+
+        self.assertEqual(payload, response, 'Helper().add_request_data does not return \'[(\'key-1\',), (\'key-2\',)]\'')
     
 
     def tearDown(self):
