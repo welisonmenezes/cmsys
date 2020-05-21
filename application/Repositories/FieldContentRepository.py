@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import FieldContent, FieldContentSchema
+from Models import FieldContent, FieldContentSchema, Field, Grouper, Post
 from Validators import FieldContentValidator
 from Utils import Paginate, ErrorHandler, FilterBuilder
 
@@ -12,9 +12,6 @@ class FieldContentRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def run(session):
-
-            # TODO: implement field content filters
-
             fb = FilterBuilder(FieldContent, args)
             fb.set_like_filter('content')
             fb.set_equals_filter('field_id')
@@ -49,14 +46,16 @@ class FieldContentRepository(RepositoryBase):
             def process(session, data):
 
                 field_content = FieldContent(
-                    content = data['content'],
-                    field_id = data['field_id'],
-                    grouper_id = data['grouper_id'],
-                    post_id = data['post_id']
+                    content = data['content']
                 )
 
-                # TODO: implement field content relationships
-                # TODO: forbid add grouper and post if this ids are different from field
+                can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
+                if can_add_ref != True:
+                    return can_add_ref
+
+                fk_was_added = self.add_foreign_keys(field_content, data, session, [('field_id', Field), ('grouper_id', Grouper), ('post_id', Post)])
+                if fk_was_added != True:
+                    return fk_was_added
 
                 session.add(field_content)
                 session.commit()
@@ -77,9 +76,15 @@ class FieldContentRepository(RepositoryBase):
                 
                 def fn(session, field_content):
                     field_content.content = data['content']
-                    field_content.field_id = data['field_id']
-                    field_content.grouper_id = data['grouper_id']
-                    field_content.post_id = data['post_id']
+                    
+                    can_add_ref = self.forbid_save_with_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
+                    if can_add_ref != True:
+                        return can_add_ref
+
+                    fk_was_added = self.add_foreign_keys(field_content, data, session, [('field_id', Field), ('grouper_id', Grouper), ('post_id', Post)])
+                    if fk_was_added != True:
+                        return fk_was_added
+                    
                     session.commit()
                     return self.handle_success(None, None, 'update', 'FieldContent', field_content.id)
 
