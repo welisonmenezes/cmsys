@@ -16,17 +16,14 @@ class MediaRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Media, args)
-            fb.set_equals_filter('type')
-            fb.set_equals_filter('origin')
-            fb.set_equals_filter('user_id')
+            fb.set_equals_filters(['type', 'origin', 'user_id'])
 
             try:
                 fb.set_date_filter('created', date_modifier=args['date_modifier'])
                 fb.set_between_dates_filter(
-                    'created',
+                    'created', not_between=args['not_between'],
                     compare_date_time_one=args['compare_date_time_one'],
-                    compare_date_time_two=args['compare_date_time_two'],
-                    not_between=args['not_between']
+                    compare_date_time_two=args['compare_date_time_two']
                 )
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:

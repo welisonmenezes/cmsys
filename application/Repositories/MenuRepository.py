@@ -15,7 +15,7 @@ class MenuRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Menu, args)
-            fb.set_equals_filter('language_id')
+            fb.set_equals_filters(['language_id'])
 
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])

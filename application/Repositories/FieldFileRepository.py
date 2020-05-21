@@ -13,10 +13,7 @@ class FieldFileRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(FieldFile, args)
-            fb.set_equals_filter('field_id')
-            fb.set_equals_filter('media_id')
-            fb.set_equals_filter('grouper_id')
-            fb.set_equals_filter('post_id')
+            fb.set_equals_filters(['field_id', 'media_id', 'grouper_id', 'post_id'])
 
             query = session.query(FieldFile).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

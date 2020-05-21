@@ -13,9 +13,8 @@ class SocialRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Social, args)
-            fb.set_like_filter('name')
-            fb.set_equals_filter('origin')
-            fb.set_equals_filter('user_id')
+            fb.set_like_filters(['name'])
+            fb.set_equals_filters(['origin', 'user_id'])
 
             query = session.query(Social).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

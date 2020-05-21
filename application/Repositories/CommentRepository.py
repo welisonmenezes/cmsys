@@ -13,22 +13,15 @@ class CommentRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Comment, args)
-            fb.set_like_filter('comment')
-            fb.set_equals_filter('status')
-            fb.set_like_filter('origin_ip')
-            fb.set_like_filter('origin_agent')
-            fb.set_equals_filter('parent_id')
-            fb.set_equals_filter('user_id')
-            fb.set_equals_filter('post_id')
-            fb.set_equals_filter('language_id')
+            fb.set_like_filters(['comment', 'origin_ip', 'origin_agent'])
+            fb.set_equals_filters(['status', 'parent_id', 'user_id', 'post_id', 'language_id'])
             
             try:
                 fb.set_date_filter('created', date_modifier=args['date_modifier'])
                 fb.set_between_dates_filter(
-                    'created',
+                    'created',  not_between=args['not_between'],
                     compare_date_time_one=args['compare_date_time_one'],
-                    compare_date_time_two=args['compare_date_time_two'],
-                    not_between=args['not_between']
+                    compare_date_time_two=args['compare_date_time_two']
                 )
             except Exception as e:
                 return ErrorHandler().get_error(400, str(e))

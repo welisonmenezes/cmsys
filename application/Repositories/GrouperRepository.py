@@ -13,8 +13,7 @@ class GrouperRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Grouper, args)
-            fb.set_equals_filter('parent_id')
-            fb.set_equals_filter('post_id')
+            fb.set_equals_filters(['parent_id', 'post_id'])
             
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])

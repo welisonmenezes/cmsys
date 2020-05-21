@@ -13,11 +13,10 @@ class RoleRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Role, args)
-            fb.set_equals_filter('can_access_admin')
-            fb.set_like_filter('name')
-            fb.set_like_filter('description')
+            fb.set_equals_filters(['can_access_admin'])
+            fb.set_like_filters(['name', 'description'])
 
-            fb.set_equals_filter('capability_description', joined=Capability, joined_key='description')
+            fb.set_like_filter('capability_description', joined=Capability, joined_key='description')
             if (args['capability_description'] and args['capability_description'] != ''):
                 self.joins.append(Role.capabilities)
             

@@ -46,12 +46,36 @@ class FilterBuilderTests(unittest.TestCase):
         self.assertEqual(payload, response, 'ErrorHandler().set_equals_filter does not return \'"Post".name = :name_1\'.')
 
 
+    def test_FilterBuilder_set_equals_filters(self):
+
+        payload_1 = '"Post".name = :name_1'
+        payload_2 = '"Post".status = :status_1'
+        self.fb.set_equals_filters(['name', 'status'])
+        response_1 = str(self.fb.filter[0])
+        response_2 = str(self.fb.filter[1])
+
+        self.assertEqual(payload_1, response_1, 'ErrorHandler().set_equals_filters does not return \'"Post".name = :name_1\'.')
+        self.assertEqual(payload_2, response_2, 'ErrorHandler().set_equals_filters does not return \'"Post".status = :status_1\'.')
+
+
     def test_FilterBuilder_set_like_filter(self):
 
         payload = '"Post".name LIKE :name_1'
         self.fb.set_like_filter('name')
         response = str(self.fb.filter[0])
         self.assertEqual(payload, response, 'ErrorHandler().set_like_filter does not return \'"Post".name LIKE :name_1\'.')
+
+
+    def test_FilterBuilder_set_like_filters(self):
+
+        payload_1 = '"Post".name LIKE :name_1'
+        payload_2 = '"Post".status LIKE :status_1'
+        self.fb.set_like_filters(['name', 'status'])
+        response_1 = str(self.fb.filter[0])
+        response_2 = str(self.fb.filter[1])
+
+        self.assertEqual(payload_1, response_1, 'ErrorHandler().set_like_filter does not return \'"Post".name LIKE :name_1\'.')
+        self.assertEqual(payload_2, response_2, 'ErrorHandler().set_like_filter does not return \'"Post".status LIKE :status_1\'.')
 
 
     def test_FilterBuilder_set_and_or_filter(self):

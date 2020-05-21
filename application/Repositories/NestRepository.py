@@ -13,9 +13,12 @@ class NestRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Nest, args)
-            fb.set_equals_filter('post_id')
-            fb.set_equals_filter('post_type_id')
-            fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            fb.set_equals_filters(['post_type_id', 'post_id'])
+            
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                return ErrorHandler().get_error(400, str(e))
 
             query = session.query(Nest).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

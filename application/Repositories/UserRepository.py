@@ -16,17 +16,15 @@ class UserRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(User, args)
-            fb.set_like_filter('email')
-            fb.set_equals_filter('status')
-            fb.set_equals_filter('role_id')
+            fb.set_like_filters(['email'])
+            fb.set_equals_filters(['status', 'role_id'])
 
             try:
                 fb.set_date_filter('registered', date_modifier=args['date_modifier'])
                 fb.set_between_dates_filter(
-                    'registered',
+                    'registered', not_between=args['not_between'],
                     compare_date_time_one=args['compare_date_time_one'],
-                    compare_date_time_two=args['compare_date_time_two'],
-                    not_between=args['not_between']
+                    compare_date_time_two=args['compare_date_time_two']
                 )
                 fb.set_and_or_filter('s', 'or', [{'field':'first_name', 'type':'like'}, {'field':'last_name', 'type':'like'}, {'field':'nickname', 'type':'like'}])
             except Exception as e:

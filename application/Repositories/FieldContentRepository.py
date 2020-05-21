@@ -13,10 +13,8 @@ class FieldContentRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(FieldContent, args)
-            fb.set_like_filter('content')
-            fb.set_equals_filter('field_id')
-            fb.set_equals_filter('grouper_id')
-            fb.set_equals_filter('post_id')
+            fb.set_like_filters(['content'])
+            fb.set_equals_filters(['field_id', 'grouper_id', 'post_id'])
 
             query = session.query(FieldContent).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

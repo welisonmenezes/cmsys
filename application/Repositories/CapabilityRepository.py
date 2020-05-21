@@ -13,12 +13,8 @@ class CapabilityRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Capability, args)
-            fb.set_equals_filter('type')
-            fb.set_equals_filter('target_id')
-            fb.set_equals_filter('can_write')
-            fb.set_equals_filter('can_read')
-            fb.set_equals_filter('can_delete')
-            fb.set_like_filter('description')
+            fb.set_equals_filters(['type', 'target_id', 'can_write', 'can_read', 'can_delete'])
+            fb.set_like_filters(['description'])
             
             query = session.query(Capability).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

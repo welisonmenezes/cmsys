@@ -13,9 +13,8 @@ class BlacklistRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Blacklist, args)
-            fb.set_equals_filter('type')
-            fb.set_equals_filter('target')
-            fb.set_like_filter('value')
+            fb.set_equals_filters(['type', 'target'])
+            fb.set_like_filters(['value'])
 
             query = session.query(Blacklist).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

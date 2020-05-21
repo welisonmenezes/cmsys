@@ -25,12 +25,19 @@ class FilterBuilder():
         else:
             return getattr(self.context, key)
 
-
+    
     def set_equals_filter(self, key, *args, **kwargs):
         """Sets filter that checks if the field with a given key is equals to the args with same key."""
 
         if (key in self.args and self.args[key]):
             self.filter += (self.get_context_attr(key, kwargs) == self.args[key], )
+
+
+    def set_equals_filters(self, keys, *args, **kwargs):
+        """Sets filter that checks if the field with a given list of keys is equals to the args with same key."""
+
+        for key in keys:
+            self.set_equals_filter(key, args, kwargs)
 
     
     def set_like_filter(self, key, *args, **kwargs):
@@ -38,6 +45,13 @@ class FilterBuilder():
 
         if (key in self.args and self.args[key]):
             self.filter += (self.get_context_attr(key, kwargs).like('%' + self.args[key] + '%'), )
+
+
+    def set_like_filters(self, keys, *args, **kwargs):
+        """Sets filter that checks if the field with a given list of keys is like to the args with same key."""
+
+        for key in keys:
+            self.set_like_filter(key, args, kwargs)
 
     
     def set_and_or_filter(self, key, modifier, configurations, *args, **kwargs):

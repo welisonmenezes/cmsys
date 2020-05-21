@@ -18,19 +18,14 @@ class PostRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Post, args)
-            fb.set_equals_filter('status')
-            fb.set_equals_filter('user_id')
-            fb.set_equals_filter('parent_id')
-            fb.set_equals_filter('post_type_id')
-            fb.set_equals_filter('language_id')
+            fb.set_equals_filters(['status', 'user_id', 'parent_id', 'post_type_id', 'language_id'])
 
             try:
                 fb.set_date_filter('created', date_modifier=args['date_modifier'])
                 fb.set_between_dates_filter(
-                    'created',
+                    'created', not_between=args['not_between'],
                     compare_date_time_one=args['compare_date_time_one'],
-                    compare_date_time_two=args['compare_date_time_two'],
-                    not_between=args['not_between']
+                    compare_date_time_two=args['compare_date_time_two']
                 )
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'title', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:

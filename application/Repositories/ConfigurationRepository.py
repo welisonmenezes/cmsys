@@ -15,7 +15,7 @@ class ConfigurationRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Configuration, args)
-            fb.set_equals_filter('language_id')
+            fb.set_equals_filters(['language_id'])
 
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'title', 'type':'like'}, {'field':'description', 'type':'like'}])

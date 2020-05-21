@@ -13,8 +13,8 @@ class PostTypeRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(PostType, args)
-            fb.set_like_filter('name')
-            fb.set_equals_filter('type')
+            fb.set_like_filters(['name'])
+            fb.set_equals_filters(['type'])
 
             query = session.query(PostType).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
