@@ -8,12 +8,6 @@ class UserController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(UserController, self).__init__()
-        self.repo = UserRepository()
-        
-
-    def get(self, id=None):
-        """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
-
         self.parser.add_argument('s')
         self.parser.add_argument('email')
         self.parser.add_argument('registered')
@@ -26,5 +20,4 @@ class UserController(ControllerBase):
         self.parser.add_argument('get_avatar')
         self.parser.add_argument('admin_new_owner')
         self.args = self.parser.parse_args()
-
-        return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
+        self.repo = UserRepository()

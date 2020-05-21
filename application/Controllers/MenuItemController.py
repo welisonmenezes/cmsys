@@ -8,12 +8,6 @@ class MenuItemController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(MenuItemController, self).__init__()
-        self.repo = MenuItemRepository()
-        
-
-    def get(self, id=None):
-        """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
-
         self.parser.add_argument('type')
         self.parser.add_argument('behavior')
         self.parser.add_argument('url')
@@ -24,5 +18,4 @@ class MenuItemController(ControllerBase):
         self.parser.add_argument('get_parent')
         self.parser.add_argument('get_children')
         self.args = self.parser.parse_args()
-
-        return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
+        self.repo = MenuItemRepository()

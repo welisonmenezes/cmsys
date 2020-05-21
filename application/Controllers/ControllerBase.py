@@ -30,7 +30,7 @@ class ControllerBase(Resource):
         """Runs the get http request method response."""
 
         try:
-            return self.repo.get(self.request)
+            return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
         except Exception as e:
             return ErrorHandler().get_error(405, str(e))
 

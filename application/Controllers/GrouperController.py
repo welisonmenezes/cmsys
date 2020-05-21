@@ -8,12 +8,6 @@ class GrouperController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(GrouperController, self).__init__()
-        self.repo = GrouperRepository()
-        
-
-    def get(self, id=None):
-        """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
-
         self.parser.add_argument('s')
         self.parser.add_argument('parent_id')
         self.parser.add_argument('post_id')
@@ -22,5 +16,4 @@ class GrouperController(ControllerBase):
         self.parser.add_argument('get_post')
         self.parser.add_argument('get_fields')
         self.args = self.parser.parse_args()
-
-        return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
+        self.repo = GrouperRepository()
