@@ -1,7 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
+from sqlalchemy import or_
 from Utils import Checker
-from Models import Session, Media
+from Models import Session, Media, FieldFile, FieldText, FieldContent
 from ErrorHandlers import ErrorHandler, BadRequestError, NotFoundError
 
 class RepositoryBase():
@@ -314,3 +315,31 @@ class RepositoryBase():
             print(config)
             filter = (getattr(config[1], config[0])==id,)
             session.query(config[1]).filter(*filter).delete(synchronize_session='evaluate')
+
+
+    def add_foreign_keys_field_type(self, field_type, current_context, data, session, configurations, id=None):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                if config[0] == 'field_id':
+                    el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+                    if el:
+                        if el.type != field_type:
+                            errors.append('The Field referenced by the \'field_id\' is not configured as ' + field_type + '.')
+
+                        if not id or (data['field_id'] != current_context.field_id):
+                            filter = (or_(FieldContent.field_id==el.id, FieldText.field_id==el.id, FieldFile.field_id==el.id),)
+                            el_childs = session.query(FieldContent.id, FieldFile.id, FieldText.id).filter(*filter).first()
+                        
+                            if el_childs:
+                                errors.append('The Field referenced by the \'field_id\' already has a field type.')
+
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+            except Exception as e:
+                errors.append('Could not find the given foreign key \'' + str(config[0]) + '\'')
+
+        if errors:
+            raise BadRequestError(errors)

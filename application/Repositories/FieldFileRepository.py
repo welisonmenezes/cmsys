@@ -4,8 +4,6 @@ from Validators import FieldFileValidator
 from Utils import Paginate, FilterBuilder
 from ErrorHandlers import BadRequestError
 
-# TODO: forbid save new field type if already exists any ohter at the specified field
-
 class FieldFileRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of FieldFile."""
@@ -45,7 +43,7 @@ class FieldFileRepository(RepositoryBase):
             def process(session, data):
                 field_file = FieldFile()
                 self.raise_if_has_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
-                self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])
+                self.add_foreign_keys_field_type('file', field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])
                 session.add(field_file)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'FieldFile', field_file.id)
@@ -65,7 +63,7 @@ class FieldFileRepository(RepositoryBase):
                 
                 def fn(session, field_file):
                     self.raise_if_has_different_parent_reference(data, session, [('field_id', 'grouper_id', Field), ('field_id', 'post_id', Field)])
-                    self.add_foreign_keys(field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)])  
+                    self.add_foreign_keys_field_type('file', field_file, data, session, [('field_id', Field), ('media_id', Media), ('grouper_id', Grouper), ('post_id', Post)], id)  
                     session.commit()
                     return self.handle_success(None, None, 'update', 'FieldFile', field_file.id)
 
@@ -89,23 +87,3 @@ class FieldFileRepository(RepositoryBase):
             return self.run_if_exists(fn, FieldFile, id, session)
 
         return self.response(run, True)
-
-
-    def add_foreign_keys(self, current_context, data, session, configurations):
-        """Controls if the list of foreign keys is an existing foreign key data. How to use:
-            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
-
-        errors = []
-        for config in configurations:
-            try:
-                if config[0] == 'field_id':
-                    el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
-                    if el and el.type != 'file':
-                        errors.append('The Field referenced by the \'field_id\' is not configured as file.')
-
-                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
-            except Exception as e:
-                errors.append('Could not find the given foreign key \'' + str(config[0]) + '\'')
-
-        if errors:
-            raise BadRequestError(errors)
