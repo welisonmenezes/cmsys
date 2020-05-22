@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Post, PostSchema, PostType, Language, User, Nest, Comment
+from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, FieldContent, FieldText
 from Validators import PostValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
@@ -14,12 +14,13 @@ class PostRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-            # TODO: implement the post publish_on and expire_on filters
-            # TODO: filter by child field
+        # TODO: implement the post publish_on and expire_on filters
 
         def run(session):
             fb = FilterBuilder(Post, args)
             fb.set_equals_filters(['status', 'user_id', 'parent_id', 'post_type_id', 'language_id'])
+            self.joins.append(FieldContent)
+            self.joins.append(FieldText)
 
             try:
                 fb.set_date_filter('created', date_modifier=args['date_modifier'])
@@ -28,11 +29,17 @@ class PostRepository(RepositoryBase):
                     compare_date_time_one=args['compare_date_time_one'],
                     compare_date_time_two=args['compare_date_time_two']
                 )
-                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'title', 'type':'like'}, {'field':'description', 'type':'like'}])
+                fb.set_and_or_filter('s', 'or', [
+                    {'field': 'name', 'type': 'like'},
+                    {'field': 'title', 'type': 'like'},
+                    {'field': 'description', 'type': 'like'},
+                    {'field': 'content', 'type': 'like', 'kwargs': {'joined': FieldContent}},
+                    {'field': 'content', 'type': 'like', 'kwargs': {'joined': FieldText}}
+                ])
             except Exception as e:
                 raise BadRequestError(str(e))
 
-            query = session.query(Post).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+            query = session.query(Post).join(*self.joins, isouter=True).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             schema = PostSchema(many=True, exclude=self.get_exclude_fields(args, ['user', 'language', 'parent', 'children', 'post_type', 'nests', 'groupers']))
             return self.handle_success(result, schema, 'get', 'Post')

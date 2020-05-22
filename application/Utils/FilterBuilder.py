@@ -65,15 +65,20 @@ class FilterBuilder():
             if (key in self.args and self.args[key] and isinstance(configurations, list)):
 
                 for config in configurations:
-                    
+
+                    kwa = kwargs
+                    if 'kwargs' in config:
+                        kwa = config['kwargs']
+                        kwa.update({'joined':kwa['joined'], 'joined_key': config['field']})
+
                     if config['type'] == 'like' and modifier == 'or':
-                        list_or += (self.get_context_attr(config['field'], kwargs).like('%' + self.args[key] + '%'),)
+                        list_or += (self.get_context_attr(config['field'], kwa).like('%' + self.args[key] + '%'),)
                     elif config['type'] == 'like' and modifier == 'and':
-                        list_and += (self.get_context_attr(config['field'], kwargs).like('%' + self.args[key] + '%'),)
+                        list_and += (self.get_context_attr(config['field'], kwa).like('%' + self.args[key] + '%'),)
                     elif config['type'] == 'equal' and modifier == 'or':
-                        list_or += (self.get_context_attr(config['field'], kwargs) == self.args[key],)
+                        list_or += (self.get_context_attr(config['field'], kwa) == self.args[key],)
                     elif config['type'] == 'equal' and modifier == 'and':
-                        list_and += (self.get_context_attr(config['field'], kwargs) == self.args[key],)
+                        list_and += (self.get_context_attr(config['field'], kwa) == self.args[key],)
 
                 self.filter += (or_(*list_or),)
                 self.filter += (and_(*list_and),)
