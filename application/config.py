@@ -3,8 +3,8 @@ ENV = 'development'
 DEBUG = True
 TEMPLATES_AUTO_RELOAD = True
 
-#SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/cmsys_tests'
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/cmsys'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/cmsys_tests'
+#SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/cmsys'
 DEFAULT_LIMIT_PAGINATION_RESULTS = 10
 ENABLE_LOG_FILE = False
 SECRET_KEY = '#$#gdFDKF#993FDVKkfdkj#$$2@@@@dfdlafFGÇPLO^dfe__fd'

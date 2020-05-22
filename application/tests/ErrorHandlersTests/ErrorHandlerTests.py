@@ -1,6 +1,6 @@
 import unittest
 import json
-from Utils import ErrorHandler
+from ErrorHandlers import ErrorHandler
 
 class ErrorHandlerTests(unittest.TestCase):
 

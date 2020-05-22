@@ -7,10 +7,10 @@ class Paginate():
         """Gets the SqlAlchemy query and apply on it the given page and size to generate the paginated result."""
 
         if page <= 0:
-            raise AttributeError('page needs to be >= 1')
+            raise Exception('page needs to be >= 1')
 
         if size <= 0:
-            raise AttributeError('size needs to be >= 1')
+            raise Exception('size needs to be >= 1')
 
         items = query.limit(size).offset((page - 1) * size).all()
 

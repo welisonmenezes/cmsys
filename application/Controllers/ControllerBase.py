@@ -1,6 +1,7 @@
 from flask import  request, jsonify
 from flask_restful import Resource, reqparse
-from Utils import ErrorHandler, Helper
+from Utils import Helper
+from ErrorHandlers import ErrorHandler
 
 class ControllerBase(Resource):
     """The base class that will provide basics configurations and methods to its children.

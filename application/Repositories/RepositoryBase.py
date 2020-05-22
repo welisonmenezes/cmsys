@@ -1,8 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
-from Utils import ErrorHandler, Checker
+from Utils import Checker
 from Models import Session, Media
-from ErrorHandlers import BadRequestError, NotFoundError
+from ErrorHandlers import ErrorHandler, BadRequestError, NotFoundError
 
 class RepositoryBase():
     """It Works like parent class witch must provide common attributes and methods
@@ -27,24 +27,24 @@ class RepositoryBase():
         except BadRequestError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler().get_error(408, e.message)
+            return ErrorHandler().get_error(400, e.message)
         
-        except BadRequestError as e:
+        except NotFoundError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler().get_error(409, e.message)
+            return ErrorHandler().get_error(404, e.message)
 
         except SQLAlchemyError as e:
             if (need_rollback):
                 session.rollback()
             return ErrorHandler().get_error(500, str(e))
 
-        except AttributeError as e:
+        except HTTPException as e:
             if (need_rollback):
                 session.rollback()
             return ErrorHandler().get_error(500, str(e))
 
-        except HTTPException as e:
+        except AttributeError as e:
             if (need_rollback):
                 session.rollback()
             return ErrorHandler().get_error(500, str(e))
@@ -68,10 +68,10 @@ class RepositoryBase():
                 return process(session, data)
 
             else:
-                return ErrorHandler().get_error(400, validator.get_errors())
+                raise BadRequestError(validator.get_errors())
 
         else:
-            return ErrorHandler().get_error(400, 'No data send.')
+            raise BadRequestError('No data sent.')
 
 
     def run_if_exists(self, fn, context, id, session):
@@ -81,7 +81,7 @@ class RepositoryBase():
         if (element):
             return fn(session, element)
         else:
-            return ErrorHandler().get_error(404, 'No ' + context.__tablename__ + ' found.')
+            raise NotFoundError('No ' + context.__tablename__ + ' found.')
 
 
     def get_exclude_fields(self, args, fields):
@@ -112,7 +112,7 @@ class RepositoryBase():
         elif type == 'delete':
             return { 'message': model_name + ' deleted successfully.', 'id': id }, 200
         else:
-            return ErrorHandler().get_error(500, 'Invalid success error handler parameters.')
+            raise Exception('Invalid success error handler parameters.')
 
 
     def get_suggestions(self, name, context, session):
@@ -163,28 +163,36 @@ class RepositoryBase():
             if (element):
                 return element if get_all_filelds else element.id
             else:
-                raise Exception('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))
+                raise NotFoundError('Cannont find '+ str(context.__tablename__) + ': ' + str( data[key]))
 
 
     def is_foreigners(self, configurations, session):
         """Verifies if is a foreigner on any given context at configuration, if so, return errors. How to use:
             The configuration must like: [(current_context, foreign_key_at_target_context, target_context)]"""
 
+        errors = []
         for config in configurations:
             filter = (getattr(config[2], config[1])==getattr(config[0], 'id'),)
             element = session.query(getattr(config[2], 'id')).filter(*filter).first()
             if element:
-                raise AttributeError('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
+                errors.append('You cannot delete this ' + config[0].__class__.__name__ + ' because it has a related ' + config[2].__tablename__)
+
+        if errors:
+            raise BadRequestError(errors)
 
     def add_foreign_keys(self, current_context, data, session, configurations):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
+        errors = []
         for config in configurations:
             try:
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
             except Exception as e:
-                raise Exception(e)
+                errors.append('Could not find the given foreign key \'' + str(config[0]) + '\'')
+
+        if errors:
+            raise BadRequestError(errors)
 
 
     def set_any_reference_as_null_to_delete(self, instance, request, session, configurations):
@@ -192,6 +200,7 @@ class RepositoryBase():
             Note that this only occurs if the 'remove_foreign_key' passed by request param was equals 1.
             How to use: The configuration must like: [(foreign_key_at_target_context, target_context)]"""
 
+        errors = []
         for config in configurations:
             try:
                 if 'remove_foreign_keys' in request.args and request.args['remove_foreign_keys'] == '1':
@@ -203,10 +212,13 @@ class RepositoryBase():
                     filter = (getattr(config[1], config[0])==instance.id,)
                     element = session.query(getattr(config[1], 'id')).filter(*filter).first()
                     if element:
-                        raise AttributeError('You cannot delete this ' + instance.__class__.__name__ + ' because it has a related ' + config[1].__tablename__)
+                        errors.append('You cannot delete this ' + instance.__class__.__name__ + ' because it has a related ' + config[1].__tablename__)
 
             except Exception as e:
-                raise Exception(e)
+                errors.append(str(e))
+
+        if errors:
+            raise BadRequestError(errors)
 
 
     def set_children_as_null_to_delete(self, instance, context, session):
@@ -222,13 +234,18 @@ class RepositoryBase():
             to add into the given instance"""
 
         if (key in data and isinstance(data[key], list)):
+
+            errors = []
             for related in data[key]:
                 if (related and Checker().can_be_integer(related)):
                     registered_related = session.query(context_target).filter_by(id=int(related)).first()
                     if (registered_related):
                         getattr(instance, key).append(registered_related)
                     else:
-                        raise AttributeError(context_target.__tablename__ + ' ' + str(related) + ' does not exists.')
+                        errors.append(context_target.__tablename__ + ' ' + str(related) + ' does not exists.')
+
+            if errors:
+                raise NotFoundError(errors)
 
 
     def edit_many_to_many_relationship(self, key, instance, data, context_target, session):
@@ -265,14 +282,18 @@ class RepositoryBase():
         """Verify if the given data has the same foreign data that its parent. How to use:
             The configuration must like: [('parent_key','referenced_key', 'context_target')]"""
 
+        errors = []
         for config in configurations:
             try:
                 if config[0] in data and config[1] in data:
                     parent = session.query(getattr(config[2], config[1])).filter_by(id=int(data[config[0]])).first()
                     if parent and parent[0] != int(data[config[1]]):
-                        raise AttributeError('The ' + config[1] + ' must the same as your father\'s, witch is: ' + str(parent[0]) + '.')
+                        errors.append('The ' + config[1] + ' must be the same as your father\'s, witch is: ' + str(parent[0]) + '.')
             except Exception as e:
-                raise Exception(e)
+                errors.append(str(e))
+
+        if errors:
+            raise BadRequestError(errors)
 
 
     def delete_deep_chidren(self, parent, context, session):
