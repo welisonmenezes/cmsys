@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Capability, CapabilitySchema
 from Validators import CapabilityValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class CapabilityRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -81,7 +82,7 @@ class CapabilityRepository(RepositoryBase):
 
             def fn(session, capability):
                 if capability.roles:
-                    return ErrorHandler().get_error(406, 'You cannot delete this Capability because it has a related Role.')
+                    raise BadRequestError('You cannot delete this Capability because it has a related Role.')
                 session.delete(capability)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Capability', id)
@@ -110,4 +111,4 @@ class CapabilityRepository(RepositoryBase):
         if not capability:
             return capability
         else:
-            raise AttributeError('The capability ' + str(capability.id) + ' has exactly the same configurations.')
+            raise BadRequestError('The capability ' + str(capability.id) + ' has exactly the same configurations.')

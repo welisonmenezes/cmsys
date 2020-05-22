@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Grouper, GrouperSchema, Post, Field
 from Validators import GrouperValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class GrouperRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -18,7 +19,7 @@ class GrouperRepository(RepositoryBase):
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Grouper).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -73,7 +74,7 @@ class GrouperRepository(RepositoryBase):
                     self.add_foreign_keys(grouper, data, session, [('parent_id', Grouper), ('post_id', Post)])
 
                     if grouper.parent_id and int(grouper.parent_id) == int(id):
-                        return ErrorHandler().get_error(400, 'The Grouper cannot be parent of yourself.')
+                        raise BadRequestError('The Grouper cannot be parent of yourself.')
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Grouper', grouper.id)

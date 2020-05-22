@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import Role, RoleSchema, Capability
 from Validators import RoleValidator, CapabilityValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
 
 class RoleRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the

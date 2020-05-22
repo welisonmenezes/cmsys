@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Variable, VariableSchema
 from Validators import VariableValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class VariableRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -17,7 +18,7 @@ class VariableRepository(RepositoryBase):
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'key', 'type':'like'}, {'field':'value', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Variable).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

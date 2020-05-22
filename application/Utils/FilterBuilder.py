@@ -1,6 +1,6 @@
 from sqlalchemy import desc, asc, not_, or_, and_
-from Utils import Checker, Helper
 from app import app
+from Utils import Checker, Helper
 
 class FilterBuilder():
     """Builds the filter tuple. Puts into the given context the

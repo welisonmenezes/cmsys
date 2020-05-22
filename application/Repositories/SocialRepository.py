@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Social, SocialSchema, Configuration, User
 from Validators import SocialValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class SocialRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -98,12 +99,12 @@ class SocialRepository(RepositoryBase):
                 setattr(current_context, config[0], None)
 
                 if getattr(current_context, 'origin') == 'configuration' and config[0] == 'user_id' and 'user_id' in data:
-                    raise AttributeError('If the \'origin\' is \'configuration\' you dont have to send the \'user_id\'.')
+                    raise BadRequestError('If the \'origin\' is \'configuration\' you dont have to send the \'user_id\'.')
 
                 if getattr(current_context, 'origin') == 'user' and config[0] == 'configuration_id' and 'configuration_id' in data:
-                    raise AttributeError('If the \'origin\' is \'user\' you dont have to send the \'configuration_id\'.')
+                    raise BadRequestError('If the \'origin\' is \'user\' you dont have to send the \'configuration_id\'.')
                 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 
             except Exception as e:
-                raise Exception(e)
+                raise BadRequestError(str(e))

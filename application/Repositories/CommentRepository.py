@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Comment, CommentSchema, User, Post, Language
 from Validators import CommentValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class CommentRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -24,7 +25,7 @@ class CommentRepository(RepositoryBase):
                     compare_date_time_two=args['compare_date_time_two']
                 )
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Comment).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -80,7 +81,7 @@ class CommentRepository(RepositoryBase):
                     self.add_foreign_keys(comment, data, session, [('user_id', User), ('post_id', Post), ('language_id', Language), ('parent_id', Comment)])
                     
                     if comment.parent_id and int(comment.parent_id) == int(id):
-                        return ErrorHandler().get_error(400, 'The Comment cannot be parent of yourself.')
+                        raise BadRequestError('The Comment cannot be parent of yourself.')
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Comment', comment.id)

@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Menu, MenuSchema, Language, Sector, MenuItem
 from Validators import MenuValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 # TODO: from menu to be able to save/update/delete menu items
 
@@ -20,7 +21,7 @@ class MenuRepository(RepositoryBase):
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Menu).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

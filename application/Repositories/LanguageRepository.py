@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Language, LanguageSchema, Configuration, Post, Menu, Comment
 from Validators import LanguageValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class LanguageRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -75,10 +76,10 @@ class LanguageRepository(RepositoryBase):
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
         
-        if id == 1:
-            return ErrorHandler().get_error(400, 'The Primary Language cannot be be deleted.')
-        
         def run(session):
+
+            if id == 1:
+                raise BadRequestError('The Primary Language cannot be be deleted.')
 
             def fn(session, language):
 

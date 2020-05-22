@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Template, TemplateSchema, PostType
 from Validators import TemplateValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class TemplateRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -17,7 +18,7 @@ class TemplateRepository(RepositoryBase):
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Template).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())

@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Nest, NestSchema, Post, PostType
 from Validators import NestValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class NestRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -18,7 +19,7 @@ class NestRepository(RepositoryBase):
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Nest).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -105,8 +106,8 @@ class NestRepository(RepositoryBase):
 
                     el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
                     if el and el.type != 'nested-page':
-                        raise AttributeError('The Post_Type must have the type \'nested-page\'.')
+                        raise BadRequestError('The Post_Type must have the type \'nested-page\'.')
 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
             except Exception as e:
-                raise Exception(e)
+                raise BadRequestError(str(e))

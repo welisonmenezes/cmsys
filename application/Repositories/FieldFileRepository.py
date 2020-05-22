@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import FieldFile, FieldFileSchema, Field, Media, Post, Grouper
 from Validators import FieldFileValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder
+from Utils import Paginate, FilterBuilder
 
 class FieldFileRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the

@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Configuration, ConfigurationSchema, Language
 from Validators import ConfigurationValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 # TODO: from configuration to be able to save/update/delete socials
 
@@ -20,7 +21,7 @@ class ConfigurationRepository(RepositoryBase):
             try:
                 fb.set_and_or_filter('s', 'or', [{'field':'title', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Configuration).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -84,10 +85,10 @@ class ConfigurationRepository(RepositoryBase):
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        if id == 1:
-            return ErrorHandler().get_error(400, 'The Primary configuration row cannot be deleted.')
-
         def run(session):
+
+            if id == 1:
+                raise BadRequestError('The Primary configuration row cannot be deleted.')
 
             def fn(session, configuration):
                 session.delete(configuration)

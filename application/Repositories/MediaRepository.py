@@ -4,7 +4,8 @@ from app import app
 from .RepositoryBase import RepositoryBase
 from Models import Media, MediaSchema, User
 from Validators import MediaValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError, NotFoundError
 
 class MediaRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -27,7 +28,7 @@ class MediaRepository(RepositoryBase):
                 )
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Media).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -55,7 +56,7 @@ class MediaRepository(RepositoryBase):
                 }, 200
                 
             else:
-                return ErrorHandler().get_error(404, 'No Media found.')
+                raise NotFoundError('No Media found.')
 
         return self.response(run, False)
 
@@ -77,7 +78,7 @@ class MediaRepository(RepositoryBase):
             if (result):
                 return self.file_response(result, False)
             else:
-                return ErrorHandler().get_error(404, 'Culd not load this file.')
+                raise NotFoundError('Could not load this file.')
 
         return self.response(run, False)
 
@@ -107,7 +108,7 @@ class MediaRepository(RepositoryBase):
                 try:
                     file_details = Helper().get_file_details_from_request(data)
                 except Exception as e:
-                    return ErrorHandler().get_error(400, e)
+                    raise BadRequestError(str(e))
 
                 media = Media(
                     type = file_details['type'],
@@ -142,7 +143,7 @@ class MediaRepository(RepositoryBase):
                         try:
                             file_details = Helper().get_file_details_from_request(data)
                         except Exception as e:
-                            return ErrorHandler().get_error(400, e)
+                            raise BadRequestError(str(e))
 
                         media.type = file_details['type']
                         media.file = file_details['data']

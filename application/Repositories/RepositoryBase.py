@@ -2,6 +2,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
 from Utils import ErrorHandler, Checker
 from Models import Session, Media
+from ErrorHandlers import BadRequestError, NotFoundError
 
 class RepositoryBase():
     """It Works like parent class witch must provide common attributes and methods
@@ -23,6 +24,16 @@ class RepositoryBase():
         try:
             return run(session)
 
+        except BadRequestError as e:
+            if (need_rollback):
+                session.rollback()
+            return ErrorHandler().get_error(408, e.message)
+        
+        except BadRequestError as e:
+            if (need_rollback):
+                session.rollback()
+            return ErrorHandler().get_error(409, e.message)
+
         except SQLAlchemyError as e:
             if (need_rollback):
                 session.rollback()
@@ -31,7 +42,7 @@ class RepositoryBase():
         except AttributeError as e:
             if (need_rollback):
                 session.rollback()
-            return ErrorHandler().get_error(400, str(e))
+            return ErrorHandler().get_error(500, str(e))
 
         except HTTPException as e:
             if (need_rollback):

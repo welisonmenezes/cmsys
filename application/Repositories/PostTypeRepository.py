@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
 from Models import PostType, PostTypeSchema, Template, Post, Nest
 from Validators import PostTypeValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
 
 class PostTypeRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the

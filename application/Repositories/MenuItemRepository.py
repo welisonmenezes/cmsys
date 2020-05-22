@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import MenuItem, MenuItemSchema, Menu
 from Validators import MenuItemValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class MenuItemRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -77,7 +78,7 @@ class MenuItemRepository(RepositoryBase):
                     self.add_foreign_keys(menu_item, data, session, [('parent_id', MenuItem), ('menu_id', Menu)])
 
                     if menu_item.parent_id and int(menu_item.parent_id) == int(id):
-                        return ErrorHandler().get_error(400, 'The MenuItem cannot be parent of yourself.')
+                        raise BadRequestError('The MenuItem cannot be parent of yourself.')
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'MenuItem', menu_item.id)

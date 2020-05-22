@@ -1,7 +1,8 @@
 from .RepositoryBase import RepositoryBase
 from Models import Post, PostSchema, PostType, Language, User, Nest, Comment
 from Validators import PostValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 # TODO: from post to be able to save/update/delete grouper and fields
 
@@ -29,7 +30,7 @@ class PostRepository(RepositoryBase):
                 )
                 fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'title', 'type':'like'}, {'field':'description', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(Post).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -101,7 +102,7 @@ class PostRepository(RepositoryBase):
                     self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
 
                     if post.parent_id and int(post.parent_id) == int(id):
-                        return ErrorHandler().get_error(400, 'The Post cannot be parent of yourself.')
+                        raise BadRequestError('The Post cannot be parent of yourself.')
 
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Post', post.id)
@@ -148,9 +149,9 @@ class PostRepository(RepositoryBase):
 
                     el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
                     if el and el.post_type and el.post_type.type != 'post-page':
-                        raise AttributeError('The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'post-page\'.')
+                        raise BadRequestError('The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'post-page\'.')
 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 
             except Exception as e:
-                raise Exception(e)
+                raise BadRequestError(str(e))

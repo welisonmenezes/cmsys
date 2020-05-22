@@ -2,7 +2,8 @@ from app import bcrypt
 from .RepositoryBase import RepositoryBase
 from Models import User, UserSchema, Media, Post, Role, Social, Comment
 from Validators import UserValidator
-from Utils import Paginate, ErrorHandler, FilterBuilder, Helper, Checker
+from Utils import Paginate, FilterBuilder, Helper, Checker
+from ErrorHandlers import BadRequestError, NotFoundError
 
 # TODO: from user to be able to save/update/delete socials
 
@@ -28,7 +29,7 @@ class UserRepository(RepositoryBase):
                 )
                 fb.set_and_or_filter('s', 'or', [{'field':'first_name', 'type':'like'}, {'field':'last_name', 'type':'like'}, {'field':'nickname', 'type':'like'}])
             except Exception as e:
-                return ErrorHandler().get_error(400, str(e))
+                raise BadRequestError(str(e))
 
             query = session.query(User).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -102,10 +103,10 @@ class UserRepository(RepositoryBase):
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        if id == 1:
-            return ErrorHandler().get_error(400, 'The Super Admin user cannot be deleted.')
-
         def run(session):
+
+            if id == 1:
+                raise BadRequestError('The Super Admin user cannot be deleted.')
 
             def fn(session, user):
                 self.delegate_content_to_delete(user,session, request, (Media, Post))
@@ -127,17 +128,17 @@ class UserRepository(RepositoryBase):
         for config in configurations:
             try:
                 if getattr(current_context, 'id') == 1 and config[0] == 'role_id':
-                    raise AttributeError('You cannot change the role of the primary user admin.')
+                    raise BadRequestError('You cannot change the role of the primary user admin.')
 
                 if config[0] == 'avatar_id' and config[0] in data:
                     image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
                     if not image or not Checker().is_image_type(image.type):
-                        raise AttributeError('The user avatar must be an image file.')
+                        raise BadRequestError('The user avatar must be an image file.')
                 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 
             except Exception as e:
-                raise Exception(e)
+                raise BadRequestError(str(e))
 
 
     def delegate_content_to_delete(self, user, session, request, context_list):
@@ -154,9 +155,9 @@ class UserRepository(RepositoryBase):
                         if admin:
                             c.user_id = admin.id
                         else:
-                            raise AttributeError('Could not find the super admin user.')
+                            raise NotFoundError('Could not find the super admin user.')
                 else:
-                    raise AttributeError('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
+                    raise BadRequestError('You cannot delete this User because it has related ' + content_context.__tablename__ + '.')
 
 
     def delete_user_comments(self, user, session):
