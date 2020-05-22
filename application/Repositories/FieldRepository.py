@@ -71,7 +71,7 @@ class FieldRepository(RepositoryBase):
                 def fn(session, field):
 
                     if 'type' in data and data['type'] != field.type:
-                        self.delete_children(session, field)
+                        self.delete_children(session, id, [('field_id', FieldContent), ('field_id', FieldFile), ('field_id', FieldText)])
 
                     Helper().fill_object_from_data(field, data, ['name', 'description', 'type', 'order', 'grouper_id', 'post_id'])
                     self.raise_if_has_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
@@ -92,7 +92,7 @@ class FieldRepository(RepositoryBase):
         def run(session):
 
             def fn(session, field):
-                self.delete_children(session, field)
+                self.delete_children(session, id, [('field_id', FieldContent), ('field_id', FieldFile), ('field_id', FieldText)])
                 session.delete(field)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Field', id)
@@ -100,11 +100,3 @@ class FieldRepository(RepositoryBase):
             return self.run_if_exists(fn, Field, id, session)
 
         return self.response(run, True)
-
-
-    def delete_children(self, session, field):
-        """Delete the Field children."""
-
-        session.query(FieldContent).filter_by(field_id=field.id).delete(synchronize_session='evaluate')
-        session.query(FieldFile).filter_by(field_id=field.id).delete(synchronize_session='evaluate')
-        session.query(FieldText).filter_by(field_id=field.id).delete(synchronize_session='evaluate')

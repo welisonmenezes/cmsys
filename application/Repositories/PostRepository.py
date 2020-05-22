@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, FieldContent, FieldText
+from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, FieldContent, FieldText, FieldFile, Field, Grouper
 from Validators import PostValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
@@ -129,13 +129,13 @@ class PostRepository(RepositoryBase):
             def fn(session, post):
 
                 # TODO: forbid delete post that is term page (or update the term page)
-                # TODO: delete field_file when delete a post
-                # TODO: delete field when delete a post
-                # TODO: delete grouper when delete a post
 
                 self.set_any_reference_as_null_to_delete(post, request, session, [('page_id', User), ('parent_id', Post)])
-                session.query(Comment).filter_by(post_id=post.id).delete(synchronize_session='evaluate')
-                session.query(Nest).filter_by(post_id=post.id).delete(synchronize_session='evaluate')
+                self.delete_children(session, id, [
+                    ('post_id', Comment), ('post_id', Nest),
+                    ('post_id', FieldContent), ('post_id', FieldFile), ('post_id', FieldText), 
+                    ('post_id', Field), ('post_id', Grouper)
+                ])
                 session.delete(post)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Post', id)

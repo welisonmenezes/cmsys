@@ -90,7 +90,7 @@ class MenuRepository(RepositoryBase):
         def run(session):
 
             def fn(session, menu):
-                session.query(MenuItem).filter_by(menu_id=menu.id).delete(synchronize_session='evaluate')
+                self.delete_children(session, id, [('menu_id', MenuItem)])
                 session.delete(menu)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Menu', id)

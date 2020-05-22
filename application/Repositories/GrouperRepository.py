@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Grouper, GrouperSchema, Post, Field
+from Models import Grouper, GrouperSchema, Post, Field, FieldFile, FieldContent, FieldText
 from Validators import GrouperValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
@@ -92,10 +92,7 @@ class GrouperRepository(RepositoryBase):
         def run(session):
 
             def fn(session, grouper):
-
-                # TODO: when delete, also delete its field (content, text or file)
-
-                session.query(Field).filter_by(grouper_id=id).delete(synchronize_session='evaluate')
+                self.delete_children(session, id, [('grouper_id', FieldContent), ('grouper_id', FieldFile), ('grouper_id', FieldText), ('grouper_id', Field)])
                 self.delete_deep_chidren(grouper, Grouper, session)
                 session.delete(grouper)
                 session.commit()

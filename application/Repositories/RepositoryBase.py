@@ -304,3 +304,13 @@ class RepositoryBase():
             for child in children:
                 self.delete_deep_chidren(child, context, session)
                 session.delete(child)
+
+
+    def delete_children(self, session, id, configurations):
+        """Delete the Field children. Attention to cascading order. How to use: 
+            The configurations must like: [(target_key, target_context)]"""
+
+        for config in configurations:
+            print(config)
+            filter = (getattr(config[1], config[0])==id,)
+            session.query(config[1]).filter(*filter).delete(synchronize_session='evaluate')

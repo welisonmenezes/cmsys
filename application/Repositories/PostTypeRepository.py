@@ -81,7 +81,7 @@ class PostTypeRepository(RepositoryBase):
 
             def fn(session, post_type):
                 self.is_foreigners([(post_type, 'post_type_id', Post)], session)
-                session.query(Nest).filter_by(post_type_id=post_type.id).delete(synchronize_session='evaluate')
+                self.delete_children(session, id, [('post_type_id', Nest)])
                 session.delete(post_type)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'PostType', id)

@@ -111,7 +111,7 @@ class UserRepository(RepositoryBase):
             def fn(session, user):
                 self.delegate_content_to_delete(user,session, request, (Media, Post))
                 self.delete_user_comments(user, session)
-                session.query(Social).filter_by(user_id=user.id).delete(synchronize_session='evaluate')
+                self.delete_children(session, id, [('user_id', Social)])
                 session.delete(user)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'User', id)
