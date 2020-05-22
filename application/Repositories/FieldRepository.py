@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Field, FieldSchema, Post, Grouper
+from Models import Field, FieldSchema, Post, Grouper, FieldContent, FieldFile, FieldText
 from Validators import FieldValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
@@ -69,10 +69,11 @@ class FieldRepository(RepositoryBase):
             def process(session, data):
                 
                 def fn(session, field):
+
+                    if 'type' in data and data['type'] != field.type:
+                        self.delete_children(session, field)
+
                     Helper().fill_object_from_data(field, data, ['name', 'description', 'type', 'order', 'grouper_id', 'post_id'])
-
-                    # TODO: when the type of a Fild was changed, delete its related child
-
                     self.raise_if_has_different_parent_reference(data, session, [('grouper_id', 'post_id', Grouper)])
                     self.add_foreign_keys(field, data, session, [('post_id', Post), ('grouper_id', Grouper)])
                     session.commit()
@@ -91,9 +92,7 @@ class FieldRepository(RepositoryBase):
         def run(session):
 
             def fn(session, field):
-
-                # TODO: when to delete a Field, delete also its children (text, content or file)
-
+                self.delete_children(session, field)
                 session.delete(field)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Field', id)
@@ -101,3 +100,11 @@ class FieldRepository(RepositoryBase):
             return self.run_if_exists(fn, Field, id, session)
 
         return self.response(run, True)
+
+
+    def delete_children(self, session, field):
+        """Delete the Field children."""
+
+        session.query(FieldContent).filter_by(field_id=field.id).delete(synchronize_session='evaluate')
+        session.query(FieldFile).filter_by(field_id=field.id).delete(synchronize_session='evaluate')
+        session.query(FieldText).filter_by(field_id=field.id).delete(synchronize_session='evaluate')

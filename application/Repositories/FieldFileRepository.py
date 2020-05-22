@@ -3,6 +3,8 @@ from Models import FieldFile, FieldFileSchema, Field, Media, Post, Grouper
 from Validators import FieldFileValidator
 from Utils import Paginate, FilterBuilder
 
+# TODO: forbid save/update if field type is equals file
+
 class FieldFileRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of FieldFile."""

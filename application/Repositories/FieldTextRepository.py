@@ -3,6 +3,8 @@ from Models import FieldText, FieldTextSchema, Field, Grouper, Post
 from Validators import FieldTextValidator
 from Utils import Paginate, FilterBuilder, Helper
 
+# TODO: forbid save/update if field type is equals short-text
+
 class FieldTextRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of FieldText."""

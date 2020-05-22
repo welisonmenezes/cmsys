@@ -3,6 +3,8 @@ from Models import FieldContent, FieldContentSchema, Field, Grouper, Post
 from Validators import FieldContentValidator
 from Utils import Paginate, FilterBuilder, Helper
 
+# TODO: forbid save/update if field type is equals long-text
+
 class FieldContentRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of FieldContent."""
