@@ -3,29 +3,27 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 
-# TODO: create a global location where Exceptions are processed
-
-# create application
+# Create the application
 app = Flask(__name__, template_folder='Views/UI', static_folder='Views/UI/static')
 app.config.from_pyfile('config.py')
 bcrypt = Bcrypt(app)
 
-# configurate logging
+# Start the logging
 if app.config['ENABLE_LOG_FILE']:
     from Utils import Logger
     Logger(app)
 
-# create api blueprint
+# Create the API and the Blueprint
 ApiBP = Blueprint('ApiBP', __name__, url_prefix='/api')
 cors = CORS(ApiBP, resources={r"/api/*": {"origins": "*"}})
 api = Api(ApiBP)
 app.register_blueprint(ApiBP)
 
-# start controllers
+# Start the controllers
 from Controllers import start_controllers
 start_controllers(app, api)
 
-# start views
+# Start the view
 from Views import start_view
 start_view(app)
 

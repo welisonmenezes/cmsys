@@ -5,6 +5,7 @@ from .ConfigurationRepository import *
 from .FieldRepository import *
 from .FieldContentRepository import *
 from .FieldFileRepository import *
+from .FieldTextRepository import *
 from .GrouperRepository import *
 from .LanguageRepository import *
 from .MediaRepository import *

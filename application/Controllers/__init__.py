@@ -6,6 +6,7 @@ from .ConfigurationController import *
 from .FieldController import *
 from .FieldContentController import *
 from .FieldFileController import *
+from .FieldTextController import *
 from .GrouperController import *
 from .LanguageController import *
 from .MediaController import *
@@ -25,7 +26,7 @@ from .VariableController import *
 def start_controllers(app, api):
     """Sets all routers of this API. Starts the Resources (Controllers) the will respond the http requests."""
 
-    ControllerBase.error_routers(app)
+    ControllerBase.default_routers(app)
     
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
@@ -34,6 +35,7 @@ def start_controllers(app, api):
     api.add_resource(FieldController, '/field', '/field/<int:id>')
     api.add_resource(FieldContentController, '/field-content', '/field-content/<int:id>')
     api.add_resource(FieldFileController, '/field-file', '/field-file/<int:id>')
+    api.add_resource(FieldTextController, '/field-text', '/field-text/<int:id>')
     api.add_resource(GrouperController, '/grouper', '/grouper/<int:id>')
     api.add_resource(LanguageController, '/language', '/language/<int:id>')
     api.add_resource(MediaController, '/media', '/media/<id>', '/media/preview/<id>', '/media/suggestions/<name>')

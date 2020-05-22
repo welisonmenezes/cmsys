@@ -5,6 +5,7 @@ from .ConfigurationValidator import *
 from .FieldValidator import *
 from .FieldContentValidator import *
 from .FieldFileValidator import *
+from .FieldTextValidator import *
 from .GrouperValidator import *
 from .LanguageValidator import *
 from .MediaValidator import *

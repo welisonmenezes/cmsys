@@ -60,7 +60,7 @@ class ControllerBase(Resource):
 
 
     @staticmethod
-    def error_routers(app):
+    def default_routers(app):
         """Implements the error routes of the api."""
 
         # Error 404 handler
