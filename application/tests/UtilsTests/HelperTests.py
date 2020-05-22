@@ -5,6 +5,7 @@ import datetime
 import base64
 from app import app
 from Utils import Helper
+from Models import Post
 
 class HelperTests(unittest.TestCase):
 
@@ -109,6 +110,21 @@ class HelperTests(unittest.TestCase):
         response = str(args)
 
         self.assertEqual(payload, response, 'Helper().add_request_data does not return \'[(\'key-1\',), (\'key-2\',)]\'')
+
+
+    def test_Helper_fill_object_from_data(self):
+        post = Post()
+        data = {
+            'title': 'title-test',
+            'name': 'name-test'
+        }
+        Helper().fill_object_from_data(post, data, ['title', 'name'])
+        payload_1 = 'title-test'
+        payload_2 = 'name-test'
+        response_1 = post.title
+        response_2 = post.name
+        self.assertEqual(payload_1, response_1, 'Helper().fill_object_from_data does not return \'title-test\'.')
+        self.assertEqual(payload_2, response_2, 'Helper().fill_object_from_data does not return \'name-test\'.')
     
 
     def tearDown(self):
