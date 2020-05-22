@@ -2,8 +2,9 @@ from .RepositoryBase import RepositoryBase
 from Models import FieldContent, FieldContentSchema, Field, Grouper, Post
 from Validators import FieldContentValidator
 from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
-# TODO: forbid save/update if field type is equals long-text
+# TODO: forbid save new field type if already exists any ohter at the specified field
 
 class FieldContentRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -91,3 +92,23 @@ class FieldContentRepository(RepositoryBase):
             return self.run_if_exists(fn, FieldContent, id, session)
 
         return self.response(run, True)
+
+
+    def add_foreign_keys(self, current_context, data, session, configurations):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        errors = []
+        for config in configurations:
+            try:
+                if config[0] == 'field_id':
+                    el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+                    if el and el.type != 'long-text':
+                        errors.append('The Field referenced by the \'field_id\' is not configured as long-text.')
+
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+            except Exception as e:
+                errors.append('Could not find the given foreign key \'' + str(config[0]) + '\'')
+
+        if errors:
+            raise BadRequestError(errors)
