@@ -326,7 +326,9 @@ class RepositoryBase():
             try:
                 if config[0] == 'field_id':
                     el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+
                     if el:
+                        
                         if el.type != field_type:
                             errors.append('The Field referenced by the \'field_id\' is not configured as ' + field_type + '.')
 

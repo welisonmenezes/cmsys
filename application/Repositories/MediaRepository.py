@@ -2,7 +2,7 @@ from flask import make_response
 import base64
 from app import app
 from .RepositoryBase import RepositoryBase
-from Models import Media, MediaSchema, User
+from Models import Media, MediaSchema, User, FieldFile
 from Validators import MediaValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError, NotFoundError
@@ -164,11 +164,7 @@ class MediaRepository(RepositoryBase):
         def run(session):
 
             def fn(session, media):
-
-                # TODO: check if media can be deleted (if any post is related to the media, it cannot be deleted)
-
-                self.is_foreigners([(media, 'avatar_id', User)], session)
-
+                self.is_foreigners([(media, 'avatar_id', User), (media, 'media_id', FieldFile)], session)
                 session.delete(media)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Media', id)
