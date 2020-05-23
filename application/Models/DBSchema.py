@@ -11,7 +11,7 @@ exclude_comment = ('parent', 'children', 'language', 'user', 'post')
 exclude_menu_item = ('parent', 'children', 'menu')
 exclude_grouper = ('parent', 'post')
 exclude_field = ('post', 'grouper')
-exclude_term = ('parent', 'children', 'posts', 'language')
+exclude_term = ('parent', 'children', 'language')
 
 class BlacklistSchema(ma.Schema):
     class Meta:
@@ -160,13 +160,13 @@ class TemplateSchema(ma.Schema):
 
 
 class TermSchema(ma.Schema):
-    posts = fields.Nested('PostSchema', many=True, exclude=exclude_post)
+    #posts = fields.Nested('PostSchema', many=True, exclude=exclude_post)
     language = fields.Nested('LanguageSchema', many=False)
     parent = fields.Nested('TermSchema', many=False, exclude=exclude_term)
     children = fields.Nested('TermSchema', many=True, exclude=exclude_term)
     class Meta:
         fields = ('id', 'name', 'display_name', 'description', 'parent_id', 'page_id',
-        'taxonomy_id', 'language_id', 'posts', 'language', 'parent', 'children')
+        'taxonomy_id', 'language_id', 'language', 'parent', 'children')
 
 
 class UserSchema(ma.Schema):

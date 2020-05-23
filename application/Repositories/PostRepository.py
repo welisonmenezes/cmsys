@@ -1,7 +1,7 @@
 from .RepositoryBase import RepositoryBase
-from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, FieldContent, FieldText, FieldFile, Field, Grouper
+from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, FieldContent, FieldText, FieldFile, Field, Grouper, Term
 from Validators import PostValidator
-from Utils import Paginate, FilterBuilder, Helper
+from Utils import Paginate, FilterBuilder, Helper, Checker
 from ErrorHandlers import BadRequestError
 
 # TODO: from post to be able to save/update/delete grouper and fields
@@ -21,6 +21,10 @@ class PostRepository(RepositoryBase):
             fb.set_equals_filters(['status', 'user_id', 'parent_id', 'post_type_id', 'language_id'])
             self.joins.append(FieldContent)
             self.joins.append(FieldText)
+
+            if (args['term_id'] and args['term_id'] != '' and Checker().can_be_integer(args['term_id'])):
+                fb.set_like_filter('term_id', joined=Term, joined_key='id')
+                self.joins.append(Post.terms)
 
             try:
                 fb.set_date_filter('created', date_modifier=args['date_modifier'])

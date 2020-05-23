@@ -16,8 +16,8 @@ class RoleRepository(RepositoryBase):
             fb.set_equals_filters(['can_access_admin'])
             fb.set_like_filters(['name', 'description'])
 
-            fb.set_like_filter('capability_description', joined=Capability, joined_key='description')
             if (args['capability_description'] and args['capability_description'] != ''):
+                fb.set_like_filter('capability_description', joined=Capability, joined_key='description')
                 self.joins.append(Role.capabilities)
             
             query = session.query(Role).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())

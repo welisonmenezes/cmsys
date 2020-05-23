@@ -22,7 +22,7 @@ class TermRepository(RepositoryBase):
 
             query = session.query(Term).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = TermSchema(many=True, exclude=self.get_exclude_fields(args, ['posts', 'language', 'parent', 'children']))
+            schema = TermSchema(many=True, exclude=self.get_exclude_fields(args, ['language', 'parent', 'children']))
             return self.handle_success(result, schema, 'get', 'Term')
 
         return self.response(run, False)
@@ -34,7 +34,7 @@ class TermRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Term).filter_by(id=id).first()
-            schema = TermSchema(many=False, exclude=self.get_exclude_fields(args, ['posts', 'language', 'parent', 'children']))
+            schema = TermSchema(many=False, exclude=self.get_exclude_fields(args, ['language', 'parent', 'children']))
             return self.handle_success(result, schema, 'get_by_id', 'Term')
 
         return self.response(run, False)
