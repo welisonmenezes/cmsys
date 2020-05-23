@@ -18,5 +18,6 @@ from .RoleValidator import *
 from .SectorValidator import *
 from .SocialValidator import *
 from .TemplateValidator import *
+from .TermValidator import *
 from .UserValidator import *
 from .VariableValidator import *

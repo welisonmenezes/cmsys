@@ -157,6 +157,11 @@ class TemplateSchema(ma.Schema):
         fields = ('id', 'name', 'description', 'value', 'post_types')
 
 
+class TermSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id')
+
+
 class UserSchema(ma.Schema):
     role = fields.Nested('RoleSchema', many=False, exclude=('capabilities',))
     socials = fields.Nested('RoleSchema', many=True)

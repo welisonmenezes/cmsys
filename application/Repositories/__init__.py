@@ -18,5 +18,6 @@ from .RoleRepository import *
 from .SectorRepository import *
 from .SocialRepository import *
 from .TemplateRepository import *
+from .TermRepository import *
 from .UserRepository import *
 from .VariableRepository import *

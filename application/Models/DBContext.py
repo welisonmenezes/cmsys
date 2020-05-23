@@ -338,7 +338,7 @@ class Term(Base):
     __tablename__ = 'Term'
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False, unique=True)
-    display_name = Column(String(100), nullable=True)
+    display_name = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
     # foreignKeys
     parent_id = Column(Integer, ForeignKey('Term.id'), nullable=True)
