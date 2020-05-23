@@ -13,11 +13,16 @@ class TermRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Term, args)
-            #fb.set_equals_filters(['type', 'target'])
-            #fb.set_like_filters(['value'])
+            fb.set_like_filters(['parent_id', 'taxonomy_id', 'language_id'])
+
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'display_name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                raise BadRequestError(str(e))
+
             query = session.query(Term).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = TermSchema(many=True)
+            schema = TermSchema(many=True, exclude=self.get_exclude_fields(args, ['posts', 'language', 'parent', 'children']))
             return self.handle_success(result, schema, 'get', 'Term')
 
         return self.response(run, False)
@@ -29,7 +34,7 @@ class TermRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Term).filter_by(id=id).first()
-            schema = TermSchema(many=False)
+            schema = TermSchema(many=False, exclude=self.get_exclude_fields(args, ['posts', 'language', 'parent', 'children']))
             return self.handle_success(result, schema, 'get_by_id', 'Term')
 
         return self.response(run, False)
@@ -41,11 +46,16 @@ class TermRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
+
+                # TODO: implement the Term relationships transformations
+
                 term = Term()
                 Helper().fill_object_from_data(term, data, ['name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id'])
                 session.add(term)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Term', term.id)
+
+                # TODO: implement slugfy to the Term name
 
             return self.validate_before(process, request.get_json(), TermValidator, session)
 
@@ -78,6 +88,10 @@ class TermRepository(RepositoryBase):
         def run(session):
 
             def fn(session, term):
+
+                # TODO: forbid delete Term that has any related post
+                # TODO: if delete a parent Term try delete also its children
+
                 session.delete(term)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Term', id)

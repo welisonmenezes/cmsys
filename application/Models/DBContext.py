@@ -258,7 +258,7 @@ class Post(Base):
     language = relationship('Language', foreign_keys='Post.language_id')
     nests = relationship('Nest')
     groupers = relationship('Grouper')
-    # term = relationship('Term')
+    terms = relationship('Term', secondary=Post_Term)
     # comments = relationship('Comment')
     #page_owner = relationship('User', foreign_keys='User.page_id')
 
@@ -346,12 +346,12 @@ class Term(Base):
     taxonomy_id = Column(Integer, ForeignKey('Taxonomy.id'), nullable=False)
     language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
     # relationships
-    # posts = relationship('Post', secondary=Post_Term)
-    # parent = relationship('Term', foreign_keys='Term.parent_id')
-    # children = relationship('Term', remote_side='Term.id')
+    parent = relationship('Term', foreign_keys='Term.parent_id', remote_side='Term.id')
+    children = relationship('Term')
+    posts = relationship('Post', secondary=Post_Term)
+    language = relationship('Language', foreign_keys='Term.language_id')
     # page = relationship('Post', foreign_keys='Term.page_id')
     # taxonomy = relationship('Taxonomy', foreign_keys='Term.taxonomy_id')
-    # language = relationship('Language', foreign_keys='Term.language_id')
 
 
 class User(Base):

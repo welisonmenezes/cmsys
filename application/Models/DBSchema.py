@@ -4,13 +4,14 @@ from app import app
 
 ma = Marshmallow(app)
 
-exclude_post = ('user', 'language', 'parent', 'children', 'post_type', 'nests')
+exclude_post = ('user', 'language', 'parent', 'children', 'post_type', 'nests', 'terms')
 exclude_post_type = ('template', 'nests',)
 exclude_user = ('role', 'socials', 'password', 'medias', 'avatar')
 exclude_comment = ('parent', 'children', 'language', 'user', 'post')
 exclude_menu_item = ('parent', 'children', 'menu')
 exclude_grouper = ('parent', 'post')
 exclude_field = ('post', 'grouper')
+exclude_term = ('parent', 'children', 'posts', 'language')
 
 class BlacklistSchema(ma.Schema):
     class Meta:
@@ -118,11 +119,12 @@ class PostSchema(ma.Schema):
     post_type = fields.Nested('PostTypeSchema', many=False)
     nests = fields.Nested('NestSchema', many=True, exclude=('post',))
     groupers = fields.Nested('GrouperSchema', many=True, exclude=('post', 'parent'))
+    terms = fields.Nested('TermSchema', many=True, exclude=exclude_term)
     class Meta:
         fields = ('id', 'name', 'title', 'description', 'status', 'is_protected', 
         'has_comments', 'publish_on', 'expire_on', 'created', 'edited', 'parent_id', 
         'post_type_id', 'language_id', 'user_id', 'user', 'language', 'parent', 'children',
-        'post_type', 'nests', 'groupers')
+        'post_type', 'nests', 'groupers', 'terms')
 
 
 class PostTypeSchema(ma.Schema):
@@ -158,8 +160,13 @@ class TemplateSchema(ma.Schema):
 
 
 class TermSchema(ma.Schema):
+    posts = fields.Nested('PostSchema', many=True, exclude=exclude_post)
+    language = fields.Nested('LanguageSchema', many=False)
+    parent = fields.Nested('TermSchema', many=False, exclude=exclude_term)
+    children = fields.Nested('TermSchema', many=True, exclude=exclude_term)
     class Meta:
-        fields = ('id', 'name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id')
+        fields = ('id', 'name', 'display_name', 'description', 'parent_id', 'page_id',
+        'taxonomy_id', 'language_id', 'posts', 'language', 'parent', 'children')
 
 
 class UserSchema(ma.Schema):
