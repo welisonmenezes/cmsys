@@ -255,6 +255,7 @@ class RepositoryBase():
 
         old_relateds = []
         new_old_relateds = []
+        errors = []
 
         if (getattr(instance, key)):
             for related in getattr(instance, key):
@@ -277,6 +278,12 @@ class RepositoryBase():
             registered_related = session.query(context_target).filter_by(id=int(related)).first()
             if (registered_related):
                 getattr(instance, key).append(registered_related)
+            else:
+                errors.append(context_target.__tablename__ + ' ' + str(related) + ' does not exists.')
+
+        if errors:
+            raise NotFoundError(errors)
+
 
 
     def raise_if_has_different_parent_reference(self, data, session, configurations):

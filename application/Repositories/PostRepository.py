@@ -80,10 +80,6 @@ class PostRepository(RepositoryBase):
         def run(session):
             
             def process(session, data):
-
-                # The child post_type must be equals the parent post type
-                # TODO: implement the Post relationships Term
-
                 post = Post()
                 Helper().fill_object_from_data(post, data, ['name', 'title', 'description', 'status', 'is_protected', 'has_comments'])
                 post.publish_on = Helper().get_null_if_empty(data['publish_on'])
@@ -91,6 +87,7 @@ class PostRepository(RepositoryBase):
                 post.created = Helper().get_current_datetime()
                 post.edited = Helper().get_current_datetime()
                 self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
+                self.add_many_to_many_relationship('terms', post, data, Term, session)
                 session.add(post)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Post', post.id)
@@ -114,6 +111,7 @@ class PostRepository(RepositoryBase):
                     post.expire_on = Helper().get_null_if_empty(data['expire_on'])
                     post.edited = Helper().get_current_datetime()
                     self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
+                    self.edit_many_to_many_relationship('terms', post, data, Term, session)
 
                     if post.parent_id and int(post.parent_id) == int(id):
                         raise BadRequestError('The Post cannot be parent of yourself.')
