@@ -4,8 +4,6 @@ from Validators import TermValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
 
-# TODO: create endpoint to get suggestions for name
-
 class TermRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Term."""

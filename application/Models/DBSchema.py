@@ -153,6 +153,11 @@ class SocialSchema(ma.Schema):
         fields = ('id', 'name', 'url', 'target', 'description', 'origin', 'configuration_id', 'user_id', 'user', 'configuration')
 
 
+class TaxonomySchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'description', 'has_child')
+
+
 class TemplateSchema(ma.Schema):
     post_types = fields.Nested('PostTypeSchema', many=True, exclude=exclude_post_type)
     class Meta:

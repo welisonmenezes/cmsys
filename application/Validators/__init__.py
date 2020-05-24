@@ -17,6 +17,7 @@ from .PostTypeValidator import *
 from .RoleValidator import *
 from .SectorValidator import *
 from .SocialValidator import *
+from .TaxonomyValidator import *
 from .TemplateValidator import *
 from .TermValidator import *
 from .UserValidator import *

@@ -1,0 +1,87 @@
+from .RepositoryBase import RepositoryBase
+from Models import Taxonomy, TaxonomySchema
+from Validators import TaxonomyValidator
+from Utils import Paginate, FilterBuilder, Helper
+
+class TaxonomyRepository(RepositoryBase):
+    """Works like a layer witch gets or transforms data and makes the
+        communication between the controller and the model of Taxonomy."""
+    
+    def get(self, args):
+        """Returns a list of data recovered from model.
+            Before applies the received query params arguments."""
+
+        def run(session):
+            fb = FilterBuilder(Taxonomy, args)
+            #fb.set_equals_filters(['type', 'target'])
+            #fb.set_like_filters(['value'])
+            query = session.query(Taxonomy).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+            result = Paginate(query, fb.get_page(), fb.get_limit())
+            schema = TaxonomySchema(many=True)
+            return self.handle_success(result, schema, 'get', 'Taxonomy')
+
+        return self.response(run, False)
+        
+
+    def get_by_id(self, id, args):
+        """Returns a single row found by id recovered from model.
+            Before applies the received query params arguments."""
+
+        def run(session):
+            result = session.query(Taxonomy).filter_by(id=id).first()
+            schema = TaxonomySchema(many=False)
+            return self.handle_success(result, schema, 'get_by_id', 'Taxonomy')
+
+        return self.response(run, False)
+
+    
+    def create(self, request):
+        """Creates a new row based on the data received by the request object."""
+
+        def run(session):
+
+            def process(session, data):
+                taxonomy = Taxonomy()
+                Helper().fill_object_from_data(taxonomy, data, ['name', 'description', 'has_child'])
+                session.add(taxonomy)
+                session.commit()
+                return self.handle_success(None, None, 'create', 'Taxonomy', taxonomy.id)
+
+            return self.validate_before(process, request.get_json(), TaxonomyValidator, session)
+
+        return self.response(run, True)
+
+
+    def update(self, id, request):
+        """Updates the row whose id corresponding with the requested id.
+            The data comes from the request object."""
+
+        def run(session):
+
+            def process(session, data):
+                
+                def fn(session, taxonomy):
+                    Helper().fill_object_from_data(taxonomy, data, ['name', 'description', 'has_child'])
+                    session.commit()
+                    return self.handle_success(None, None, 'update', 'Taxonomy', taxonomy.id)
+
+                return self.run_if_exists(fn, Taxonomy, id, session)
+
+            return self.validate_before(process, request.get_json(), TaxonomyValidator, session, id=id)
+
+        return self.response(run, True)
+
+
+    def delete(self, id, request):
+        """Deletes, if it is possible, the row whose id corresponding with the requested id."""
+
+        def run(session):
+
+            def fn(session, taxonomy):
+                session.delete(taxonomy)
+                session.commit()
+                return self.handle_success(None, None, 'delete', 'Taxonomy', id)
+
+            return self.run_if_exists(fn, Taxonomy, id, session)
+
+        return self.response(run, True)

@@ -17,6 +17,7 @@ from .PostTypeRepository import *
 from .RoleRepository import *
 from .SectorRepository import *
 from .SocialRepository import *
+from .TaxonomyRepository import *
 from .TemplateRepository import *
 from .TermRepository import *
 from .UserRepository import *
