@@ -34,7 +34,7 @@ class TermRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def run(session):
-            result = session.query(Term).filter_by(id=id).first()
+            result = self.get_result_by_unique_key(id, Term, session)
             schema = TermSchema(many=False, exclude=self.get_exclude_fields(args, ['language', 'parent', 'children', 'taxonomy']))
             return self.handle_success(result, schema, 'get_by_id', 'Term')
 

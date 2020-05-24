@@ -51,6 +51,6 @@ def start_controllers(app, api):
     api.add_resource(SocialController, '/social', '/social/<int:id>')
     api.add_resource(TaxonomyController, '/taxonomy', '/taxonomy/<int:id>')
     api.add_resource(TemplateController, '/template', '/template/<int:id>')
-    api.add_resource(TermController, '/term', '/term/<int:id>', '/term/suggestions/<name>')
+    api.add_resource(TermController, '/term', '/term/<id>', '/term/suggestions/<name>')
     api.add_resource(UserController, '/user', '/user/<int:id>')
     api.add_resource(VariableController, '/variable', '/variable/<int:id>')

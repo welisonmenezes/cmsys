@@ -57,7 +57,7 @@ class PostRepository(RepositoryBase):
             Before applies the received query params arguments."""
 
         def run(session):
-            result = session.query(Post).filter_by(id=id).first()
+            result = self.get_result_by_unique_key(id, Post, session)
             schema = PostSchema(many=False, exclude=self.get_exclude_fields(args, [
                 'user', 'language', 'parent', 'children', 'post_type', 'nests', 'groupers', 'terms']))
             return self.handle_success(result, schema, 'get_by_id', 'Post')
