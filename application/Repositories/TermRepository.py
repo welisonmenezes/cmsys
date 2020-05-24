@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Term, TermSchema
+from Models import Term, TermSchema, Post, Language
 from Validators import TermValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
@@ -50,10 +50,11 @@ class TermRepository(RepositoryBase):
 
             def process(session, data):
 
-                # TODO: forbid save if Page referenced by the page_id is not from PostType whose type is 'term-page'
+                # TODO: resolve term/taxonomy relationship
 
                 term = Term()
                 Helper().fill_object_from_data(term, data, ['name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id'])
+                self.add_foreign_keys(term, data, session, [('parent_id', Term), ('page_id', Post), ('language_id', Language)])
                 session.add(term)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Term', term.id)
@@ -73,6 +74,11 @@ class TermRepository(RepositoryBase):
                 
                 def fn(session, term):
                     Helper().fill_object_from_data(term, data, ['name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id'])
+                    self.add_foreign_keys(term, data, session, [('parent_id', Term), ('page_id', Post), ('language_id', Language)])
+
+                    if term.parent_id and int(term.parent_id) == int(id):
+                        raise BadRequestError('The Term cannot be parent of yourself.')
+                    
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Term', term.id)
 
@@ -99,3 +105,22 @@ class TermRepository(RepositoryBase):
             return self.run_if_exists(fn, Term, id, session)
 
         return self.response(run, True)
+
+
+    def add_foreign_keys(self, current_context, data, session, configurations):
+        """Controls if the list of foreign keys is an existing foreign key data. How to use:
+            The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
+
+        for config in configurations:
+            try:
+                if config[0] == 'page_id':
+                    """If the post referenced by the page_id is not post_type of type term-page, return error."""
+
+                    el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+                    if el and el.post_type and el.post_type.type != 'term-page':
+                        raise BadRequestError('The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'term-page\'.')
+                
+                setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
+
+            except Exception as e:
+                raise BadRequestError(str(e))

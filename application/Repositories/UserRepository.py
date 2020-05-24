@@ -125,9 +125,6 @@ class UserRepository(RepositoryBase):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
-
-        # TODO: the page referenced by page_id must belong to a post type whose type is equals user-profile
-
         for config in configurations:
             try:
                 if getattr(current_context, 'id') == 1 and config[0] == 'role_id':

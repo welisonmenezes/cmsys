@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Language, LanguageSchema, Configuration, Post, Menu, Comment
+from Models import Language, LanguageSchema, Configuration, Post, Menu, Comment, Term
 from Validators import LanguageValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
@@ -82,14 +82,12 @@ class LanguageRepository(RepositoryBase):
                 raise BadRequestError('The Primary Language cannot be be deleted.')
 
             def fn(session, language):
-
-                # TODO: forbid delete language that has any related term
-
                 self.is_foreigners([
                     (language, 'language_id', Configuration),
                     (language, 'language_id', Post),
                     (language, 'language_id', Menu),
-                    (language, 'language_id', Comment)
+                    (language, 'language_id', Comment),
+                    (language, 'language_id', Term)
                 ], session)
 
                 session.delete(language)
