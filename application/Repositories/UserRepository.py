@@ -125,6 +125,9 @@ class UserRepository(RepositoryBase):
         """Controls if the list of foreign keys is an existing foreign key data. How to use:
             The configurtations must like: [('foreign_key_at_target_context, target_context)]"""
 
+
+        # TODO: the page referenced by page_id must belong to a post type whose type is equals user-profile
+
         for config in configurations:
             try:
                 if getattr(current_context, 'id') == 1 and config[0] == 'role_id':
@@ -134,6 +137,13 @@ class UserRepository(RepositoryBase):
                     image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
                     if not image or not Checker().is_image_type(image.type):
                         raise BadRequestError('The user avatar must be an image file.')
+
+                if config[0] == 'page_id':
+                    """If the post referenced by the page_id is not post_type of type user-profile, return error."""
+
+                    el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
+                    if el and el.post_type and el.post_type.type != 'user-profile':
+                        raise BadRequestError('The Post_Type \'' + el.post_type.name + '\' of the parent post is \'' + el.post_type.type + '\' It must be \'user-profile\'.')
                 
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
 
