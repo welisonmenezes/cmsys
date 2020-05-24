@@ -177,5 +177,13 @@ class FilterBuilderTests(unittest.TestCase):
         self.assertEqual(payload, response, 'ErrorHandler().get_order_by does not return  \'"Post".id DESC\'.')
 
 
+    def test_FilterBuilder_set_range_of_dates_filter(self):
+        
+        payload = '"Post".publish_on <= :publish_on_1 AND "Post".expire_on >= :expire_on_1'
+        self.fb.set_range_of_dates_filter()
+        response = str(self.fb.filter[0])
+        self.assertEqual(payload, response, 'ErrorHandler().set_range_of_dates_filter does not return  \'"Post".publish_on <= :publish_on_1 AND "Post".expire_on >= :expire_on_1\'.')
+
+
     def tearDown(self):
         pass

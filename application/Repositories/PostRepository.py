@@ -14,8 +14,6 @@ class PostRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        # TODO: implement the post publish_on and expire_on filters
-
         def run(session):
             fb = FilterBuilder(Post, args)
             fb.set_equals_filters(['status', 'user_id', 'parent_id', 'post_type_id', 'language_id'])
@@ -40,6 +38,12 @@ class PostRepository(RepositoryBase):
                     {'field': 'content', 'type': 'like', 'kwargs': {'joined': FieldContent}},
                     {'field': 'content', 'type': 'like', 'kwargs': {'joined': FieldText}}
                 ])
+
+                # change when access control was working
+                is_logged = True
+                if not is_logged:
+                    fb.set_range_of_dates_filter()
+
             except Exception as e:
                 raise BadRequestError(str(e))
 

@@ -137,6 +137,17 @@ class FilterBuilder():
         except Exception as e:
             raise Exception(str(e))
 
+
+    def set_range_of_dates_filter(self, *args, **kwargs):
+        """Sets filter that get items whose current date fit with publish_on and expire_on dates."""
+
+        try:
+            today = Helper().get_current_datetime()
+            self.filter += (and_(self.get_context_attr('publish_on', kwargs) <= today, self.get_context_attr('expire_on', kwargs) >= today),)
+
+        except Exception as e:
+            raise Exception(str(e))
+
     
     def get_filter(self):
         """Returns the tuple of the configured filter."""
