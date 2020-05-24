@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import Term, TermSchema, Post, Language
+from Models import Term, TermSchema, Post, Language, Taxonomy
 from Validators import TermValidator
 from Utils import Paginate, FilterBuilder, Helper
 from ErrorHandlers import BadRequestError
@@ -56,12 +56,9 @@ class TermRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
-                # TODO: resolve term/taxonomy relationship
-
                 term = Term()
                 Helper().fill_object_from_data(term, data, ['name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id'])
-                self.add_foreign_keys(term, data, session, [('parent_id', Term), ('page_id', Post), ('language_id', Language)])
+                self.add_foreign_keys(term, data, session, [('parent_id', Term), ('page_id', Post), ('language_id', Language), ('taxonomy_id', Taxonomy)])
                 session.add(term)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Term', term.id)
@@ -81,7 +78,7 @@ class TermRepository(RepositoryBase):
                 
                 def fn(session, term):
                     Helper().fill_object_from_data(term, data, ['name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id'])
-                    self.add_foreign_keys(term, data, session, [('parent_id', Term), ('page_id', Post), ('language_id', Language)])
+                    self.add_foreign_keys(term, data, session, [('parent_id', Term), ('page_id', Post), ('language_id', Language), ('taxonomy_id', Taxonomy)])
 
                     if term.parent_id and int(term.parent_id) == int(id):
                         raise BadRequestError('The Term cannot be parent of yourself.')
