@@ -1,5 +1,5 @@
 from .RepositoryBase import RepositoryBase
-from Models import PostType, PostTypeSchema, Template, Post, Nest
+from Models import PostType, PostTypeSchema, Template, Post, Nest, Taxonomy
 from Validators import PostTypeValidator
 from Utils import Paginate, FilterBuilder, Helper
 
@@ -41,12 +41,10 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
-
-                # TODO: implement PostType/Taxonomy relationship (many-to-many)
-
                 post_type = PostType()
                 Helper().fill_object_from_data(post_type, data, ['name', 'type'])
                 self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
+                self.edit_many_to_many_relationship('taxonomies', post_type, data, Taxonomy, session)
                 session.add(post_type)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'PostType', post_type.id)
@@ -67,6 +65,7 @@ class PostTypeRepository(RepositoryBase):
                 def fn(session, post_type):
                     Helper().fill_object_from_data(post_type, data, ['name', 'type'])
                     self.add_foreign_keys(post_type, data, session, [('template_id', Template)])
+                    self.edit_many_to_many_relationship('taxonomies', post_type, data, Taxonomy, session)
                     session.commit()
                     return self.handle_success(None, None, 'update', 'PostType', post_type.id)
 
