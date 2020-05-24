@@ -2,6 +2,7 @@ from .RepositoryBase import RepositoryBase
 from Models import Taxonomy, TaxonomySchema
 from Validators import TaxonomyValidator
 from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
 
 class TaxonomyRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -82,9 +83,11 @@ class TaxonomyRepository(RepositoryBase):
         def run(session):
 
             def fn(session, taxonomy):
+                if taxonomy.terms:
+                    raise BadRequestError('You cannot delete this Taxonomy because it has a related Term')
 
-                # TODO: forbid delete Taxonomy that has a related PostType
-                # TODO: forbid delete Taxonomy that has a related Terms
+                if taxonomy.post_types:
+                    raise BadRequestError('You cannot delete this Taxonomy because it has a related Post_Type')
 
                 session.delete(taxonomy)
                 session.commit()
