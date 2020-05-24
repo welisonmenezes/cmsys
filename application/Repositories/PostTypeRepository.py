@@ -17,7 +17,7 @@ class PostTypeRepository(RepositoryBase):
             fb.set_equals_filters(['type'])
             query = session.query(PostType).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = PostTypeSchema(many=True, exclude=self.get_exclude_fields(args, ['template', 'nests']))
+            schema = PostTypeSchema(many=True, exclude=self.get_exclude_fields(args, ['template', 'nests', 'taxonomies']))
             return self.handle_success(result, schema, 'get', 'PostType')
 
         return self.response(run, False)
@@ -29,7 +29,7 @@ class PostTypeRepository(RepositoryBase):
 
         def run(session):
             result = session.query(PostType).filter_by(id=id).first()
-            schema = PostTypeSchema(many=False, exclude=self.get_exclude_fields(args, ['template', 'nests']))
+            schema = PostTypeSchema(many=False, exclude=self.get_exclude_fields(args, ['template', 'nests', 'taxonomies']))
             return self.handle_success(result, schema, 'get_by_id', 'PostType')
 
         return self.response(run, False)
@@ -41,6 +41,9 @@ class PostTypeRepository(RepositoryBase):
         def run(session):
 
             def process(session, data):
+
+                # TODO: implement PostType/Taxonomy relationship (many-to-many)
+
                 post_type = PostType()
                 Helper().fill_object_from_data(post_type, data, ['name', 'type'])
                 self.add_foreign_keys(post_type, data, session, [('template_id', Template)])

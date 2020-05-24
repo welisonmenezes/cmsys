@@ -87,6 +87,9 @@ class PostRepository(RepositoryBase):
                 post.created = Helper().get_current_datetime()
                 post.edited = Helper().get_current_datetime()
                 self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
+
+                # TODO: user-profile, term-page and nested-page cannot have taxonomies/terms
+
                 self.add_many_to_many_relationship('terms', post, data, Term, session)
                 session.add(post)
                 session.commit()

@@ -273,8 +273,8 @@ class PostType(Base):
     # relationships
     template = relationship('Template', foreign_keys='PostType.template_id')
     nests = relationship('Nest')
+    taxonomies = relationship('Taxonomy', secondary=Post_Type_Taxonomy)
     # posts = relationship('Post')
-    # taxonomies = relationship('Taxonomy', secondary=Post_Type_Taxonomy)
 
 
 class Role(Base):
@@ -320,8 +320,8 @@ class Taxonomy(Base):
     description = Column(String(255), nullable=True)
     has_child = Column(Boolean, nullable=False) # if will have hierarchy
     # relationships
-    # post_types = relationship('PostType', secondary=Post_Type_Taxonomy)
-    # terms = relationship('Term')
+    post_types = relationship('PostType', secondary=Post_Type_Taxonomy)
+    terms = relationship('Term')
 
 
 class Template(Base):
@@ -350,8 +350,8 @@ class Term(Base):
     children = relationship('Term')
     language = relationship('Language', foreign_keys='Term.language_id')
     posts = relationship('Post', secondary=Post_Term)
+    taxonomy = relationship('Taxonomy', foreign_keys='Term.taxonomy_id')
     # page = relationship('Post', foreign_keys='Term.page_id')
-    # taxonomy = relationship('Taxonomy', foreign_keys='Term.taxonomy_id')
 
 
 class User(Base):

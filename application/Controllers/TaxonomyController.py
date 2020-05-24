@@ -9,5 +9,5 @@ class TaxonomyController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(TaxonomyController, self).__init__()
-        self.args = Helper().add_request_data(self.parser, [])
+        self.args = Helper().add_request_data(self.parser, ['s', 'get_post_types', 'get_terms'])
         self.repo = TaxonomyRepository()

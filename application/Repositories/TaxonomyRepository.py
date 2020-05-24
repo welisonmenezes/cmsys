@@ -13,11 +13,15 @@ class TaxonomyRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Taxonomy, args)
-            #fb.set_equals_filters(['type', 'target'])
-            #fb.set_like_filters(['value'])
+
+            try:
+                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+            except Exception as e:
+                raise BadRequestError(str(e))
+
             query = session.query(Taxonomy).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = TaxonomySchema(many=True)
+            schema = TaxonomySchema(many=True, exclude=self.get_exclude_fields(args, ['post_types', 'terms']))
             return self.handle_success(result, schema, 'get', 'Taxonomy')
 
         return self.response(run, False)
@@ -29,7 +33,7 @@ class TaxonomyRepository(RepositoryBase):
 
         def run(session):
             result = session.query(Taxonomy).filter_by(id=id).first()
-            schema = TaxonomySchema(many=False)
+            schema = TaxonomySchema(many=False, exclude=self.get_exclude_fields(args, ['post_types', 'terms']))
             return self.handle_success(result, schema, 'get_by_id', 'Taxonomy')
 
         return self.response(run, False)
@@ -78,6 +82,10 @@ class TaxonomyRepository(RepositoryBase):
         def run(session):
 
             def fn(session, taxonomy):
+
+                # TODO: forbid delete Taxonomy that has a related PostType
+                # TODO: forbid delete Taxonomy that has a related Terms
+
                 session.delete(taxonomy)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Taxonomy', id)

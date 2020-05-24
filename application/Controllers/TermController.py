@@ -11,7 +11,7 @@ class TermController(ControllerBase):
 
         super(TermController, self).__init__()
         self.args = Helper().add_request_data(self.parser, [
-            's', 'parent_id', 'taxonomy_id', 'language_id', 'get_language', 'get_parent', 'get_children'])
+            's', 'parent_id', 'taxonomy_id', 'language_id', 'get_language', 'get_parent', 'get_children', 'get_taxonomy'])
         self.repo = TermRepository()
 
     def get(self, id=None, name=None):

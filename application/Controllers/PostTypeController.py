@@ -9,5 +9,5 @@ class PostTypeController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(PostTypeController, self).__init__()
-        self.args = Helper().add_request_data(self.parser, ['name', 'type', 'get_template', 'get_nests'])
+        self.args = Helper().add_request_data(self.parser, ['name', 'type', 'get_template', 'get_nests', 'get_taxonomies'])
         self.repo = PostTypeRepository()
