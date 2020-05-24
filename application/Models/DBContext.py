@@ -349,7 +349,7 @@ class Term(Base):
     parent = relationship('Term', foreign_keys='Term.parent_id', remote_side='Term.id')
     children = relationship('Term')
     language = relationship('Language', foreign_keys='Term.language_id')
-    #posts = relationship('Post', secondary=Post_Term)
+    posts = relationship('Post', secondary=Post_Term)
     # page = relationship('Post', foreign_keys='Term.page_id')
     # taxonomy = relationship('Taxonomy', foreign_keys='Term.taxonomy_id')
 

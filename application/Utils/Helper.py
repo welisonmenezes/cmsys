@@ -91,11 +91,11 @@ class Helper():
         return None if value == '' else value
 
 
-    def get_with_slug(self, data, key):
+    def get_with_slug(self, data, key='name'):
         """Return the given dict data with value of the given key with slugfy applied."""
 
-        if 'name' in data:
-            data['name'] = slugify(data['name'])
+        if key in data:
+            data[key] = slugify(data[key])
         
         return data
 

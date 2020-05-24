@@ -2,6 +2,9 @@ from .RepositoryBase import RepositoryBase
 from Models import Term, TermSchema
 from Validators import TermValidator
 from Utils import Paginate, FilterBuilder, Helper
+from ErrorHandlers import BadRequestError
+
+# TODO: create endpoint to get suggestions for name
 
 class TermRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -47,7 +50,7 @@ class TermRepository(RepositoryBase):
 
             def process(session, data):
 
-                # TODO: implement the Term relationships transformations
+                # TODO: forbid save if Page referenced by the page_id is not from PostType whose type is 'term-page'
 
                 term = Term()
                 Helper().fill_object_from_data(term, data, ['name', 'display_name', 'description', 'parent_id', 'page_id', 'taxonomy_id', 'language_id'])
@@ -55,9 +58,7 @@ class TermRepository(RepositoryBase):
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Term', term.id)
 
-                # TODO: implement slugfy to the Term name
-
-            return self.validate_before(process, request.get_json(), TermValidator, session)
+            return self.validate_before(process, Helper().get_with_slug(request.get_json(), 'name'), TermValidator, session)
 
         return self.response(run, True)
 
@@ -77,7 +78,7 @@ class TermRepository(RepositoryBase):
 
                 return self.run_if_exists(fn, Term, id, session)
 
-            return self.validate_before(process, request.get_json(), TermValidator, session, id=id)
+            return self.validate_before(process, Helper().get_with_slug(request.get_json(), 'name'), TermValidator, session, id=id)
 
         return self.response(run, True)
 
@@ -88,10 +89,9 @@ class TermRepository(RepositoryBase):
         def run(session):
 
             def fn(session, term):
-
-                # TODO: forbid delete Term that has any related post
-                # TODO: if delete a parent Term try delete also its children
-
+                if term.posts:
+                    raise BadRequestError('You cannot delete this Term because it has a related Post.')
+                self.set_children_as_null_to_delete(term, Term, session)
                 session.delete(term)
                 session.commit()
                 return self.handle_success(None, None, 'delete', 'Term', id)

@@ -82,6 +82,7 @@ class PostRepository(RepositoryBase):
             def process(session, data):
 
                 # The child post_type must be equals the parent post type
+                # TODO: implement the Post relationships Term
 
                 post = Post()
                 Helper().fill_object_from_data(post, data, ['name', 'title', 'description', 'status', 'is_protected', 'has_comments'])
@@ -133,9 +134,6 @@ class PostRepository(RepositoryBase):
         def run(session):
 
             def fn(session, post):
-
-                # TODO: forbid delete post that is term page (or update the term page)
-
                 self.set_any_reference_as_null_to_delete(post, request, session, [('page_id', User), ('parent_id', Post)])
                 self.delete_children(session, id, [
                     ('post_id', Comment), ('post_id', Nest),
