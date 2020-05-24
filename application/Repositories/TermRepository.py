@@ -42,6 +42,15 @@ class TermRepository(RepositoryBase):
 
         return self.response(run, False)
 
+
+    def get_name_suggestions(self, name, args):
+        """Returns names suggestions to new Media."""
+
+        def run(session):
+            return self.get_suggestions(name, Term, session)
+
+        return self.response(run, False)
+
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""

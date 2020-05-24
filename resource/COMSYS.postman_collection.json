@@ -2354,7 +2354,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/media/suggestions/post",
+							"raw": "http://127.0.0.1:5000/api/media/suggestions/xxx",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2367,7 +2367,7 @@
 								"api",
 								"media",
 								"suggestions",
-								"post"
+								"xxx"
 							]
 						}
 					},
@@ -3198,7 +3198,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=10&order_by=id&order=asc&s=mene&status=&date_modifier=&created=&not_between=&compare_date_time_one=&compare_date_time_two=&get_user=&user_id=&parent_id=&post_type_id=&language_id=&get_language=&get_parent=&get_children=&get_post_type=&get_nests=&get_groupers=",
+							"raw": "http://127.0.0.1:5000/api/post?page=1&limit=100&order_by=&order=&s=&status=&date_modifier=&created=&not_between=&compare_date_time_one=&compare_date_time_two=&get_user=&user_id=&parent_id=&post_type_id=&language_id=&get_language=&get_parent=&get_children=&get_post_type=&get_nests=&get_groupers=&get_terms=&term_id=1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3218,19 +3218,19 @@
 								},
 								{
 									"key": "limit",
-									"value": "10"
+									"value": "100"
 								},
 								{
 									"key": "order_by",
-									"value": "id"
+									"value": ""
 								},
 								{
 									"key": "order",
-									"value": "asc"
+									"value": ""
 								},
 								{
 									"key": "s",
-									"value": "mene"
+									"value": ""
 								},
 								{
 									"key": "status",
@@ -3299,6 +3299,14 @@
 								{
 									"key": "get_groupers",
 									"value": ""
+								},
+								{
+									"key": "get_terms",
+									"value": ""
+								},
+								{
+									"key": "term_id",
+									"value": "1"
 								}
 							]
 						}
@@ -3335,7 +3343,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post/suggestions/post",
+							"raw": "http://127.0.0.1:5000/api/post/suggestions/xxx",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3348,7 +3356,7 @@
 								"api",
 								"post",
 								"suggestions",
-								"post"
+								"xxx"
 							]
 						}
 					},
@@ -3367,7 +3375,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Legal tess ânUsx\",\n\t\"title\": \"Post caça\",\n\t\"description\": \"lorem ipsum\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"test terms\",\n\t\"title\": \"Post caça\",\n\t\"description\": \"lorem ipsum\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1,\n\t\"terms\": [1,2,3]\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/post",
@@ -3400,10 +3408,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Legal tess editado\",\n\t\"title\": \"titlex 2\",\n\t\"description\": \"zzz 2\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 1,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"parent_id\": 15,\n\t\"post_type_id\": 6,\n\t\"language_id\": 1,\n\t\"user_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"test terms\",\n\t\"title\": \"Post caça\",\n\t\"description\": \"lorem ipsum\",\n\t\"status\": \"publish\",\n\t\"is_protected\": 0,\n\t\"has_comments\": 0,\n\t\"publish_on\": \"2020-05-06 22:53:10\",\n\t\"expire_on\": \"2020-05-07 22:53:10\",\n\t\"xparent_id\": 1,\n\t\"post_type_id\": 1,\n\t\"language_id\": 1,\n\t\"user_id\": 1,\n\t\"terms\": [1,2]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/post/15",
+							"raw": "http://127.0.0.1:5000/api/post/18",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -3415,7 +3423,7 @@
 							"path": [
 								"api",
 								"post",
-								"15"
+								"18"
 							]
 						}
 					},
@@ -4551,7 +4559,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/term?page=1&limit=10&order_by=&order=&",
+							"raw": "http://127.0.0.1:5000/api/term?&page=1&limit=10&order_by=&order=&s=&taxonomy_id&language_id=&parent_id=&get_language=&get_parent=&get_children=",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -4565,6 +4573,10 @@
 								"term"
 							],
 							"query": [
+								{
+									"key": null,
+									"value": null
+								},
 								{
 									"key": "page",
 									"value": "1"
@@ -4582,8 +4594,32 @@
 									"value": ""
 								},
 								{
-									"key": null,
+									"key": "s",
+									"value": ""
+								},
+								{
+									"key": "taxonomy_id",
 									"value": null
+								},
+								{
+									"key": "language_id",
+									"value": ""
+								},
+								{
+									"key": "parent_id",
+									"value": ""
+								},
+								{
+									"key": "get_language",
+									"value": ""
+								},
+								{
+									"key": "get_parent",
+									"value": ""
+								},
+								{
+									"key": "get_children",
+									"value": ""
 								}
 							]
 						}
@@ -4615,6 +4651,31 @@
 					"response": []
 				},
 				{
+					"name": "get-suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/term/suggestions/xxx",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"term",
+								"suggestions",
+								"xxx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "post",
 					"request": {
 						"method": "POST",
@@ -4627,7 +4688,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"term-5\",\n\t\"display_name\": \"Term 5\",\n\t\"description\": \"Lorem term 5\",\n\t\"xparent_id\": \"\",\n\t\"xpage_id\": \"\",\n\t\"taxonomy_id\": 1,\n\t\"language_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"filhodf tedst\",\n\t\"display_name\": \"Term c\",\n\t\"description\": \"Lorem term 5\",\n\t\"parent_id\": 11,\n\t\"page_id\": 13,\n\t\"taxonomy_id\": 1,\n\t\"language_id\": 1\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/term",
@@ -4660,10 +4721,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"term-1\",\n\t\"display_name\": \"Term 1 Edited\",\n\t\"description\": \"Lorem term 1\",\n\t\"xparent_id\": \"\",\n\t\"xpage_id\": \"\",\n\t\"taxonomy_id\": 1,\n\t\"language_id\": 1\n}"
+							"raw": "{\n\t\"name\": \"filhodf tedst\",\n\t\"display_name\": \"Term c\",\n\t\"description\": \"Lorem term 5\",\n\t\"parent_id\": 12,\n\t\"page_id\": 13,\n\t\"taxonomy_id\": 1,\n\t\"language_id\": 1\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/term/1",
+							"raw": "http://127.0.0.1:5000/api/term/12",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -4675,7 +4736,7 @@
 							"path": [
 								"api",
 								"term",
-								"1"
+								"12"
 							]
 						}
 					},
@@ -4687,7 +4748,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/term/5",
+							"raw": "http://127.0.0.1:5000/api/term/10",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -4699,7 +4760,7 @@
 							"path": [
 								"api",
 								"term",
-								"5"
+								"10"
 							]
 						}
 					},
@@ -4933,7 +4994,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"user31-edited\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 7,\n\t\"avatar_id\": 25,\n\t\"xpage_id\": 1\n}"
+							"raw": "{\n\t\"login\": \"user31-edited\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 7,\n\t\"avatar_id\": 25,\n\t\"page_id\": 17\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/user/31",

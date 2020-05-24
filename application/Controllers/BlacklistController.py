@@ -10,5 +10,4 @@ class BlacklistController(ControllerBase):
 
         super(BlacklistController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['value', 'type', 'target'])
-        print(self.args)
         self.repo = BlacklistRepository()

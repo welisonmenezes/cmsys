@@ -10,14 +10,13 @@ class MediaController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(MediaController, self).__init__()
+        self.args = Helper().add_request_data(self.parser, [
+            'download_file', 'return_file_data', 's', 'type', 'origin', 'created', 'user_id', 'get_user'])
         self.repo = MediaRepository()
 
 
     def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
-
-        self.args = Helper().add_request_data(self.parser, [
-            'download_file', 'return_file_data', 's', 'type', 'origin', 'created', 'user_id', 'get_user'])
 
         if str(request.url_rule) == '/api/media/preview/<id>':
             return self.repo.get_image_preview(id)
