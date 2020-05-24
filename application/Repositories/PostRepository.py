@@ -87,9 +87,7 @@ class PostRepository(RepositoryBase):
                 post.created = Helper().get_current_datetime()
                 post.edited = Helper().get_current_datetime()
                 self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
-
-                # TODO: user-profile, term-page and nested-page cannot have taxonomies/terms
-
+                self.raise_if_has_term_and_not_is_post_page(data, session)
                 self.add_many_to_many_relationship('terms', post, data, Term, session)
                 session.add(post)
                 session.commit()
@@ -114,6 +112,7 @@ class PostRepository(RepositoryBase):
                     post.expire_on = Helper().get_null_if_empty(data['expire_on'])
                     post.edited = Helper().get_current_datetime()
                     self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
+                    self.raise_if_has_term_and_not_is_post_page(data, session)
                     self.edit_many_to_many_relationship('terms', post, data, Term, session)
 
                     if post.parent_id and int(post.parent_id) == int(id):
@@ -167,3 +166,14 @@ class PostRepository(RepositoryBase):
 
             except Exception as e:
                 raise BadRequestError(str(e))
+
+
+    def raise_if_has_term_and_not_is_post_page(self, data, session):
+        """Raise an error if the Post has terms but it does not is from a Post_Type with type 'post-page'"""
+
+        if 'terms' in data and data['terms']:
+            if 'post_type_id' in data and Checker().can_be_integer(data['post_type_id']):
+                post_type = session.query(PostType.type).filter_by(id=int(data['post_type_id'])).first()
+                if post_type and post_type[0]:
+                    if post_type[0] != 'post-page':
+                        raise BadRequestError('The Post_Type of the Post must be settled as type \'post-page\' to have Terms.')
