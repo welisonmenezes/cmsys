@@ -9,5 +9,5 @@ class CapabilityController(ControllerBase):
         """Starts the repository from which data will be written or retrieved."""
 
         super(CapabilityController, self).__init__()
-        self.args = Helper().add_request_data(self.parser, ['description', 'type', 'target_id', 'can_write', 'can_read', 'can_delete', 'get_roles'])
+        self.args = Helper().add_request_data(self.parser, ['description', 'type', 'target_id', 'can_write', 'can_read', 'can_delete', 'only_themselves', 'get_roles'])
         self.repo = CapabilityRepository()

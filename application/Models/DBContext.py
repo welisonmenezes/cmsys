@@ -41,6 +41,7 @@ class Capability(Base):
     can_write = Column(Boolean, nullable=False)
     can_read = Column(Boolean, nullable=False)
     can_delete = Column(Boolean, nullable=False)
+    only_themselves = Column(Boolean, nullable=False)
     # relationships
     roles = relationship('Role', secondary=Capability_Role)
 

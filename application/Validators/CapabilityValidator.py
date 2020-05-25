@@ -24,14 +24,11 @@ class CapabilityValidator(ValidatorBase):
                 'max_length': 50,
                 'min_length': 1,
                 'valid_values': [
-                    'user', 'post', 'specifc-post-type', 'post-type', 'media', 'menu', 
-                    'taxonomy', 'configuration', 'comment', 'guest'
+                    'user', 'post', 'specific-post-type', 'post-type', 'media', 'menu', 
+                    'taxonomy', 'configuration', 'comment', 'guest', 'capability'
                 ]
             },
             'target_id': {
-                'key_required': True,
-                'field_required': True,
-                'min_length': 1,
                 'is_integer': True
             },
             'can_write': {
@@ -45,6 +42,11 @@ class CapabilityValidator(ValidatorBase):
                 'is_boolean': True
             },
             'can_delete': {
+                'key_required': True,
+                'field_required': True,
+                'is_boolean': True
+            },
+            'only_themselves': {
                 'key_required': True,
                 'field_required': True,
                 'is_boolean': True

@@ -22,7 +22,7 @@ class BlacklistSchema(ma.Schema):
 class CapabilitySchema(ma.Schema):
     roles = fields.Nested('RoleSchema', many=True, exclude=('capabilities',))
     class Meta:
-        fields = ('id', 'description', 'type', 'target_id', 'can_write', 'can_write', 'can_read', 'can_delete', 'roles')
+        fields = ('id', 'description', 'type', 'target_id', 'can_write', 'can_write', 'can_read', 'can_delete', 'only_themselves', 'roles')
 
 
 class CommentSchema(ma.Schema):

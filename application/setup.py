@@ -131,7 +131,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     post_capability = Capability(
@@ -140,7 +141,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     post_type_capability = Capability(
@@ -149,7 +151,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     media_capability = Capability(
@@ -158,7 +161,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     menu_capability = Capability(
@@ -167,7 +171,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     taxonomy_capability = Capability(
@@ -176,7 +181,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     configuration_capability = Capability(
@@ -185,7 +191,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     comment_capability = Capability(
@@ -194,7 +201,8 @@ def _add_primary_role(session):
         target_id = None,
         can_write = True,
         can_read = True,
-        can_delete  = True
+        can_delete  = True,
+        only_themselves = False
     )
 
     admin_role = Role(

@@ -14,7 +14,7 @@ class CapabilityRepository(RepositoryBase):
 
         def run(session):
             fb = FilterBuilder(Capability, args)
-            fb.set_equals_filters(['type', 'target_id', 'can_write', 'can_read', 'can_delete'])
+            fb.set_equals_filters(['type', 'target_id', 'can_write', 'can_read', 'can_delete', 'only_themselves'])
             fb.set_like_filters(['description'])
             query = session.query(Capability).join(*self.joins).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -44,7 +44,13 @@ class CapabilityRepository(RepositoryBase):
             def process(session, data):
                 self.raise_if_has_identical_capability(data, session)
                 capability = Capability()
-                Helper().fill_object_from_data(capability, data, ['description', 'type', 'target_id', 'can_write', 'can_read', 'can_delete'])
+                Helper().fill_object_from_data(capability, data, ['description', 'type', 'can_write', 'can_read', 'can_delete', 'only_themselves'])
+
+                if 'target_id' in data:
+                    capability.target_id = data['target_id']
+                else:
+                    capability.target_id = None
+
                 session.add(capability)
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Capability', capability.id)
@@ -64,7 +70,13 @@ class CapabilityRepository(RepositoryBase):
 
                 def fn(session, capability):
                     self.raise_if_has_identical_capability(data, session, id)
-                    Helper().fill_object_from_data(capability, data, ['description', 'type', 'target_id', 'can_write', 'can_read', 'can_delete'])
+                    Helper().fill_object_from_data(capability, data, ['description', 'type', 'can_write', 'can_read', 'can_delete', 'only_themselves'])
+
+                    if 'target_id' in data:
+                        capability.target_id = data['target_id']
+                    else:
+                        capability.target_id = None
+                        
                     session.commit()
                     return self.handle_success(None, None, 'update', 'Capability', capability.id)
                 
@@ -96,12 +108,16 @@ class CapabilityRepository(RepositoryBase):
         """Verifies if already exists another capability with exactly same values, if so, returns this."""	
 
         filter = (	
-            Capability.type == data['type'],	
-            Capability.target_id == int(data['target_id']),	
+            Capability.type == data['type'],
             Capability.can_write == data['can_write'],	
             Capability.can_read == data['can_read'],	
-            Capability.can_delete == data['can_delete'],	
-        )	
+            Capability.can_delete == data['can_delete'],
+            Capability.only_themselves == data['only_themselves'],
+        )
+
+        if 'target_id' in data:	
+            filter += (Capability.target_id == int(data['target_id']),)
+
 
         if id:	
             filter += (Capability.id != id,)	

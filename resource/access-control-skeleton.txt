@@ -1,6 +1,10 @@
 user: 
 	Pode gerenciar usuarios
-		- Capability, Role, User, Social
+		- User, Social
+
+capability:
+	Pode gerenciar permissões
+		- Capability, Role
 
 post:
 	Pode gerenciar posts
