@@ -1,7 +1,8 @@
 from flask import  request, jsonify
 from flask_restful import Resource, reqparse
 from Utils import Helper
-from ErrorHandlers import ErrorHandler
+from ErrorHandlers import ErrorHandler, NotAuthorizedError
+from Auth import BlacklistProtect
 
 class ControllerBase(Resource):
     """The base class that will provide basics configurations and methods to its children.
@@ -62,6 +63,19 @@ class ControllerBase(Resource):
     @staticmethod
     def default_routers(app):
         """Implements the error routes of the api."""
+
+        @app.before_request
+        def before_request():
+            
+            try:
+                BlacklistProtect()
+
+            except NotAuthorizedError as e:
+                return ErrorHandler().get_error(401, str(e))
+            
+            except Exception as e:
+                return ErrorHandler().get_error(500, str(e))
+                
 
         # Error 404 handler
         @app.route('/api/<path:path>', defaults={'path': ''})

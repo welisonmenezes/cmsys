@@ -7,8 +7,6 @@ class CapabilityValidator(ValidatorBase):
     def __init__(self, obj_data):
         """Gets the object data that will be validated and initializes the configurations."""
 
-        # TODO: fill capabilities types
-
         self.request = obj_data
 
         self.validate_config = {
