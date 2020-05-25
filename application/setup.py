@@ -1,5 +1,5 @@
 from app import app
-from Models import Engine, Base, Session, Language, Template, PostType, Capability, Role, User
+from Models import Engine, Base, Session, Language, Template, PostType, Capability, Role, User, Configuration
 from Utils import Helper
 
 def create_database():
@@ -27,6 +27,7 @@ def add_primary_data():
     _add_primary_post_type(session)
     _add_primary_role(session)
     _add_primary_user(session)
+    _add_primary_configuration(session)
     
     session.commit()
 
@@ -158,3 +159,17 @@ def _add_primary_user(session):
         role_id = 1
     )
     session.add(primary_user)
+
+
+def _add_primary_configuration(session):
+
+    session.flush()
+
+    primary_config = Configuration(
+        title = 'CMSYS - Content Management System.',
+        description = 'An API FLASK to content management system.',
+        has_comments = False,
+        email = 'site@email.com',
+        language_id = 1
+    )
+    session.add(primary_config)

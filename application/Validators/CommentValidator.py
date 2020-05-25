@@ -12,7 +12,8 @@ class CommentValidator(ValidatorBase):
             'comment': {
                 'key_required': True,
                 'field_required': True,
-                'min_length': 1
+                'min_length': 1,
+                'max_length': 65535
             },
             'status': {
                 'key_required': True,

@@ -173,7 +173,7 @@ class Media(Base):
     description = Column(String(255), nullable=True)
     type = Column(String(100), nullable=False)
     extension = Column(String(4), nullable=False)
-    file = Column(LargeBinary(length=(2**32)-1), nullable=False)
+    file = Column(LargeBinary(length=(2**24)-1), nullable=False)
     origin = Column(String(50), nullable=False) # where came from (post, user avatar, configuration, etc...)
     created = Column(DateTime, nullable=False)
     # foreignKeys

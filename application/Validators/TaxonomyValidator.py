@@ -18,7 +18,8 @@ class TaxonomyValidator(ValidatorBase):
                 'is_unique': True
             },
             'description': {
-                'key_required': True
+                'key_required': True,
+                'max_length': 255
             },
             'has_child': {
                 'key_required': True,

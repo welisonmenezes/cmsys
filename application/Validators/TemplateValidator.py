@@ -23,7 +23,8 @@ class TemplateValidator(ValidatorBase):
             'value': {
                 'key_required': True,
                 'field_required': True,
-                'min_length': 1
+                'min_length': 1,
+                'max_length': 4294967295
             }
         }
 

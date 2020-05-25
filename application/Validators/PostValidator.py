@@ -24,7 +24,8 @@ class PostValidator(ValidatorBase):
                 'min_length': 1
             },
             'description': {
-                'key_required': True
+                'key_required': True,
+                'max_length': 65535
             },
             'status': {
                 'key_required': True,

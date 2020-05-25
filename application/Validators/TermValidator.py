@@ -24,7 +24,8 @@ class TermValidator(ValidatorBase):
                 'min_length': 1
             },
             'description': {
-                'key_required': True
+                'key_required': True,
+                'max_length': 255
             },
             'parent_id': {
                 'is_integer': True

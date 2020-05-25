@@ -12,7 +12,8 @@ class FieldContentValidator(ValidatorBase):
             'content': {
                 'key_required': True,
                 'field_required': True,
-                'min_length': 1
+                'min_length': 1,
+                'max_length': 4294967295
             },
             'field_id': {
                 'key_required': True,
