@@ -1,6 +1,6 @@
 from .RepositoryBase import RepositoryBase
 from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, FieldContent, FieldText, FieldFile, Field, Grouper, Term
-from Validators import PostValidator
+from Validators import PostValidator, GrouperValidator, FieldValidator, FieldContentValidator, FieldTextValidator, FieldFileValidator
 from Utils import Paginate, FilterBuilder, Helper, Checker
 from ErrorHandlers import BadRequestError
 
@@ -93,7 +93,10 @@ class PostRepository(RepositoryBase):
                 self.add_foreign_keys(post, data, session, [('parent_id', Post), ('post_type_id', PostType), ('language_id', Language), ('user_id', User)])
                 self.raise_if_has_term_and_not_is_post_page(data, session)
                 self.add_many_to_many_relationship('terms', post, data, Term, session)
+                
                 session.add(post)
+                self.save_groupers_into_post(data, post, session)
+
                 session.commit()
                 return self.handle_success(None, None, 'create', 'Post', post.id)
 
@@ -181,3 +184,139 @@ class PostRepository(RepositoryBase):
                 if post_type and post_type[0]:
                     if post_type[0] != 'post-page':
                         raise BadRequestError('The Post_Type of the Post must be settled as type \'post-page\' to have Terms.')
+
+
+
+    def save_groupers_into_post(self, data, post, session, parent_id=None):
+        """"""
+        session.flush()
+        errors = []
+        if 'groupers' in data and isinstance(data['groupers'], list) and len(data['groupers']) > 0:
+           
+            for grouper in data['groupers']:
+
+                pgrouper_id = parent_id
+
+                if len(grouper) > 0:
+                    
+                    grouper['post_id'] = post.id
+                    if pgrouper_id:
+                        grouper['parent_id'] = pgrouper_id
+                    grouper_validator = GrouperValidator(grouper)
+
+                    if grouper_validator.is_valid():
+
+                        new_grouper = Grouper()
+                        Helper().fill_object_from_data(new_grouper, grouper, ['name', 'description', 'order', 'parent_id'])
+                        post.groupers.append(new_grouper)
+                        self.save_fields_into_grouper(grouper, post, new_grouper, session)
+                        pgrouper_id = new_grouper.id
+                        
+                    else:
+                        raise BadRequestError(grouper_validator.get_errors())
+
+                    self.save_groupers_into_post(grouper, post, session, pgrouper_id)
+
+
+    def save_fields_into_grouper(self, data, post, grouper, session):
+        """"""
+
+        session.flush()
+        errors = []
+        if 'fields' in data and isinstance(data['fields'], list) and len(data['fields']) > 0:
+
+            for field in data['fields']:
+                
+                field['grouper_id'] = grouper.id
+                field['post_id'] = post.id
+                field_validator = FieldValidator(field)
+                
+                if field_validator.is_valid():
+
+                    new_field = Field()
+                    Helper().fill_object_from_data(new_field, field, ['name', 'description', 'type', 'order', 'grouper_id', 'post_id'])
+                    grouper.fields.append(new_field)
+
+                    if new_field.type == 'long-text':
+                        self.save_field_content_into_field(field, post, grouper, new_field, session)
+
+                    elif new_field.type == 'short-text':
+                        self.save_field_text_into_field(field, post, grouper, new_field, session)
+
+                    elif new_field.type == 'file':
+                        self.save_field_file_into_field(field, post, grouper, new_field, session)
+                    
+                else:
+                    raise BadRequestError(field_validator.get_errors())
+
+                self.save_fields_into_grouper(field, post, grouper, session)
+
+
+    def save_field_content_into_field(self, data, post, grouper, field, session):
+        """"""
+
+        session.flush()
+        errors = []
+        if 'field' in data and data['field'] != '':
+
+            field_content = data['field']
+            field_content['grouper_id'] = grouper.id
+            field_content['post_id'] = post.id
+            field_content['field_id'] = field.id
+            field_validator = FieldContentValidator(field_content)
+
+            if field_validator.is_valid():
+
+                    new_field = FieldContent()
+                    Helper().fill_object_from_data(new_field, field_content, ['content', 'post_id', 'grouper_id', 'field_id'])
+                    session.add(new_field)
+                    
+            else:
+                raise BadRequestError(field_validator.get_errors())
+
+
+
+    def save_field_text_into_field(self, data, post, grouper, field, session):
+        """"""
+
+        session.flush()
+        errors = []
+        if 'field' in data and data['field'] != '':
+
+            field_text = data['field']
+            field_text['grouper_id'] = grouper.id
+            field_text['post_id'] = post.id
+            field_text['field_id'] = field.id
+            field_validator = FieldTextValidator(field_text)
+
+            if field_validator.is_valid():
+
+                    new_field = FieldText()
+                    Helper().fill_object_from_data(new_field, field_text, ['content', 'post_id', 'grouper_id', 'field_id'])
+                    session.add(new_field)
+                    
+            else:
+                raise BadRequestError(field_validator.get_errors())
+
+    
+    def save_field_file_into_field(self, data, post, grouper, field, session):
+        """"""
+
+        session.flush()
+        errors = []
+        if 'field' in data and data['field'] != '':
+
+            field_file = data['field']
+            field_file['grouper_id'] = grouper.id
+            field_file['post_id'] = post.id
+            field_file['field_id'] = field.id
+            field_validator = FieldFileValidator(field_file)
+
+            if field_validator.is_valid():
+
+                    new_field = FieldFile()
+                    Helper().fill_object_from_data(new_field, field_file, ['media_id', 'post_id', 'grouper_id', 'field_id'])
+                    session.add(new_field)
+                    
+            else:
+                raise BadRequestError(field_validator.get_errors())

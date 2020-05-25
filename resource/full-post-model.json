@@ -1,0 +1,110 @@
+{
+	"name": "Hello World",
+	"title": "Hello World",
+	"description": "Lorem ipsum dolor",
+	"status": "publish",
+	"is_protected": 0,
+	"has_comments": 0,
+	"publish_on": "2020-05-06 22:53:10",
+	"expire_on": "2020-05-07 22:53:10",
+	"xparent_id": 1,
+	"post_type_id": 1,
+	"language_id": 1,
+	"user_id": 1,
+	"terms": [],
+	"groupers": [
+		{
+			"name": "Grupo Portfolio",
+			"description": "Area de portfolio do site",
+			"order": 0,
+			"groupers": [
+				{
+					"name": "Item 1 do portfolio",
+					"description": "Lorem ipsum dolor",
+					"order": 0,
+					"fields": [
+						{
+							"name": "Foto do item 1 do portfolio",
+							"description": "Lorem ipsum dolor",
+							"type": "file",
+							"order": 0,
+							"field": {
+								"media_id": 1
+							}
+						},
+						{
+							"name": "Item 2 do portfolio",
+							"description": "Lorem ipsum dolor",
+							"type": "short-text",
+							"order": 0,
+							"field": {
+								"content": "Uma descrição curta"
+							}
+						}
+					],
+					"groupers": [
+						{
+							"name": "Agrupador do item um do portifolio",
+							"description": "Lorem ipsum dolor",
+							"order": 0,
+							"fields": [
+								{
+									"name": "Item do agrupador do item 1 do portfolio",
+									"description": "Lorem ipsum dolor",
+									"type": "short-text",
+									"order": 0,
+									"field": {
+										"content": "Uma descrição curta do agrupador do item um"
+									}
+								}	
+							]
+						}
+					]
+				},
+				{
+					"name": "Item 2 do portfolio",
+					"description": "Lorem ipsum dolor",
+					"order": 0,
+					"fields": [
+						{
+							"name": "Content do Item 2 do portifolio",
+							"description": "Lorem ipsum dolor",
+							"type": "long-text",
+							"order": 0,
+							"field": {
+								"content": "Descrição longa do item 2 do portifolio"
+							}
+						}
+					],
+					"groupers": []
+				}
+			]
+		},
+		{
+			"name": "Grupo Galeria",
+			"description": "Lorem ipsum dolor",
+			"order": 0,
+			"fields": [
+				{
+					"name": "Item 1 da galeria",
+					"description": "Lorem ipsum dolor",
+					"type": "file",
+					"order": 0,
+					"field": {
+						"media_id": 2
+					}
+				},
+				{
+					"name": "Item 2 da galeria",
+					"description": "Lorem ipsum dolor",
+					"type": "short-text",
+					"order": 0,
+					"field": {
+						"content": "Uma breve descrição"
+					}
+				}
+			],
+			"groupers": []
+		}
+	]
+}
