@@ -5,23 +5,23 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 Post_Term = Table('Post_Term', Base.metadata,
-    Column('post_id', Integer, ForeignKey('Post.id'), nullable=False),
-    Column('term_id', Integer, ForeignKey('Term.id'), nullable=False)
+    Column('post_id', Integer, ForeignKey('Post.id', name='fk_post_term_post_id'), nullable=False),
+    Column('term_id', Integer, ForeignKey('Term.id', name='fk_post_term_term_id'), nullable=False)
 )
 
 Post_Type_Taxonomy = Table('Post_Type_Taxonomy', Base.metadata,
-    Column('post_type_id', Integer, ForeignKey('Post_Type.id'), nullable=False),
-    Column('taxonomy_id', Integer, ForeignKey('Taxonomy.id'), nullable=False)
+    Column('post_type_id', Integer, ForeignKey('Post_Type.id', name='fk_post_type_taxonomy_post_type_id'), nullable=False),
+    Column('taxonomy_id', Integer, ForeignKey('Taxonomy.id', name='fk_post_type_taxonomy_taxonomy_id'), nullable=False)
 )
 
 Sector_Menu = Table('Sector_Menu', Base.metadata,
-    Column('sector_id', Integer, ForeignKey('Sector.id'), nullable=False),
-    Column('menu_id', Integer, ForeignKey('Menu.id'), nullable=False)
+    Column('sector_id', Integer, ForeignKey('Sector.id', name='fk_sector_menu_sector_id'), nullable=False),
+    Column('menu_id', Integer, ForeignKey('Menu.id', name='fk_sector_menu_menu_id'), nullable=False)
 )
 
 Capability_Role = Table('Capability_Role', Base.metadata,
-    Column('capability_id', Integer, ForeignKey('Capability.id'), nullable=False),
-    Column('role_id', Integer, ForeignKey('Role.id'), nullable=False)
+    Column('capability_id', Integer, ForeignKey('Capability.id', name='fk_capability_role_capability_id'), nullable=False),
+    Column('role_id', Integer, ForeignKey('Role.id', name='fk_capability_role_role_id'), nullable=False)
 )
 
 class Blacklist(Base):
@@ -54,10 +54,10 @@ class Comment(Base):
     origin_agent = Column(String(255), nullable=False)
     created = Column(DateTime, nullable=False)
     # foreignKeys
-    parent_id = Column(Integer, ForeignKey('Comment.id'), nullable=True)
-    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
-    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
-    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
+    parent_id = Column(Integer, ForeignKey('Comment.id', name='fk_comment_parent_id'), nullable=True)
+    user_id = Column(Integer, ForeignKey('User.id', name='fk_comment_user_id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id', name='fk_comment_post_id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id', name='fk_comment_language_id'), nullable=False)
     # relationships
     user = relationship('User', foreign_keys='Comment.user_id')
     language = relationship('Language', foreign_keys='Comment.language_id')
@@ -74,7 +74,7 @@ class Configuration(Base):
     has_comments = Column(Boolean, nullable=False)
     email = Column(String(100), nullable=True)
     # foreignKeys
-    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id', name='fk_configuration_language_id'), nullable=False)
     # relationships
     language = relationship('Language', foreign_keys='Configuration.language_id')
     socials = relationship('Social', foreign_keys='Social.configuration_id')
@@ -88,8 +88,8 @@ class Field(Base):
     type = Column(String(15), nullable=False) # can be content, text and file
     order = Column(Integer, nullable=False)
     # foreignKeys
-    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
-    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id', name='fk_field_grouper_id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id', name='fk_field_post_id'), nullable=False)
     # relationships
     grouper = relationship('Grouper', foreign_keys='Field.grouper_id')
     post = relationship('Post', foreign_keys='Field.post_id')
@@ -103,9 +103,9 @@ class FieldContent(Base):
     id = Column(Integer, primary_key=True)
     content = Column(Text(4294000000), nullable=False)
     # foreignKeys
-    field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
-    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
-    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
+    field_id = Column(Integer, ForeignKey('Field.id', name='fk_field_content_field_id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id', name='fk_field_content_grouper_id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id', name='fk_field_content_post_id'), nullable=False)
     # relationships
     #field = relationship('Field', foreign_keys='FieldContent.field_id')
 
@@ -114,10 +114,10 @@ class FieldFile(Base):
     __tablename__ = 'Field_File'
     id = Column(Integer, primary_key=True)
     # foreignKeys
-    field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
-    media_id = Column(Integer, ForeignKey('Media.id'), nullable=False)
-    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
-    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
+    field_id = Column(Integer, ForeignKey('Field.id', name='fk_field_file_field_id'), nullable=False)
+    media_id = Column(Integer, ForeignKey('Media.id', name='fk_field_file_media_id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id', name='fk_field_file_grouper_id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id', name='fk_field_file_post_id'), nullable=False)
     # relationships
     media = relationship('Media', foreign_keys='FieldFile.media_id')
     #field = relationship('Field', foreign_keys='FieldFile.field_id')
@@ -128,9 +128,9 @@ class FieldText(Base):
     id = Column(Integer, primary_key=True)
     content = Column(String(255), nullable=False)
     # foreignKeys
-    field_id = Column(Integer, ForeignKey('Field.id'), nullable=False)
-    grouper_id = Column(Integer, ForeignKey('Grouper.id'), nullable=False)
-    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
+    field_id = Column(Integer, ForeignKey('Field.id', name='fk_field_text_field_id'), nullable=False)
+    grouper_id = Column(Integer, ForeignKey('Grouper.id', name='fk_field_text_grouper_id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id', name='fk_field_text_post_id'), nullable=False)
     # relationships
     #field = relationship('Field', foreign_keys='FieldText.field_id')
 
@@ -142,8 +142,8 @@ class Grouper(Base):
     description = Column(String(255), nullable=True)
     order = Column(Integer, nullable=False)
     # foreignKeys
-    parent_id = Column(Integer, ForeignKey('Grouper.id'), nullable=True)
-    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
+    parent_id = Column(Integer, ForeignKey('Grouper.id', name='fk_grouper_parent_id'), nullable=True)
+    post_id = Column(Integer, ForeignKey('Post.id', name='fk_grouper_post_id'), nullable=False)
     # relationships
     parent = relationship('Grouper', foreign_keys='Grouper.parent_id', remote_side='Grouper.id')
     children = relationship('Grouper')
@@ -173,11 +173,11 @@ class Media(Base):
     description = Column(String(255), nullable=True)
     type = Column(String(100), nullable=False)
     extension = Column(String(4), nullable=False)
-    file = Column(LargeBinary, nullable=False)
+    file = Column(LargeBinary(length=(2**32)-1), nullable=False)
     origin = Column(String(50), nullable=False) # where came from (post, user avatar, configuration, etc...)
     created = Column(DateTime, nullable=False)
     # foreignKeys
-    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('User.id', name='fk_media_user_id'), nullable=False)
     # relationships
     user = relationship('User', foreign_keys='Media.user_id')
     #avatar_owner = relationship('User', foreign_keys='User.avatar_id')
@@ -191,7 +191,7 @@ class Menu(Base):
     order = Column(Integer, nullable=False)
     description = Column(String(255), nullable=True)
     # foreignKeys
-    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id', name='fk_menu_language_id'), nullable=False)
     # relationships
     language = relationship('Language', foreign_keys='Menu.language_id')
     sectors = relationship('Sector', secondary=Sector_Menu)
@@ -208,8 +208,8 @@ class MenuItem(Base):
     title = Column(String(255), nullable=False)
     order = Column(Integer, nullable=False)
     # foreignKeys
-    parent_id = Column(Integer, ForeignKey('Menu_Item.id'), nullable=True)
-    menu_id = Column(Integer, ForeignKey('Menu.id'), nullable=False)
+    parent_id = Column(Integer, ForeignKey('Menu_Item.id', name='fk_menu_item_parent_id'), nullable=True)
+    menu_id = Column(Integer, ForeignKey('Menu.id', name='fk_menu_item_menu_id'), nullable=False)
     # relationships
     parent = relationship('MenuItem', foreign_keys='MenuItem.parent_id', remote_side='MenuItem.id')
     children = relationship('MenuItem')
@@ -224,8 +224,8 @@ class Nest(Base):
     limit = Column(Integer, nullable=False, default=0)
     has_pagination = Column(Boolean, nullable=False)
     # foreignKeys
-    post_id = Column(Integer, ForeignKey('Post.id'), nullable=False)
-    post_type_id = Column(Integer, ForeignKey('Post_Type.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('Post.id', name='fk_nest_post_id'), nullable=False)
+    post_type_id = Column(Integer, ForeignKey('Post_Type.id', name='fk_nest_post_type_id'), nullable=False)
     # relationships
     post = relationship('Post', foreign_keys='Nest.post_id')
     post_type = relationship('PostType', foreign_keys='Nest.post_type_id')
@@ -245,10 +245,10 @@ class Post(Base):
     created = Column(DateTime, nullable=False)
     edited = Column(DateTime, nullable=False)
     # foreignKeys
-    parent_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
-    post_type_id = Column(Integer, ForeignKey('Post_Type.id'), nullable=False)
-    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
-    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
+    parent_id = Column(Integer, ForeignKey('Post.id', name='fk_post_parent_id'), nullable=True)
+    post_type_id = Column(Integer, ForeignKey('Post_Type.id', name='fk_post_post_type_id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id', name='fk_post_language_id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('User.id', name='fk_post_user_id'), nullable=False)
     # relationships
     terms = relationship('Term', secondary=Post_Term)
     parent = relationship('Post', foreign_keys='Post.parent_id', remote_side='Post.id')
@@ -269,7 +269,7 @@ class PostType(Base):
     name = Column(String(255), nullable=False, unique=True)
     type = Column(String(50), nullable=False) # if the page will be to nest, user, tax, post, static, etc.
     # foreignKeys
-    template_id = Column(Integer, ForeignKey('Template.id'))
+    template_id = Column(Integer, ForeignKey('Template.id', name='fk_post_type_template_id'))
     # relationships
     template = relationship('Template', foreign_keys='PostType.template_id')
     nests = relationship('Nest')
@@ -306,8 +306,8 @@ class Social(Base):
     description = Column(String(255), nullable=True)
     origin = Column(String(50), nullable=False)
     # foreignKeys
-    configuration_id = Column(Integer, ForeignKey('Configuration.id'), nullable=True)
-    user_id = Column(Integer, ForeignKey('User.id'), nullable=True)
+    configuration_id = Column(Integer, ForeignKey('Configuration.id', name='fk_social_configuration_id'), nullable=True)
+    user_id = Column(Integer, ForeignKey('User.id', name='fk_social_user_id'), nullable=True)
     # relationships
     configuration = relationship('Configuration', foreign_keys='Social.configuration_id')
     user = relationship('User', foreign_keys='Social.user_id')
@@ -341,10 +341,10 @@ class Term(Base):
     display_name = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
     # foreignKeys
-    parent_id = Column(Integer, ForeignKey('Term.id'), nullable=True)
-    page_id = Column(Integer, ForeignKey('Post.id'), nullable=True) # the term's custom page
-    taxonomy_id = Column(Integer, ForeignKey('Taxonomy.id'), nullable=False)
-    language_id = Column(Integer, ForeignKey('Language.id'), nullable=False)
+    parent_id = Column(Integer, ForeignKey('Term.id', name='fk_term_parent_id'), nullable=True)
+    page_id = Column(Integer, ForeignKey('Post.id', name='fk_term_page_id'), nullable=True) # the term's custom page
+    taxonomy_id = Column(Integer, ForeignKey('Taxonomy.id', name='fk_term_taxonomy_id'), nullable=False)
+    language_id = Column(Integer, ForeignKey('Language.id', name='fk_term_language_id'), nullable=False)
     # relationships
     parent = relationship('Term', foreign_keys='Term.parent_id', remote_side='Term.id')
     children = relationship('Term')
@@ -366,9 +366,9 @@ class User(Base):
     registered = Column(DateTime, nullable=False)
     status = Column(String(15), nullable=False)
     # foreignKeys
-    role_id = Column(Integer, ForeignKey('Role.id'), nullable=False)
-    avatar_id = Column(Integer, ForeignKey('Media.id'), nullable=True)
-    page_id = Column(Integer, ForeignKey('Post.id'), nullable=True)
+    role_id = Column(Integer, ForeignKey('Role.id', name='fk_user_role_id'), nullable=False)
+    avatar_id = Column(Integer, ForeignKey('Media.id', name='fk_user_avatar_id'), nullable=True)
+    page_id = Column(Integer, ForeignKey('Post.id', name='fk_user_page_id'), nullable=True)
     # relationships
     role = relationship('Role', foreign_keys='User.role_id')
     socials = relationship('Social', foreign_keys='Social.user_id')
