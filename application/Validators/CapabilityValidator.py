@@ -23,7 +23,10 @@ class CapabilityValidator(ValidatorBase):
                 'field_required': True,
                 'max_length': 50,
                 'min_length': 1,
-                #'valid_values': []
+                'valid_values': [
+                    'user', 'post', 'specifc-post-type', 'post-type', 'media', 'menu', 
+                    'taxonomy', 'configuration', 'comment', 'guest'
+                ]
             },
             'target_id': {
                 'key_required': True,

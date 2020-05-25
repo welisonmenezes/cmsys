@@ -125,20 +125,87 @@ def _add_primary_role(session):
 
     session.flush()
 
-    primary_capability = Capability(
-        description = 'Primary capability',
-        type = 'type-here',
-        target_id = 1,
+    user_capability = Capability(
+        description = 'User Manager',
+        type = 'user',
+        target_id = None,
         can_write = True,
         can_read = True,
         can_delete  = True
     )
+
+    post_capability = Capability(
+        description = 'Post Manager',
+        type = 'post',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True
+    )
+
+    post_type_capability = Capability(
+        description = 'Post Type Manager',
+        type = 'post-type',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True
+    )
+
+    media_capability = Capability(
+        description = 'Media Manager',
+        type = 'media',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True
+    )
+
+    menu_capability = Capability(
+        description = 'Menu Manager',
+        type = 'menu',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True
+    )
+
+    taxonomy_capability = Capability(
+        description = 'Taxonomy Manager',
+        type = 'taxonomy',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True
+    )
+
+    configuration_capability = Capability(
+        description = 'Configuration Manager',
+        type = 'configuration',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True
+    )
+
+    comment_capability = Capability(
+        description = 'Comment Manager',
+        type = 'comment',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True
+    )
+
     admin_role = Role(
         name = 'Administrator',
         description = 'Full access aplication',
         can_access_admin = True
     )
-    admin_role.capabilities.append(primary_capability)
+    admin_role.capabilities.extend([
+        user_capability, post_capability, post_type_capability, media_capability, menu_capability,
+        taxonomy_capability, configuration_capability, comment_capability
+    ])
 
     session.add(admin_role)
 

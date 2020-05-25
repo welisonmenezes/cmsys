@@ -1,0 +1,45 @@
+user: 
+	Pode gerenciar usuarios
+		- Capability, Role, User, Social
+
+post:
+	Pode gerenciar posts
+		- Post, Field, FieldContent, FieldFile, FieldText, Nest, Grouper
+
+specifc-post-type:
+	Pode gerenciar posts, mas de um post type específico
+		- Post, Field, FieldContent, FieldFile, FieldText, Nest, Grouper
+
+post-type:
+	Pode gerenciar tipos de posts
+		- PostType, Template
+
+media:
+	Pode gerenciar midias
+		- Media
+
+menu:
+	Pode gerenciar menus
+		- Menu, MenuItem
+
+taxonomy:
+	Pode gerenciar taxonomias
+		- Term, Taxonomy
+
+configuration:
+	Pode gerenciar Configurações
+		- Blacklist, Variable, Configuration, Language, Social
+
+comment:
+	Pode gerenciar Comentários
+		- Comment
+
+guest:
+	Pode ver posts protegidos
+
+
+# extras
+
+manager:
+	Pode executar transformações (post,put,delete)
+
