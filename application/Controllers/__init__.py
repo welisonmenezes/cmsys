@@ -1,4 +1,5 @@
 from .ControllerBase import *
+from .AuthController import *
 from .BlacklistController import *
 from .CapabilityController import *
 from .CommentController import *
@@ -30,6 +31,7 @@ def start_controllers(app, api):
 
     ControllerBase.default_routers(app)
     
+    api.add_resource(AuthController, '/login', '/refresh', '/public')
     api.add_resource(BlacklistController, '/blacklist', '/blacklist/<int:id>')
     api.add_resource(CapabilityController, '/capability', '/capability/<int:id>')
     api.add_resource(CommentController, '/comment', '/comment/<int:id>')
