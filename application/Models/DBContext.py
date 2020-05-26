@@ -366,7 +366,7 @@ class User(Base):
     email = Column(String(100), nullable=False)
     registered = Column(DateTime, nullable=False)
     status = Column(String(15), nullable=False)
-    refresh_token = Column(String(385), nullable=True)
+    refresh_token = Column(String(400), nullable=True)
     # foreignKeys
     role_id = Column(Integer, ForeignKey('Role.id', name='fk_user_role_id'), nullable=False)
     avatar_id = Column(Integer, ForeignKey('Media.id', name='fk_user_avatar_id'), nullable=True)

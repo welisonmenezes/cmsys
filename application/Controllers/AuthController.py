@@ -17,7 +17,7 @@ class AuthController(Resource):
         if str(request.url_rule) == '/api/public':
 
             try:
-                access = decode_token('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA1MDU0MjksIm5iZiI6MTU5MDUwNTQyOSwianRpIjoiYTg3YWM4NmYtMDJmMi00Nzk0LTg1MzktMDRiM2YyN2U1OWM0IiwiZXhwIjoxNTkwNTA1NjA5LCJpZGVudGl0eSI6eyJpZCI6MSwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.rExyjtVG2NQAUw-DvxOSKoVfcsOyGJgihkDc46RvRC4')
+                access = decode_token('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA1MDYwMzQsIm5iZiI6MTU5MDUwNjAzNCwianRpIjoiZTFmN2MxZjgtNzBmYy00YmU4LTg2NWQtYjFkNDAyN2NkOWRkIiwiZXhwIjoxNTkwNTA2MjE0LCJpZGVudGl0eSI6eyJpZCI6MSwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.B5-k4DL3fkY3ZkupgdQ6feXzP36q5UM5dvKQESr9xSA')
 
                 if 'identity' in access:
 
@@ -40,6 +40,8 @@ class AuthController(Resource):
 
 
     def _login(self):
+        """"""
+
         data = request.get_json()
         if 'login' in data and 'password' in data and data['login'] != '' and data['password'] != '':
             user = self.session.query(User).filter_by(login=data['login']).first()
@@ -52,12 +54,12 @@ class AuthController(Resource):
                     }
                     try:
                         token = create_access_token(identity=user_identity)
-                        refresh_token = create_refresh_token(identity=user.id)
+                        refresh_token = create_refresh_token(identity=user_identity)
                         user.refresh_token = refresh_token
                         self.session.commit()
                         return {
-                            'access_token': create_access_token(identity=user_identity),
-                            'refresh_token': create_refresh_token(identity=user.id)
+                            'access_token': token,
+                            'refresh_token': refresh_token
                         }, 200
                     except Exception as e:
                         return ErrorHandler().get_error(500, 'Error to process your login.')
@@ -66,21 +68,42 @@ class AuthController(Resource):
             else:
                 return ErrorHandler().get_error(401, 'Invalid credencials.')
         else:
-            return ErrorHandler().get_error(400, 'Insufficient credentials.')
+            return ErrorHandler().get_error(400, 'Insufficient data to authenticate.')
 
 
     def _refresh(self):
+        """"""
 
-        try:
-            access = decode_token('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA0NTI1MjAsIm5iZiI6MTU5MDQ1MjUyMCwianRpIjoiZmE4MzQ4MDUtODg5Ni00OGJhLWI3Y2MtZTZlNjg2MTQ5MTJjIiwiZXhwIjoxNTkwNDUyNTgwLCJpZGVudGl0eSI6IndlbGlzb24iLCJ0eXBlIjoicmVmcmVzaCJ9.vw9G0m6AMpTzeDqD_t8PbH9S-wEki9k4ZfRrRvoLyj0')
-
-            if 'identity' in access:
-                return {
-                    'access_token': create_access_token(identity=access['identity'])
-                }, 200
-
-        except Exception as e:
-            
-            return 'sem acesso'
-
-        
+        data = request.get_json()
+        if 'refresh_token' in data and data['refresh_token'] != '':
+            try:
+                access = decode_token(data['refresh_token'])
+                if 'identity' in access:
+                    identity = access['identity']
+                    if 'id' in identity and 'login' in identity and 'role' in identity:
+                        user = self.session.query(User).filter_by(login=identity['login']).first()
+                        if user:
+                            if user.refresh_token == data['refresh_token']:
+                                try:
+                                    token = create_access_token(identity=identity)
+                                    refresh_token = create_refresh_token(identity=identity)
+                                    user.refresh_token = refresh_token
+                                    self.session.commit()
+                                    return {
+                                        'access_token': token,
+                                        'refresh_token': refresh_token
+                                    }, 200
+                                except Exception as e:
+                                    return ErrorHandler().get_error(500, 'Error to process the token refreshing.')
+                            else:
+                                return ErrorHandler().get_error(401, 'The given Refresh Token is not available.')
+                        else:
+                            return ErrorHandler().get_error(400, 'No user found.')
+                    else:
+                        return ErrorHandler().get_error(400, 'Invalid identity.')
+                else:
+                    return ErrorHandler().get_error(400, 'Invalid Refresh Token.')
+            except Exception as e:
+                return ErrorHandler().get_error(401, 'Refresh Token expired.')
+        else:
+            return ErrorHandler().get_error(400, 'No Refresh Token send.')

@@ -60,7 +60,7 @@ class UserValidator(ValidatorBase):
                 'is_integer': True
             },
             'refresh_token': {
-                'max_length': 385
+                'max_length': 400
             }
         }
 
