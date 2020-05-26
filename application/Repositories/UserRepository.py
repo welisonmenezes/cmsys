@@ -34,7 +34,7 @@ class UserRepository(RepositoryBase):
             query = session.query(User).filter(*fb.get_filter()).order_by(*fb.get_order_by())
             result = Paginate(query, fb.get_page(), fb.get_limit())
             excluded_fields = self.get_exclude_fields(args, ['role', 'socials', 'medias', 'page', 'avatar'])
-            excluded_fields += ('password',)
+            excluded_fields += ('password', 'refresh_token',)
             schema = UserSchema(many=True, exclude=excluded_fields)
             return self.handle_success(result, schema, 'get', 'User')
 
@@ -48,7 +48,7 @@ class UserRepository(RepositoryBase):
         def run(session):
             result = session.query(User).filter_by(id=id).first()
             excluded_fields = self.get_exclude_fields(args, ['role', 'socials', 'medias', 'page', 'avatar'])
-            excluded_fields += ('password',)
+            excluded_fields += ('password', 'refresh_token',)
             schema = UserSchema(many=False, exclude=excluded_fields)
             return self.handle_success(result, schema, 'get_by_id', 'User')
 
