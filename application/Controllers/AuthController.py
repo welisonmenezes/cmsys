@@ -3,44 +3,32 @@ from flask_restful import Resource
 from flask_jwt_extended import create_access_token, create_refresh_token, decode_token
 from app import bcrypt
 from ErrorHandlers import ErrorHandler
-from Models import Session, User
+from Models import Session, User, Blacklist
 
 class AuthController(Resource):
     """This flask_restful API's Resource works like a controller to AuthRepository."""
 
     def __init__(self):
         self.session = Session()
-    
-
-    def get(self, id=None):
-        
-        if str(request.url_rule) == '/api/public':
-
-            try:
-                access = decode_token('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA1MDYwMzQsIm5iZiI6MTU5MDUwNjAzNCwianRpIjoiZTFmN2MxZjgtNzBmYy00YmU4LTg2NWQtYjFkNDAyN2NkOWRkIiwiZXhwIjoxNTkwNTA2MjE0LCJpZGVudGl0eSI6eyJpZCI6MSwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.B5-k4DL3fkY3ZkupgdQ6feXzP36q5UM5dvKQESr9xSA')
-
-                if 'identity' in access:
-
-                    return access
-
-            except Exception as e:
-                
-                return 'refaça seu login'
 
 
     def post(self):
+        """Sets the available endpoints to deal with Tokens."""
 
-        if str(request.url_rule) == '/api/login':
-            return self._login()
-        elif str(request.url_rule) == '/api/refresh':
-            return self._refresh()
+        if str(request.url_rule) == '/api/get-token':
+            return self._get_token()
+        elif str(request.url_rule) == '/api/refresh-token':
+            return self._refresh_token()
+        elif str(request.url_rule) == '/api/revoke-token':
+            return self._revoke_token()
+        elif str(request.url_rule) == '/api/test-token':
+            return self._test_token()
         
         return ErrorHandler().get_error(405, 'Method not allowed.')
 
 
-
-    def _login(self):
-        """"""
+    def _get_token(self):
+        """Gets the Token and Refresh Token to valid user."""
 
         data = request.get_json()
         if 'login' in data and 'password' in data and data['login'] != '' and data['password'] != '':
@@ -71,8 +59,8 @@ class AuthController(Resource):
             return ErrorHandler().get_error(400, 'Insufficient data to authenticate.')
 
 
-    def _refresh(self):
-        """"""
+    def _refresh_token(self):
+        """Refreshes the Token by the given Refresh Token only if it is valid yet."""
 
         data = request.get_json()
         if 'refresh_token' in data and data['refresh_token'] != '':
@@ -98,7 +86,7 @@ class AuthController(Resource):
                             else:
                                 return ErrorHandler().get_error(401, 'The given Refresh Token is not available.')
                         else:
-                            return ErrorHandler().get_error(400, 'No user found.')
+                            return ErrorHandler().get_error(404, 'No user found.')
                     else:
                         return ErrorHandler().get_error(400, 'Invalid identity.')
                 else:
@@ -107,3 +95,71 @@ class AuthController(Resource):
                 return ErrorHandler().get_error(401, 'Refresh Token expired.')
         else:
             return ErrorHandler().get_error(400, 'No Refresh Token send.')
+
+
+    def _revoke_token(self):
+        """Revokes the given Token by adding it into a blacklist and empties the user Refresh Token."""
+
+        data = request.get_json()
+        if 'token' in data and data['token'] != '':
+            try:
+                access = decode_token(data['token'])
+                if 'identity' in access:
+                    identity = access['identity']
+                    if 'id' in identity and 'login' in identity and 'role' in identity:
+                        user = self.session.query(User).filter_by(login=identity['login']).first()
+                        if user:
+                            if not user.refresh_token or user.refresh_token == '':
+                                return ErrorHandler().get_error(401, 'Token already revoked.')
+                            try:
+                                user.refresh_token = None
+                                blacklist = Blacklist(
+                                    type = 'token',
+                                    value = data['token'],
+                                    target = 'auth'
+                                )
+                                self.session.add(blacklist)
+                                self.session.commit()
+                                return {'message': 'Token revoked successfully.'}, 200
+                            except Exception as e:
+                                self.session.rollback()
+                                return ErrorHandler().get_error(500, 'Error to process the token revoking.')
+                        else:
+                            return ErrorHandler().get_error(404, 'No user found.')
+                    else:
+                        return ErrorHandler().get_error(400, 'Invalid identity.')
+                else:
+                    return ErrorHandler().get_error(400, 'Invalid Token.')
+            except Exception as e:
+                return ErrorHandler().get_error(401, 'Token already expired.')
+        else:
+            return ErrorHandler().get_error(400, 'No Token send.')
+
+
+    def _test_token(self):
+        """Just a endpoint to test the given Token sent by request header into the Authorization key."""
+
+        token = request.headers.get('Authorization')
+        if token:
+            blacklist = self.session.query(Blacklist.id).filter_by(value=token).first()
+            if blacklist:
+                return ErrorHandler().get_error(401, 'Token revoked.')
+            else:
+                try:
+                    access = decode_token(token)
+                    if 'identity' in access:
+                        identity = access['identity']
+                        if 'id' in identity and 'login' in identity and 'role' in identity:
+                            user = self.session.query(User).filter_by(login=identity['login']).first()
+                            if user:
+                                return {'message': 'Your token is valid.'}, 200
+                            else:
+                                return ErrorHandler().get_error(404, 'No user found.')
+                        else:
+                            return ErrorHandler().get_error(400, 'Invalid identity.')
+                    else:
+                        return ErrorHandler().get_error(400, 'Invalid Token.')
+                except Exception as e:
+                    return ErrorHandler().get_error(401, 'Token already expired.')
+        else:
+            return ErrorHandler().get_error(401, 'No Token send.')
