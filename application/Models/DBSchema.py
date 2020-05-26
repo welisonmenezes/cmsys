@@ -6,7 +6,7 @@ ma = Marshmallow(app)
 
 exclude_post = ('user', 'language', 'parent', 'children', 'post_type', 'nests', 'terms')
 exclude_post_type = ('template', 'nests', 'taxonomies')
-exclude_user = ('role', 'socials', 'password', 'medias', 'avatar')
+exclude_user = ('role', 'socials', 'password', 'refresh_token','medias', 'avatar')
 exclude_comment = ('parent', 'children', 'language', 'user', 'post')
 exclude_menu_item = ('parent', 'children', 'menu')
 exclude_grouper = ('parent', 'post')
@@ -186,7 +186,7 @@ class UserSchema(ma.Schema):
     page = fields.Nested('PostSchema', many=False, exclude=exclude_post)
     class Meta:
         fields = ('id', 'login', 'password', 'nickname', 'first_name', 'last_name', 'email', 
-        'registered', 'status', 'role_id', 'avatar_id', 'page_id', 'role', 'socials',
+        'registered', 'status', 'refresh_token', 'role_id', 'avatar_id', 'page_id', 'role', 'socials',
         'medias', 'page', 'avatar')
 
 

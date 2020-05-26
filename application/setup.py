@@ -1,4 +1,4 @@
-from app import app
+from app import app, bcrypt
 from Models import Engine, Base, Session, Language, Template, PostType, Capability, Role, User, Configuration
 from Utils import Helper
 
@@ -224,7 +224,7 @@ def _add_primary_user(session):
 
     primary_user = User(
         login = 'admin',
-        password = 'admin123',
+        password = bcrypt.generate_password_hash('admin123'),
         nickname = 'admin',
         first_name = 'Admin',
         last_name = 'Admin',
