@@ -5,6 +5,8 @@ from Utils import Checker
 from Models import Session, Media, FieldFile, FieldText, FieldContent
 from ErrorHandlers import ErrorHandler, BadRequestError, NotFoundError
 
+# TODO: transfer the error handler returns to controller base.
+
 class RepositoryBase():
     """It Works like parent class witch must provide common attributes and methods
         and applies the response method to each child's method responder."""

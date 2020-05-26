@@ -64,11 +64,12 @@ class AuthController(Resource):
 
         def fn():
             passport = AuthUtils().get_authorized_passport(from_where='Request', verify_blacklist=False, token_key='refresh_token')
+            print(passport)
             data = request.get_json()
             if passport['user'].refresh_token == data['refresh_token']:
                 try:
-                    token = create_access_token(identity=passport['access'].identity)
-                    refresh_token = create_refresh_token(identity=passport['access'].identity)
+                    token = create_access_token(identity=passport['access']['identity'])
+                    refresh_token = create_refresh_token(identity=passport['access']['identity'])
                     passport['user'].refresh_token = refresh_token
                     self.session.commit()
                     return {
