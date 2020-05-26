@@ -1,8 +1,8 @@
 from flask import  request, jsonify
 from flask_restful import Resource, reqparse
 from Utils import Helper
-from ErrorHandlers import ErrorHandler, NotAuthorizedError
-from Auth import BlacklistProtect
+from ErrorHandlers import ErrorHandler, NotAuthorizedError, BadRequestError, NotFoundError
+from Auth import protect_endpoints
 
 class ControllerBase(Resource):
     """The base class that will provide basics configurations and methods to its children.
@@ -66,13 +66,16 @@ class ControllerBase(Resource):
 
         @app.before_request
         def before_request():
+            """Before request execute the endpoint protectors."""
             
             try:
-                BlacklistProtect()
-
+                protect_endpoints()
             except NotAuthorizedError as e:
                 return ErrorHandler().get_error(401, str(e))
-            
+            except BadRequestError as e:
+                return ErrorHandler().get_error(400, str(e))
+            except NotFoundError as e:
+                return ErrorHandler().get_error(404, str(e))
             except Exception as e:
                 return ErrorHandler().get_error(500, str(e))
                 
