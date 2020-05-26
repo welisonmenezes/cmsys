@@ -3,15 +3,11 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
-import datetime
 
 # Create the application
 app = Flask(__name__, template_folder='Views/UI', static_folder='Views/UI/static')
 app.config.from_pyfile('config.py')
 bcrypt = Bcrypt(app)
-app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(minutes=3)
-app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(minutes=10)
 jwt = JWTManager(app)
 
 # Start the logging

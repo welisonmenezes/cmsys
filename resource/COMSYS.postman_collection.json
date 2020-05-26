@@ -6,6 +6,148 @@
 	},
 	"item": [
 		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "get-token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"login\": \"admin\",\n\t\"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/get-token",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"get-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA1MzMzNzMsIm5iZiI6MTU5MDUzMzM3MywianRpIjoiOWQ5ODExYjItODMxOC00MWJmLWI5YmItMjEwMzMyZWEyOWRjIiwiZXhwIjoxNTkwNTM1MTczLCJpZGVudGl0eSI6eyJpZCI6MSwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.1YVghRPU0XZ98x-74N3OzELgzeyhNsiibWGg0svUAVw\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/refresh-token",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revoke-token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA1MzMzNzMsIm5iZiI6MTU5MDUzMzM3MywianRpIjoiOWQ5ODExYjItODMxOC00MWJmLWI5YmItMjEwMzMyZWEyOWRjIiwiZXhwIjoxNTkwNTM1MTczLCJpZGVudGl0eSI6eyJpZCI6MSwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.1YVghRPU0XZ98x-74N3OzELgzeyhNsiibWGg0svUAVw\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/revoke-token",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"revoke-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "public",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA1MzM1MzAsIm5iZiI6MTU5MDUzMzUzMCwianRpIjoiNWM4NWM1NWItNjY4Ny00NWI4LThlYTUtMjQxMWQ1MDdiNDU3IiwiZXhwIjoxNTkwNTM1MzMwLCJpZGVudGl0eSI6eyJpZCI6MSwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.nuu8YKyPFYHDxxoIV7MWHNUbWfF5tBc6UCWdvJVPETE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/test-token",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"test-token"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Blacklist",
 			"item": [
 				{
@@ -98,7 +240,13 @@
 					"name": "get-by-id",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTA1MzM1MzAsIm5iZiI6MTU5MDUzMzUzMCwianRpIjoiNWM4NWM1NWItNjY4Ny00NWI4LThlYTUtMjQxMWQ1MDdiNDU3IiwiZXhwIjoxNTkwNTM1MzMwLCJpZGVudGl0eSI6eyJpZCI6MSwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.nuu8YKyPFYHDxxoIV7MWHNUbWfF5tBc6UCWdvJVPETE",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://127.0.0.1:5000/api/blacklist/1",
 							"protocol": "http",
@@ -5246,10 +5394,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"login\": \"user31-edited\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Fernanda\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com\",\n\t\"status\": \"pending\",\n\t\"role_id\": 7,\n\t\"avatar_id\": 25,\n\t\"page_id\": 17\n}"
+							"raw": "{\n\t\"login\": \"welison\",\n\t\"password\": \"123456\",\n\t\"nickname\": \"welison\",\n\t\"first_name\": \"Welison\",\n\t\"last_name\": \"Menezes\",\n\t\"email\": \"welison@email.com.br\",\n\t\"status\": \"active\",\n\t\"role_id\": 1,\n\t\"xavatar_id\": 31,\n\t\"xpage_id\": 1\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/api/user/31",
+							"raw": "http://127.0.0.1:5000/api/user/2",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -5261,7 +5409,7 @@
 							"path": [
 								"api",
 								"user",
-								"31"
+								"2"
 							]
 						}
 					},
