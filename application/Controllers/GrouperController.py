@@ -10,4 +10,4 @@ class GrouperController(ControllerBase):
 
         super(GrouperController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'parent_id', 'post_id', 'get_parent', 'get_children', 'get_post', 'get_fields'])
-        self.repo = GrouperRepository()
+        self.repo = GrouperRepository(session=self.session)

@@ -10,6 +10,10 @@ from ErrorHandlers import BadRequestError, NotFoundError
 class MediaRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Media."""
+
+    def __init__(self, session):
+        super().__init__(session)
+        
     
     def get(self, args):
         """Returns a list of data recovered from model.

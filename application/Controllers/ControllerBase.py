@@ -1,8 +1,11 @@
 from flask import  request, jsonify
 from flask_restful import Resource, reqparse
-from Utils import Helper
+from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.exceptions import HTTPException
 from ErrorHandlers import ErrorHandler, NotAuthorizedError, BadRequestError, NotFoundError
+from Utils import Helper
 from Auth import protect_endpoints
+from Models import Session
 
 class ControllerBase(Resource):
     """The base class that will provide basics configurations and methods to its children.
@@ -18,6 +21,7 @@ class ControllerBase(Resource):
         self.repo = None # must be passed by child controller (nemaly, an RepositoryBase child)
         self.request = request
         self.parser = reqparse.RequestParser()
+        self.session = Session()
         Helper().add_request_data(self.parser, [
             'page', 'limit', 'order', 'order_by', 'date_modifier', 
             'compare_date_time_one', 'compare_date_time_two', 'not_between'],
@@ -27,37 +31,33 @@ class ControllerBase(Resource):
     def get(self, id=None):
         """Runs the get http request method response."""
 
-        try:
+        def fn():
             return self.repo.get_by_id(id, self.args) if id else self.repo.get(self.args)
-        except Exception as e:
-            return ErrorHandler().get_error(405, str(e))
+        return ControllerBase.run_if_not_raise(fn, self.session)
 
 
     def post(self):
         """Runs the post http request method response."""
 
-        try:
+        def fn():
             return self.repo.create(self.request)
-        except Exception as e:
-            return ErrorHandler().get_error(405, str(e))
+        return ControllerBase.run_if_not_raise(fn, self.session)
 
 
     def put(self, id=None):
         """Runs the get http request method response."""
 
-        try:
+        def fn():
             return self.repo.update(id, self.request)
-        except Exception as e:
-            return ErrorHandler().get_error(405, str(e))
+        return ControllerBase.run_if_not_raise(fn, self.session)
 
 
     def delete(self, id=None):
         """Runs the delete http request method response."""
 
-        try:
+        def fn():
             return self.repo.delete(id, self.request)
-        except Exception as e:
-            return ErrorHandler().get_error(405, str(e))
+        return ControllerBase.run_if_not_raise(fn, self.session)
 
 
     @staticmethod
@@ -68,16 +68,9 @@ class ControllerBase(Resource):
         def before_request():
             """Before request execute the endpoint protectors."""
             
-            try:
+            def fn():
                 protect_endpoints()
-            except NotAuthorizedError as e:
-                return ErrorHandler().get_error(401, str(e))
-            except BadRequestError as e:
-                return ErrorHandler().get_error(400, str(e))
-            except NotFoundError as e:
-                return ErrorHandler().get_error(404, str(e))
-            except Exception as e:
-                return ErrorHandler().get_error(500, str(e))
+            return ControllerBase.run_if_not_raise(fn)
                 
 
         # Error 404 handler
@@ -113,3 +106,30 @@ class ControllerBase(Resource):
                 'error': 500,
                 'message': 'An internal error has occurred.'
             }), 500
+
+
+    @staticmethod
+    def run_if_not_raise(fn, session=None):
+        """Catch exception if it occurs, if not, execute the given function."""
+
+        try:
+            return fn()
+        except NotAuthorizedError as e:
+            return ErrorHandler().get_error(401, e.message)
+        except BadRequestError as e:
+            return ErrorHandler().get_error(400, e.message)
+        except NotFoundError as e:
+            return ErrorHandler().get_error(404, e.message)
+        except Exception as e:
+            return ErrorHandler().get_error(500, str(e))
+        except SQLAlchemyError as e:
+            return ErrorHandler().get_error(500, str(e))
+        except HTTPException as e:
+            return ErrorHandler().get_error(500, str(e))
+        except AttributeError as e:
+            return ErrorHandler().get_error(500, str(e))
+        except Exception as e:
+            return ErrorHandler().get_error(500, str(e))
+        finally:
+            if session:
+                session.rollback()

@@ -10,4 +10,4 @@ class ConfigurationController(ControllerBase):
 
         super(ConfigurationController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'has_comments', 'language_id', 'get_language', 'get_socials'])
-        self.repo = ConfigurationRepository()
+        self.repo = ConfigurationRepository(session=self.session)

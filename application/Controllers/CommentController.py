@@ -12,4 +12,4 @@ class CommentController(ControllerBase):
         self.args = Helper().add_request_data(self.parser, [
             'comment', 'status', 'origin_ip', 'origin_agent', 'created', 'parent_id', 'user_id', 'post_id',
             'language_id', 'get_user', 'get_language',  'get_post', 'get_parent', 'get_children'])
-        self.repo = CommentRepository()
+        self.repo = CommentRepository(session=self.session)

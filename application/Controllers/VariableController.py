@@ -10,4 +10,4 @@ class VariableController(ControllerBase):
 
         super(VariableController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s'])
-        self.repo = VariableRepository()
+        self.repo = VariableRepository(session=self.session)

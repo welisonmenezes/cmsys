@@ -10,4 +10,4 @@ class FieldFileController(ControllerBase):
 
         super(FieldFileController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['field_id', 'media_id', 'grouper_id', 'post_id'])
-        self.repo = FieldFileRepository()
+        self.repo = FieldFileRepository(session=self.session)

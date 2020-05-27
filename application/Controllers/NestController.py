@@ -10,4 +10,4 @@ class NestController(ControllerBase):
 
         super(NestController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'post_id', 'post_type_id', 'get_post', 'get_post_type'])
-        self.repo = NestRepository()
+        self.repo = NestRepository(session=self.session)

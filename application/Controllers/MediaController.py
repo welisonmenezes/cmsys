@@ -12,7 +12,7 @@ class MediaController(ControllerBase):
         super(MediaController, self).__init__()
         self.args = Helper().add_request_data(self.parser, [
             'download_file', 'return_file_data', 's', 'type', 'origin', 'created', 'user_id', 'get_user'])
-        self.repo = MediaRepository()
+        self.repo = MediaRepository(session=self.session)
 
 
     def get(self, id=None, name=None):

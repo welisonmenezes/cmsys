@@ -8,6 +8,10 @@ class SocialRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Social."""
 
+    def __init__(self, session):
+        super().__init__(session)
+        
+
     def get(self, args):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""

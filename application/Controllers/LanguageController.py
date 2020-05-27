@@ -10,4 +10,4 @@ class LanguageController(ControllerBase):
 
         super(LanguageController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['name', 'code', 'status'])
-        self.repo = LanguageRepository()
+        self.repo = LanguageRepository(session=self.session)

@@ -6,6 +6,10 @@ from Utils import Paginate, FilterBuilder, Helper
 class BlacklistRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
         communication between the controller and the model of Blacklist."""
+
+    def __init__(self, session):
+        super().__init__(session)
+        
     
     def get(self, args):
         """Returns a list of data recovered from model.

@@ -11,4 +11,4 @@ class MenuItemController(ControllerBase):
         super(MenuItemController, self).__init__()
         self.args = Helper().add_request_data(self.parser, [
             'type', 'behavior', 'url', 'title', 'parent_id', 'menu_id', 'get_menu', 'get_parent', 'get_children'])
-        self.repo = MenuItemRepository()
+        self.repo = MenuItemRepository(session=self.session)

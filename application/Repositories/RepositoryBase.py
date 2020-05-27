@@ -11,17 +11,21 @@ class RepositoryBase():
     """It Works like parent class witch must provide common attributes and methods
         and applies the response method to each child's method responder."""
 
-    def __init__(self):
+    def __init__(self, session):
         """Starts the common attributes on instantiation of the class."""
 
         self.joins = []
         self.fields = []
+        self.session = session
 
     
     def response(self, run, need_rollback):
         """Applies the errors handling before returns a response.
             Must be implemented by methods of RepositoryBase's children classes."""
 
+        return run(self.session)   
+
+        """
         session = Session()
 
         try:
@@ -59,6 +63,7 @@ class RepositoryBase():
             
         finally:
             session.close()
+        """
 
     
     def validate_before(self, process, data, validator_context, session, id=None):

@@ -10,4 +10,4 @@ class MenuController(ControllerBase):
 
         super(MenuController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'language_id', 'get_language', 'get_sectors', 'get_items'])
-        self.repo = MenuRepository()
+        self.repo = MenuRepository(session=self.session)

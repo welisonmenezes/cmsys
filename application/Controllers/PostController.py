@@ -13,7 +13,7 @@ class PostController(ControllerBase):
         self.args = Helper().add_request_data(self.parser, [
             's', 'status', 'created', 'parent_id', 'post_type_id', 'user_id', 'language_id', 'get_user', 'get_language', 
             'get_parent', 'get_children', 'get_post_type', 'get_nests', 'get_groupers', 'remove_foreign_keys', 'get_terms', 'term_id'])
-        self.repo = PostRepository()
+        self.repo = PostRepository(session=self.session)
         
 
     def get(self, id=None, name=None):

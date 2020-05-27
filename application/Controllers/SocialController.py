@@ -10,4 +10,4 @@ class SocialController(ControllerBase):
 
         super(SocialController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['name', 'origin', 'user_id', 'get_user', 'get_configuration'])
-        self.repo = SocialRepository()
+        self.repo = SocialRepository(session=self.session)

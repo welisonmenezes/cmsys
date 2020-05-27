@@ -10,4 +10,4 @@ class FieldTextController(ControllerBase):
 
         super(FieldTextController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['content', 'field_id', 'grouper_id', 'post_id'])
-        self.repo = FieldTextRepository()
+        self.repo = FieldTextRepository(session=self.session)

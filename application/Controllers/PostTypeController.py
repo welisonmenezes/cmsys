@@ -10,4 +10,4 @@ class PostTypeController(ControllerBase):
 
         super(PostTypeController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['name', 'type', 'get_template', 'get_nests', 'get_taxonomies'])
-        self.repo = PostTypeRepository()
+        self.repo = PostTypeRepository(session=self.session)

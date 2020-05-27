@@ -10,4 +10,4 @@ class FieldController(ControllerBase):
 
         super(FieldController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'type', 'grouper_id', 'post_id', 'get_post', 'get_grouper'])
-        self.repo = FieldRepository()
+        self.repo = FieldRepository(session=self.session)
