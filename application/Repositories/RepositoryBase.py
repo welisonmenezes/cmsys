@@ -16,54 +16,7 @@ class RepositoryBase():
 
         self.joins = []
         self.fields = []
-        self.session = session
-
-    
-    def response(self, run, need_rollback):
-        """Applies the errors handling before returns a response.
-            Must be implemented by methods of RepositoryBase's children classes."""
-
-        return run(self.session)   
-
-        """
-        session = Session()
-
-        try:
-            return run(session)
-
-        except BadRequestError as e:
-            if (need_rollback):
-                session.rollback()
-            return ErrorHandler().get_error(400, e.message)
-        
-        except NotFoundError as e:
-            if (need_rollback):
-                session.rollback()
-            return ErrorHandler().get_error(404, e.message)
-
-        except SQLAlchemyError as e:
-            if (need_rollback):
-                session.rollback()
-            return ErrorHandler().get_error(500, str(e))
-
-        except HTTPException as e:
-            if (need_rollback):
-                session.rollback()
-            return ErrorHandler().get_error(500, str(e))
-
-        except AttributeError as e:
-            if (need_rollback):
-                session.rollback()
-            return ErrorHandler().get_error(500, str(e))
-
-        except Exception as e:
-            if (need_rollback):
-                session.rollback()
-            return ErrorHandler().get_error(500, str(e))
-            
-        finally:
-            session.close()
-        """
+        self.session = session  
 
     
     def validate_before(self, process, data, validator_context, session, id=None):
@@ -71,13 +24,10 @@ class RepositoryBase():
 
         if (data):
             validator = validator_context(data)
-
             if (validator.is_valid(id=id)):
                 return process(session, data)
-
             else:
                 raise BadRequestError(validator.get_errors())
-
         else:
             raise BadRequestError('No data sent.')
 
@@ -97,12 +47,10 @@ class RepositoryBase():
             The arguments received by parameters determines the correct behave."""
 
         exclude_fields = ()
-
         if fields and isinstance(fields, list):
             for field in fields:
                 if (not args['get_' + str(field)] or args['get_' + str(field)] != '1'):
                     exclude_fields += (field,)
-
         return exclude_fields
 
 
@@ -152,6 +100,8 @@ class RepositoryBase():
 
 
     def get_result_by_unique_key(self, id, context, session):
+        """Return a row by the given key."""
+
         if Checker().can_be_integer(id):
             return session.query(context).filter_by(id=id).first()
         else:
@@ -290,7 +240,6 @@ class RepositoryBase():
 
         if errors:
             raise NotFoundError(errors)
-
 
 
     def raise_if_has_different_parent_reference(self, data, session, configurations):

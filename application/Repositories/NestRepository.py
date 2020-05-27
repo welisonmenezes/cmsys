@@ -16,87 +16,69 @@ class NestRepository(RepositoryBase):
         """Returns a list of data recovered from model.
             Before applies the received query params arguments."""
 
-        def run(session):
-            fb = FilterBuilder(Nest, args)
-            fb.set_equals_filters(['post_type_id', 'post_id'])
-            
-            try:
-                fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
-            except Exception as e:
-                raise BadRequestError(str(e))
+        fb = FilterBuilder(Nest, args)
+        fb.set_equals_filters(['post_type_id', 'post_id'])
+        
+        try:
+            fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
+        except Exception as e:
+            raise BadRequestError(str(e))
 
-            query = session.query(Nest).filter(*fb.get_filter()).order_by(*fb.get_order_by())
-            result = Paginate(query, fb.get_page(), fb.get_limit())
-            schema = NestSchema(many=True, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
-            return self.handle_success(result, schema, 'get', 'Nest')
-
-        return self.response(run, False)
+        query = self.session.query(Nest).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+        result = Paginate(query, fb.get_page(), fb.get_limit())
+        schema = NestSchema(many=True, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
+        return self.handle_success(result, schema, 'get', 'Nest')
         
 
     def get_by_id(self, id, args):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        def run(session):
-            result = session.query(Nest).filter_by(id=id).first()
-            schema = NestSchema(many=False, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
-            return self.handle_success(result, schema, 'get_by_id', 'Nest')
-
-        return self.response(run, False)
+        result = self.session.query(Nest).filter_by(id=id).first()
+        schema = NestSchema(many=False, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
+        return self.handle_success(result, schema, 'get_by_id', 'Nest')
 
     
     def create(self, request):
         """Creates a new row based on the data received by the request object."""
 
-        def run(session):
+        def process(session, data):
+            nest = Nest()
+            Helper().fill_object_from_data(nest, data, ['name', 'description', 'limit', 'has_pagination'])
+            self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
+            session.add(nest)
+            session.commit()
+            return self.handle_success(None, None, 'create', 'Nest', nest.id)
 
-            def process(session, data):
-                nest = Nest()
-                Helper().fill_object_from_data(nest, data, ['name', 'description', 'limit', 'has_pagination'])
-                self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
-                session.add(nest)
-                session.commit()
-                return self.handle_success(None, None, 'create', 'Nest', nest.id)
-
-            return self.validate_before(process, request.get_json(), NestValidator, session)
-
-        return self.response(run, True)
+        return self.validate_before(process, request.get_json(), NestValidator, self.session)
 
 
     def update(self, id, request):
         """Updates the row whose id corresponding with the requested id.
             The data comes from the request object."""
 
-        def run(session):
+        def process(session, data):
+            
+            def fn(session, nest):
+                Helper().fill_object_from_data(nest, data, ['name', 'description', 'limit', 'has_pagination'])
+                self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
+                session.commit()
+                return self.handle_success(None, None, 'update', 'Nest', nest.id)
 
-            def process(session, data):
-                
-                def fn(session, nest):
-                    Helper().fill_object_from_data(nest, data, ['name', 'description', 'limit', 'has_pagination'])
-                    self.add_foreign_keys(nest, data, session, [('post_id', Post), ('post_type_id', PostType)])
-                    session.commit()
-                    return self.handle_success(None, None, 'update', 'Nest', nest.id)
+            return self.run_if_exists(fn, Nest, id, session)
 
-                return self.run_if_exists(fn, Nest, id, session)
-
-            return self.validate_before(process, request.get_json(), NestValidator, session, id=id)
-
-        return self.response(run, True)
+        return self.validate_before(process, request.get_json(), NestValidator, self.session, id=id)
 
 
     def delete(self, id, request):
         """Deletes, if it is possible, the row whose id corresponding with the requested id."""
 
-        def run(session):
+        def fn(session, nest):
+            session.delete(nest)
+            session.commit()
+            return self.handle_success(None, None, 'delete', 'Nest', id)
 
-            def fn(session, nest):
-                session.delete(nest)
-                session.commit()
-                return self.handle_success(None, None, 'delete', 'Nest', id)
-
-            return self.run_if_exists(fn, Nest, id, session)
-
-        return self.response(run, True)
+        return self.run_if_exists(fn, Nest, id, self.session)
 
 
     def add_foreign_keys(self, current_context, data, session, configurations):
