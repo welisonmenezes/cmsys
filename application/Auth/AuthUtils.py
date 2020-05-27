@@ -57,10 +57,21 @@ class AuthUtils():
             raise NotAuthorizedError('No Token send.')
 
     
-    def verify_capabilities(self, capabilities, capability_type=None, permission=None):
+    def verify_capabilities(self, capabilities, capability_type=None, permission=None, owner_id=None, user_id=None, new_owner_id=None):
         """Verify from the given capabilities if it matches with the given capability type and permission."""
+    
+        has_comparators = False
+        if owner_id and user_id:
+            has_comparators = True
 
         for capability in capabilities:
-            if capability_type == getattr(capability, 'type') and getattr(capability, permission) == True:
+            if capability_type == getattr(capability, 'type') and getattr(capability, permission) == True and getattr(capability, 'only_themselves') == False:
                 return True
+            elif capability_type == getattr(capability, 'type') and getattr(capability, permission) == True and has_comparators:
+                if new_owner_id and owner_id != new_owner_id:
+                    raise NotAuthorizedError('You cannot change the owner ID of this element.')
+                if owner_id != user_id:
+                    raise NotAuthorizedError('You only can access your own element by this action.')
+                return True
+            
         raise NotAuthorizedError('Your profile does not has permission to access this resource.')
