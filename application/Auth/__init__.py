@@ -2,6 +2,7 @@ from .AuthUtils import *
 from .BlacklistProtect import *
 from .CapabilityProtect import *
 from .CommentProtect import *
+from .ConfigurationProtect import *
 
 def protect_endpoints():
     """Run all endpoint protectors."""
@@ -9,3 +10,4 @@ def protect_endpoints():
     BlacklistProtect()
     CapabilityProtect()
     CommentProtect()
+    ConfigurationProtect()
