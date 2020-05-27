@@ -12,19 +12,22 @@ class MediaController(ControllerBase):
         super(MediaController, self).__init__()
         self.args = Helper().add_request_data(self.parser, [
             'download_file', 'return_file_data', 's', 'type', 'origin', 'created', 'user_id', 'get_user'])
-        self.repo = MediaRepository()
+        self.repo = MediaRepository(session=self.session)
 
 
     def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        if str(request.url_rule) == '/api/media/preview/<id>':
-            return self.repo.get_image_preview(id)
-        elif str(request.url_rule) == '/api/media/suggestions/<name>':
-            return self.repo.get_name_suggestions(name, self.args)
-        elif (id and self.args['download_file'] == '1'):
-            return self.repo.get_file(id, self.args)
-        elif id:
-            return self.repo.get_by_id(id, self.args)
-        else:
-            return self.repo.get(self.args)
+        def fn():
+            if str(request.url_rule) == '/api/media/preview/<id>':
+                return self.repo.get_image_preview(id)
+            elif str(request.url_rule) == '/api/media/suggestions/<name>':
+                return self.repo.get_name_suggestions(name, self.args)
+            elif (id and self.args['download_file'] == '1'):
+                return self.repo.get_file(id, self.args)
+            elif id:
+                return self.repo.get_by_id(id, self.args)
+            else:
+                return self.repo.get(self.args)
+
+        return ControllerBase.run_if_not_raise(fn, self.session)

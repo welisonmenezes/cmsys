@@ -10,4 +10,4 @@ class TemplateController(ControllerBase):
 
         super(TemplateController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'get_post_types'])
-        self.repo = TemplateRepository()
+        self.repo = TemplateRepository(session=self.session)

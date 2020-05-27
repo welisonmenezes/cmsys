@@ -10,4 +10,4 @@ class RoleController(ControllerBase):
 
         super(RoleController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['get_capabilities', 'name', 'description', 'can_access_admin', 'capability_description'])
-        self.repo = RoleRepository()
+        self.repo = RoleRepository(session=self.session)

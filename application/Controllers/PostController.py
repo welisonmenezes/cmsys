@@ -13,15 +13,18 @@ class PostController(ControllerBase):
         self.args = Helper().add_request_data(self.parser, [
             's', 'status', 'created', 'parent_id', 'post_type_id', 'user_id', 'language_id', 'get_user', 'get_language', 
             'get_parent', 'get_children', 'get_post_type', 'get_nests', 'get_groupers', 'remove_foreign_keys', 'get_terms', 'term_id'])
-        self.repo = PostRepository()
+        self.repo = PostRepository(session=self.session)
         
 
     def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        if str(request.url_rule) == '/api/post/suggestions/<name>':
-            return self.repo.get_name_suggestions(name, self.args)
-        elif id:
-            return self.repo.get_by_id(id, self.args)
-        else:
-            return self.repo.get(self.args)
+        def fn():
+            if str(request.url_rule) == '/api/post/suggestions/<name>':
+                return self.repo.get_name_suggestions(name, self.args)
+            elif id:
+                return self.repo.get_by_id(id, self.args)
+            else:
+                return self.repo.get(self.args)
+                
+        return ControllerBase.run_if_not_raise(fn, self.session)

@@ -10,4 +10,4 @@ class SectorController(ControllerBase):
 
         super(SectorController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'get_menus'])
-        self.repo = SectorRepository()
+        self.repo = SectorRepository(session=self.session)

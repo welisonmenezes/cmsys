@@ -12,14 +12,17 @@ class TermController(ControllerBase):
         super(TermController, self).__init__()
         self.args = Helper().add_request_data(self.parser, [
             's', 'parent_id', 'taxonomy_id', 'language_id', 'get_language', 'get_parent', 'get_children', 'get_taxonomy'])
-        self.repo = TermRepository()
+        self.repo = TermRepository(session=self.session)
 
     def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        if str(request.url_rule) == '/api/term/suggestions/<name>':
-            return self.repo.get_name_suggestions(name, self.args)
-        elif id:
-            return self.repo.get_by_id(id, self.args)
-        else:
-            return self.repo.get(self.args)
+        def fn():
+            if str(request.url_rule) == '/api/term/suggestions/<name>':
+                return self.repo.get_name_suggestions(name, self.args)
+            elif id:
+                return self.repo.get_by_id(id, self.args)
+            else:
+                return self.repo.get(self.args)
+
+        return ControllerBase.run_if_not_raise(fn, self.session)

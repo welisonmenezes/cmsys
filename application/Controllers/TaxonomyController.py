@@ -10,4 +10,4 @@ class TaxonomyController(ControllerBase):
 
         super(TaxonomyController, self).__init__()
         self.args = Helper().add_request_data(self.parser, ['s', 'get_post_types', 'get_terms'])
-        self.repo = TaxonomyRepository()
+        self.repo = TaxonomyRepository(session=self.session)

@@ -12,4 +12,4 @@ class UserController(ControllerBase):
         self.args = Helper().add_request_data(self.parser, [
             's', 'email', 'registered', 'status', 'role_id', 'get_role', 'get_socials',
             'get_medias', 'get_page', 'get_avatar', 'admin_new_owner'])
-        self.repo = UserRepository()
+        self.repo = UserRepository(session=self.session)
