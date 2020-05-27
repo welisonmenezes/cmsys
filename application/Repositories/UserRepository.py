@@ -114,7 +114,8 @@ class UserRepository(RepositoryBase):
         for config in configurations:
             try:
                 if getattr(current_context, 'id') == 1 and config[0] == 'role_id':
-                    raise BadRequestError('You cannot change the role of the primary user admin.')
+                    if getattr(current_context, 'role_id') != data['role_id']:
+                        raise BadRequestError('You cannot change the role of the primary user admin.')
 
                 if config[0] == 'avatar_id' and config[0] in data:
                     image = self.get_existing_foreing_id(data, 'avatar_id', Media, session, True)
