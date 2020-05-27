@@ -56,3 +56,11 @@ class AuthUtils():
         else:
             raise NotAuthorizedError('No Token send.')
 
+    
+    def verify_capabilities(self, capabilities, capability_type=None, permission=None):
+        """"""
+
+        for capability in capabilities:
+            if capability_type == getattr(capability, 'type') and getattr(capability, permission) == True:
+                return True
+        raise NotAuthorizedError('Your profile does not has permission to access this resource.')

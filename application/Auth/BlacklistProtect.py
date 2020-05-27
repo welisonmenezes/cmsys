@@ -6,10 +6,16 @@ class BlacklistProtect():
 
     def __init__(self):
 
-        print(request.method)
-        print(request.url_rule)
+        if str(request.endpoint) == 'ApiBP.blacklistcontroller':
 
-        if str(request.url_rule) == '/api/blacklist/<int:id>':
             passport = AuthUtils().get_authorized_passport()
-            print(passport)
-            #raise NotAuthorizedError('You do not have permission to access this resource.')
+            capabilities = passport['user'].role.capabilities
+
+            if request.method == 'GET':
+                AuthUtils().verify_capabilities(capabilities, 'configuration', 'can_read')
+
+            elif request.method == 'POST' or request.method == 'PUT':
+                AuthUtils().verify_capabilities(capabilities, 'configuration', 'can_write')
+
+            elif request.method == 'DELETE':
+                AuthUtils().verify_capabilities(capabilities, 'configuration', 'can_delete')
