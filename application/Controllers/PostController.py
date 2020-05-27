@@ -19,9 +19,12 @@ class PostController(ControllerBase):
     def get(self, id=None, name=None):
         """Rewrite ControllerBase get method to apply customizations to the get http verb responder."""
 
-        if str(request.url_rule) == '/api/post/suggestions/<name>':
-            return self.repo.get_name_suggestions(name, self.args)
-        elif id:
-            return self.repo.get_by_id(id, self.args)
-        else:
-            return self.repo.get(self.args)
+        def fn():
+            if str(request.url_rule) == '/api/post/suggestions/<name>':
+                return self.repo.get_name_suggestions(name, self.args)
+            elif id:
+                return self.repo.get_by_id(id, self.args)
+            else:
+                return self.repo.get(self.args)
+                
+        return ControllerBase.run_if_not_raise(fn, self.session)
