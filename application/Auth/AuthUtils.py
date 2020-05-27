@@ -58,7 +58,7 @@ class AuthUtils():
 
     
     def verify_capabilities(self, capabilities, capability_type=None, permission=None):
-        """"""
+        """Verify from the given capabilities if it matches with the given capability type and permission."""
 
         for capability in capabilities:
             if capability_type == getattr(capability, 'type') and getattr(capability, permission) == True:

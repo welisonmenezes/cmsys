@@ -205,6 +205,16 @@ def _add_primary_role(session):
         only_themselves = False
     )
 
+    capability_capability = Capability(
+        description = 'Capability Manager',
+        type = 'capability',
+        target_id = None,
+        can_write = True,
+        can_read = True,
+        can_delete  = True,
+        only_themselves = False
+    )
+
     admin_role = Role(
         name = 'Administrator',
         description = 'Full access aplication',
