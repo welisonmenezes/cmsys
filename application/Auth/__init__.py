@@ -4,6 +4,7 @@ from .CapabilityProtect import *
 from .CommentProtect import *
 from .ConfigurationProtect import *
 from .FieldProtect import *
+from .PostProtect import *
 
 def protect_endpoints():
     """Run all endpoint protectors."""
@@ -14,3 +15,4 @@ def protect_endpoints():
     CommentProtect(authenticator)
     ConfigurationProtect(authenticator)
     FieldProtect(authenticator)
+    PostProtect(authenticator)

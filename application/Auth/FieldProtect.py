@@ -12,9 +12,6 @@ class FieldProtect():
         str(request.endpoint) == 'ApiBP.nestcontroller' or str(request.endpoint) == 'ApiBP.groupercontroller':
 
             # TODO: see how implement the private post request
-
-            if request.method == 'GET':
-                pass
             
             if request.method == 'POST' or request.method == 'PUT' or request.method == 'DELETE':
 
