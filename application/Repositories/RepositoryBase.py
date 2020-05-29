@@ -145,6 +145,7 @@ class RepositoryBase():
         errors = []
         for config in configurations:
             try:
+                el = self.get_existing_foreing_id(data, config[0], config[1], session)
                 setattr(current_context, config[0], self.get_existing_foreing_id(data, config[0], config[1], session))
             except Exception as e:
                 errors.append('Could not find the given foreign key \'' + str(config[0]) + '\'')
@@ -251,8 +252,12 @@ class RepositoryBase():
             try:
                 if config[0] in data and config[1] in data:
                     parent = session.query(getattr(config[2], config[1])).filter_by(id=int(data[config[0]])).first()
-                    if parent and parent[0] != int(data[config[1]]):
-                        errors.append('The ' + config[1] + ' must be the same as your father\'s, witch is: ' + str(parent[0]) + '.')
+                    if parent:
+                        if parent[0] != int(data[config[1]]):
+                            errors.append('The ' + config[1] + ' must be the same as your father\'s, witch is: ' + str(parent[0]) + '.')
+                    else:
+                        errors.append('The given ' + config[2].__tablename__ + ' was not found.')
+                    
             except Exception as e:
                 errors.append(str(e))
 
@@ -275,7 +280,6 @@ class RepositoryBase():
             The configurations must like: [(target_key, target_context)]"""
 
         for config in configurations:
-            print(config)
             filter = (getattr(config[1], config[0])==id,)
             session.query(config[1]).filter(*filter).delete(synchronize_session='evaluate')
 
@@ -289,7 +293,7 @@ class RepositoryBase():
             try:
                 if config[0] == 'field_id':
                     el = self.get_existing_foreing_id(data, config[0], config[1], session, True)
-
+            
                     if el:
                         
                         if el.type != field_type:
