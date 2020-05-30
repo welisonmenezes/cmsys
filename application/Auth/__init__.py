@@ -8,6 +8,8 @@ from .FieldContentProtect import *
 from .FieldFileProtect import *
 from .FieldTextProtect import *
 from .GrouperProtect import *
+from .LanguageProtect import *
+from .MediaProtect import *
 from .NestProtect import *
 from .PostProtect import *
 
@@ -24,5 +26,7 @@ def protect_endpoints():
     FieldFileProtect(authenticator)
     FieldTextProtect(authenticator)
     GrouperProtect(authenticator)
+    LanguageProtect(authenticator)
+    MediaProtect(authenticator)
     NestProtect(authenticator)
     PostProtect(authenticator)

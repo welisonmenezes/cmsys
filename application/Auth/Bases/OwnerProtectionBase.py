@@ -15,12 +15,15 @@ class OwnerProtectionBase():
 
                 # The user can only post your own comment
                 if request.method == 'POST':
-                    if data['user_id'] != passport['user'].id:
-                        authenticator.verify_capabilities(capabilities, capability_type, 'can_write')
+                    if not 'user_id' in data:
+                        return True
+                    authenticator.verify_capabilities(capabilities, capability_type, 'can_write', owner_id=data['user_id'], user_id=passport['user'].id)
 
                 # The user can only update your own comment or, to update others comment, the field only_themselves must be False.
                 # If the field only_themselves is False the user cannot change the user_id field.
                 if  request.method == 'PUT':
+                    if not 'user_id' in data:
+                        return True
                     owner_result = authenticator.session.query(getattr(context, 'user_id')).filter_by(id=request.view_args['id']).first()
                     if owner_result:
                         owner_id = owner_result[0]

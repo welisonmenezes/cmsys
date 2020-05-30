@@ -73,5 +73,5 @@ class AuthUtils():
                 if owner_id != user_id:
                     raise NotAuthorizedError('You only can access your own element by this action.')
                 return True
-            
+
         raise NotAuthorizedError('Your profile does not has permission to access this resource.')

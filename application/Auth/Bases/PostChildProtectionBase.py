@@ -17,6 +17,8 @@ class PostChildProtectionBase():
                 # The user can only update your own post element or, to update other ones, the field only_themselves must be False.
                 if request.method == 'POST' or request.method == 'PUT':
                     data = request.get_json()
+                    if not 'post_id' in data:
+                        return True
                     post_result = authenticator.session.query(Post.id, Post.user_id).filter_by(id=data['post_id']).first()
                     if post_result:
                         owner_id = post_result[1]
