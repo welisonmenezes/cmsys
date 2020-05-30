@@ -73,5 +73,7 @@ class AuthUtils():
                 if owner_id != user_id:
                     raise NotAuthorizedError('You only can access your own element by this action.')
                 return True
+            elif capability_type == getattr(capability, 'type') and getattr(capability, permission) == True:
+                return True
 
         raise NotAuthorizedError('Your profile does not has permission to access this resource.')

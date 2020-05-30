@@ -10,6 +10,8 @@ from .FieldTextProtect import *
 from .GrouperProtect import *
 from .LanguageProtect import *
 from .MediaProtect import *
+from .MenuProtect import *
+from .MenuItemProtect import *
 from .NestProtect import *
 from .PostProtect import *
 
@@ -28,5 +30,7 @@ def protect_endpoints():
     GrouperProtect(authenticator)
     LanguageProtect(authenticator)
     MediaProtect(authenticator)
+    MenuProtect(authenticator)
+    MenuItemProtect(authenticator)
     NestProtect(authenticator)
     PostProtect(authenticator)
