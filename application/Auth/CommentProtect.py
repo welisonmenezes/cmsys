@@ -1,4 +1,4 @@
-from .OwnerProtectionBase import *
+from .Bases.OwnerProtectionBase import *
 from Models import Comment
 
 class CommentProtect(OwnerProtectionBase):

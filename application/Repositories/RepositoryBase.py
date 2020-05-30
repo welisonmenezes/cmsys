@@ -256,10 +256,11 @@ class RepositoryBase():
                         if parent[0] != int(data[config[1]]):
                             errors.append('The ' + config[1] + ' must be the same as your father\'s, witch is: ' + str(parent[0]) + '.')
                     else:
-                        errors.append('The given ' + config[2].__tablename__ + ' was not found.')
+                        raise BadRequestError('The given ' + config[2].__tablename__ + ' was not found.')
+                        break
                     
             except Exception as e:
-                errors.append(str(e))
+                raise BadRequestError(str(e))
 
         if errors:
             raise BadRequestError(errors)

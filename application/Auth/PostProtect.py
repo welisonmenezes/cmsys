@@ -1,5 +1,7 @@
-from .OwnerProtectionBase import *
+from .Bases.OwnerProtectionBase import *
 from Models import Post
+
+# TODO: see how implement the private post request
 
 class PostProtect(OwnerProtectionBase):
     def __init__(self, authenticator):

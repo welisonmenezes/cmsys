@@ -4,6 +4,11 @@ from .CapabilityProtect import *
 from .CommentProtect import *
 from .ConfigurationProtect import *
 from .FieldProtect import *
+from .FieldContentProtect import *
+from .FieldFileProtect import *
+from .FieldTextProtect import *
+from .GrouperProtect import *
+from .NestProtect import *
 from .PostProtect import *
 
 def protect_endpoints():
@@ -15,4 +20,9 @@ def protect_endpoints():
     CommentProtect(authenticator)
     ConfigurationProtect(authenticator)
     FieldProtect(authenticator)
+    FieldContentProtect(authenticator)
+    FieldFileProtect(authenticator)
+    FieldTextProtect(authenticator)
+    GrouperProtect(authenticator)
+    NestProtect(authenticator)
     PostProtect(authenticator)

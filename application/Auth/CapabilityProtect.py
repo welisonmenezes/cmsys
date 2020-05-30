@@ -1,4 +1,4 @@
-from .BasicProtectionBase import *
+from .Bases.BasicProtectionBase import *
 
 class CapabilityProtect(BasicProtectionBase):
     def __init__(self, authenticator):
