@@ -14,6 +14,9 @@ from .MenuProtect import *
 from .MenuItemProtect import *
 from .NestProtect import *
 from .PostProtect import *
+from .PostTypeProtect import *
+from .RoleProtect import *
+from .SectorProtect import *
 
 def protect_endpoints():
     """Run all endpoint protectors."""
@@ -34,3 +37,6 @@ def protect_endpoints():
     MenuItemProtect(authenticator)
     NestProtect(authenticator)
     PostProtect(authenticator)
+    PostTypeProtect(authenticator)
+    RoleProtect(authenticator)
+    SectorProtect(authenticator)

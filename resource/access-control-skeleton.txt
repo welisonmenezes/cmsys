@@ -24,7 +24,7 @@ media:
 
 menu:
 	Pode gerenciar menus
-		- Menu, MenuItem
+		- Menu, MenuItem, Sector
 
 taxonomy:
 	Pode gerenciar taxonomias
