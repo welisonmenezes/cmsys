@@ -17,6 +17,10 @@ from .PostProtect import *
 from .PostTypeProtect import *
 from .RoleProtect import *
 from .SectorProtect import *
+from .SocialProtect import *
+from .TaxonomyProtect import *
+from .TemplateProtect import *
+from .TermProtect import *
 
 def protect_endpoints():
     """Run all endpoint protectors."""
@@ -40,3 +44,7 @@ def protect_endpoints():
     PostTypeProtect(authenticator)
     RoleProtect(authenticator)
     SectorProtect(authenticator)
+    SocialProtect(authenticator)
+    TaxonomyProtect(authenticator)
+    TemplateProtect(authenticator)
+    TermProtect(authenticator)
