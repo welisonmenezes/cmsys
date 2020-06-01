@@ -3,7 +3,7 @@ from flask import  request
 class OwnerProtectionBase():
     """Only logged user can accsses post, put and delete endpoints of this resource."""
 
-    def __init__(self, authenticator, endpoint=None, capability_type=None, context=None):
+    def __init__(self, authenticator, endpoint=None, capability_type=None, context=None, is_route_user=False):
 
         if authenticator and endpoint and str(request.endpoint) == endpoint and capability_type and context:
 
@@ -22,8 +22,13 @@ class OwnerProtectionBase():
                 # The user can only update your own comment or, to update others comment, the field only_themselves must be False.
                 # If the field only_themselves is False the user cannot change the user_id field.
                 if  request.method == 'PUT':
+                    if is_route_user:
+                        authenticator.verify_capabilities(capabilities, capability_type, 'can_write', owner_id=request.view_args['id'], user_id=passport['user'].id)
+                        return True
+
                     if not 'user_id' in data:
                         return True
+
                     owner_result = authenticator.session.query(getattr(context, 'user_id')).filter_by(id=request.view_args['id']).first()
                     if owner_result:
                         owner_id = owner_result[0]
@@ -31,6 +36,10 @@ class OwnerProtectionBase():
 
                 # The user can only delete your own comment, or to delete others comment the field only_themselves must be False
                 elif request.method == 'DELETE':
+                    if is_route_user:
+                        authenticator.verify_capabilities(capabilities, capability_type, 'can_write', owner_id=request.view_args['id'], user_id=passport['user'].id)
+                        return True
+                        
                     owner_result = authenticator.session.query(getattr(context, 'user_id')).filter_by(id=request.view_args['id']).first()
                     if owner_result:
                         owner_id = owner_result[0]

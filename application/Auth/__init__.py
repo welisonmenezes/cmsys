@@ -21,6 +21,8 @@ from .SocialProtect import *
 from .TaxonomyProtect import *
 from .TemplateProtect import *
 from .TermProtect import *
+from .UserProtect import *
+from .VariableProtect import *
 
 def protect_endpoints():
     """Run all endpoint protectors."""
@@ -48,3 +50,5 @@ def protect_endpoints():
     TaxonomyProtect(authenticator)
     TemplateProtect(authenticator)
     TermProtect(authenticator)
+    UserProtect(authenticator)
+    VariableProtect(authenticator)
