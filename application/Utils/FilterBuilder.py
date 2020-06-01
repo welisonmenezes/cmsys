@@ -143,7 +143,7 @@ class FilterBuilder():
 
         try:
             today = Helper().get_current_datetime()
-            self.filter += (and_(self.get_context_attr('publish_on', kwargs) <= today, self.get_context_attr('expire_on', kwargs) >= today),)
+            self.filter += (or_( and_(self.get_context_attr('publish_on', kwargs) <= today, self.get_context_attr('expire_on', kwargs) >= today, ), or_(self.get_context_attr('publish_on', kwargs) == None, self.get_context_attr('expire_on', kwargs) == None),),)
 
         except Exception as e:
             raise Exception(str(e))

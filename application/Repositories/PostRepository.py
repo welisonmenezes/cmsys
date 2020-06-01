@@ -1,8 +1,10 @@
+from sqlalchemy import or_
 from .RepositoryBase import RepositoryBase
 from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, FieldContent, FieldText, FieldFile, Field, Grouper, Term
 from Validators import PostValidator
 from Utils import Paginate, FilterBuilder, Helper, Checker
-from ErrorHandlers import BadRequestError
+from ErrorHandlers import BadRequestError, NotAuthorizedError
+from Auth import AuthUtils
 
 # TODO: from post to be able to save/update/delete grouper and fields
 
@@ -12,6 +14,8 @@ class PostRepository(RepositoryBase):
 
     def __init__(self, session):
         super().__init__(session)
+        self.the_logged_user = AuthUtils().get_logged_in()
+        self.can_see_protected = False
         
     
     def get(self, args):
@@ -42,10 +46,12 @@ class PostRepository(RepositoryBase):
                 {'field': 'content', 'type': 'like', 'kwargs': {'joined': FieldText}}
             ])
 
-            # change when access control was working
-            is_logged = True
-            if not is_logged:
+            
+            if not self.the_logged_user:
                 fb.set_range_of_dates_filter()
+            self.set_can_see_protected()
+            if not self.can_see_protected:
+                fb.filter += ((Post.is_protected != True),)
 
         except Exception as e:
             raise BadRequestError(str(e))
@@ -61,7 +67,10 @@ class PostRepository(RepositoryBase):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        result = self.get_result_by_unique_key(id, Post, self.session)
+        self.set_can_see_protected()
+        result = self.get_result_by_unique_key(id, Post, self.session, the_logged_user=self.the_logged_user)
+        if result and result.is_protected and not self.can_see_protected:
+            raise NotAuthorizedError('You cannot access this post.')
         schema = PostSchema(many=False, exclude=self.get_exclude_fields(args, [
             'user', 'language', 'parent', 'children', 'post_type', 'nests', 'groupers', 'terms']))
         return self.handle_success(result, schema, 'get_by_id', 'Post')
@@ -164,3 +173,12 @@ class PostRepository(RepositoryBase):
                 if post_type and post_type[0]:
                     if post_type[0] != 'post-page':
                         raise BadRequestError('The Post_Type of the Post must be settled as type \'post-page\' to have Terms.')
+
+
+    
+    def set_can_see_protected(self):
+        if self.the_logged_user:
+            capabilities = self.the_logged_user['user'].role.capabilities
+            for capability in capabilities:
+                if getattr(capability, 'type') == 'see-protected':
+                    self.can_see_protected = True

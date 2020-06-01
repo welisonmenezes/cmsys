@@ -38,7 +38,7 @@ comment:
 	Pode gerenciar Comentários
 		- Comment
 
-guest:
+see-protected:
 	Pode ver posts protegidos
 
 

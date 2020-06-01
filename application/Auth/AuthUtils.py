@@ -11,6 +11,29 @@ class AuthUtils():
         self.session = Session()
 
 
+    def get_logged_in(self):
+        """"""
+
+        token = request.headers.get('Authorization')
+        if token:
+            try:
+                access = decode_token(token)
+
+                if 'identity' in access:
+                    identity = access['identity']
+                    if 'id' in identity and 'login' in identity and 'role' in identity:
+                        user = self.session.query(User).filter_by(login=identity['login']).first()
+                        if user:
+                            return {
+                                'user': user,
+                                'access': access
+                            }
+
+            except expression as identifier:
+                return False
+        return False
+
+
     def get_authorized_passport(self, from_where='Authorization', verify_blacklist=True, token_key='token'):
         """Get the authorized user based on the given token. This can come from Authorization or Request."""
 

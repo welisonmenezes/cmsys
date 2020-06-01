@@ -1,8 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import HTTPException
 from sqlalchemy import or_
-from Utils import Checker
-from Models import Session, Media, FieldFile, FieldText, FieldContent
+from Utils import Checker, FilterBuilder
+from Models import Session, Media, FieldFile, FieldText, FieldContent, Post
 from ErrorHandlers import ErrorHandler, BadRequestError, NotFoundError
 
 # TODO: transfer the error handler returns to controller base.
@@ -99,13 +99,18 @@ class RepositoryBase():
         }, 200
 
 
-    def get_result_by_unique_key(self, id, context, session):
+    def get_result_by_unique_key(self, id, context, session, the_logged_user=None):
         """Return a row by the given key."""
 
+        fb = FilterBuilder(context, {})
+        if context.__tablename__ == 'Post':
+            if not the_logged_user:
+                fb.set_range_of_dates_filter()
+
         if Checker().can_be_integer(id):
-            return session.query(context).filter_by(id=id).first()
+            return session.query(context).filter(*fb.get_filter()).filter_by(id=id).first()
         else:
-            return session.query(context).filter_by(name=id).first()
+            return session.query(context).filter(*fb.get_filter()).filter_by(name=id).first()
 
     
     def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):

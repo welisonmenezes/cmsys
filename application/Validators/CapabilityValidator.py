@@ -23,7 +23,7 @@ class CapabilityValidator(ValidatorBase):
                 'min_length': 1,
                 'valid_values': [
                     'user', 'post', 'specific-post-type', 'post-type', 'media', 'menu', 
-                    'taxonomy', 'configuration', 'comment', 'guest', 'capability'
+                    'taxonomy', 'configuration', 'comment', 'see-protected', 'capability'
                 ]
             },
             'target_id': {
