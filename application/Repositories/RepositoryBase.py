@@ -4,8 +4,7 @@ from sqlalchemy import or_
 from Utils import Checker, FilterBuilder
 from Models import Session, Media, FieldFile, FieldText, FieldContent, Post
 from ErrorHandlers import ErrorHandler, BadRequestError, NotFoundError
-
-# TODO: transfer the error handler returns to controller base.
+from Auth import AuthUtils
 
 class RepositoryBase():
     """It Works like parent class witch must provide common attributes and methods
@@ -14,6 +13,8 @@ class RepositoryBase():
     def __init__(self, session):
         """Starts the common attributes on instantiation of the class."""
 
+        self.the_logged_user = AuthUtils().get_logged_in()
+        self.can_see_protected = False
         self.joins = []
         self.fields = []
         self.session = session  
@@ -106,6 +107,7 @@ class RepositoryBase():
         if context.__tablename__ == 'Post':
             if not the_logged_user:
                 fb.set_range_of_dates_filter()
+                fb.filter += ((context.is_protected != True),)
 
         if Checker().can_be_integer(id):
             return session.query(context).filter(*fb.get_filter()).filter_by(id=id).first()
@@ -318,3 +320,11 @@ class RepositoryBase():
 
         if errors:
             raise BadRequestError(errors)
+
+
+    def set_can_see_protected(self):
+        if self.the_logged_user:
+            capabilities = self.the_logged_user['user'].role.capabilities
+            for capability in capabilities:
+                if getattr(capability, 'type') == 'see-protected':
+                    self.can_see_protected = True

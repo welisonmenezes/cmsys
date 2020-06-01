@@ -4,9 +4,10 @@ from Models import Post, PostSchema, PostType, Language, User, Nest, Comment, Fi
 from Validators import PostValidator
 from Utils import Paginate, FilterBuilder, Helper, Checker
 from ErrorHandlers import BadRequestError, NotAuthorizedError
-from Auth import AuthUtils
 
 # TODO: from post to be able to save/update/delete grouper and fields
+# TODO: see how implement the post childs range date and is_protected filters
+# TODO: implement the post status filter to non logged user
 
 class PostRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -14,8 +15,6 @@ class PostRepository(RepositoryBase):
 
     def __init__(self, session):
         super().__init__(session)
-        self.the_logged_user = AuthUtils().get_logged_in()
-        self.can_see_protected = False
         
     
     def get(self, args):
@@ -46,7 +45,6 @@ class PostRepository(RepositoryBase):
                 {'field': 'content', 'type': 'like', 'kwargs': {'joined': FieldText}}
             ])
 
-            
             if not self.the_logged_user:
                 fb.set_range_of_dates_filter()
             self.set_can_see_protected()
@@ -69,8 +67,6 @@ class PostRepository(RepositoryBase):
 
         self.set_can_see_protected()
         result = self.get_result_by_unique_key(id, Post, self.session, the_logged_user=self.the_logged_user)
-        if result and result.is_protected and not self.can_see_protected:
-            raise NotAuthorizedError('You cannot access this post.')
         schema = PostSchema(many=False, exclude=self.get_exclude_fields(args, [
             'user', 'language', 'parent', 'children', 'post_type', 'nests', 'groupers', 'terms']))
         return self.handle_success(result, schema, 'get_by_id', 'Post')
@@ -173,12 +169,3 @@ class PostRepository(RepositoryBase):
                 if post_type and post_type[0]:
                     if post_type[0] != 'post-page':
                         raise BadRequestError('The Post_Type of the Post must be settled as type \'post-page\' to have Terms.')
-
-
-    
-    def set_can_see_protected(self):
-        if self.the_logged_user:
-            capabilities = self.the_logged_user['user'].role.capabilities
-            for capability in capabilities:
-                if getattr(capability, 'type') == 'see-protected':
-                    self.can_see_protected = True

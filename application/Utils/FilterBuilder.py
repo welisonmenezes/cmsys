@@ -143,7 +143,16 @@ class FilterBuilder():
 
         try:
             today = Helper().get_current_datetime()
-            self.filter += (or_( and_(self.get_context_attr('publish_on', kwargs) <= today, self.get_context_attr('expire_on', kwargs) >= today, ), or_(self.get_context_attr('publish_on', kwargs) == None, self.get_context_attr('expire_on', kwargs) == None),),)
+
+            exp_kwargs = kwargs
+            if 'joined_key' in kwargs:
+                print('bva')
+                exp_kwargs = {
+                    'joined': kwargs['joined'],
+                    'joined_key': 'expire_on'
+                }
+
+            self.filter += (or_( and_(self.get_context_attr('publish_on', kwargs) <= today, self.get_context_attr('expire_on', exp_kwargs) >= today, ), or_(self.get_context_attr('publish_on', kwargs) == None, self.get_context_attr('expire_on', exp_kwargs) == None),),)
 
         except Exception as e:
             raise Exception(str(e))
