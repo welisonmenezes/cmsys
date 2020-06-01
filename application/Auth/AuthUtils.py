@@ -2,7 +2,7 @@ from flask import request
 from flask_jwt_extended import decode_token
 from ErrorHandlers import NotAuthorizedError, BadRequestError, NotFoundError
 from Decorators import SingletonDecorator
-from Models import Session, Blacklist, User
+from Models import Session, Blacklist, User, PostType
 
 class AuthUtils():
 
@@ -57,12 +57,24 @@ class AuthUtils():
             raise NotAuthorizedError('No Token send.')
 
     
-    def verify_capabilities(self, capabilities, capability_type=None, permission=None, owner_id=None, user_id=None, new_owner_id=None):
+    def verify_capabilities(self, capabilities, capability_type=None, permission=None, owner_id=None, user_id=None, new_owner_id=None, post_type_id=None):
         """Verify from the given capabilities if it matches with the given capability type and permission."""
     
         has_comparators = False
         if owner_id and user_id:
             has_comparators = True
+
+        # verify the post type id
+        for capability in capabilities:
+            the_type = getattr(capability, 'type')
+            the_target = getattr(capability, 'target_id')
+            if the_type == 'specific-post-type':
+                if post_type_id and not the_target:
+                    raise NotAuthorizedError('The target id must be sent.')
+                    return True
+                if post_type_id and post_type_id != the_target:
+                    raise NotAuthorizedError('You cannot access elements that belongs to this post type.')
+                    return True
 
         for capability in capabilities:
             if capability_type == getattr(capability, 'type') and getattr(capability, permission) == True and getattr(capability, 'only_themselves') == False:
@@ -70,8 +82,10 @@ class AuthUtils():
             elif capability_type == getattr(capability, 'type') and getattr(capability, permission) == True and has_comparators:
                 if new_owner_id and owner_id != new_owner_id:
                     raise NotAuthorizedError('You cannot change the owner ID of this element.')
+                    return True
                 if owner_id != user_id:
                     raise NotAuthorizedError('You only can access your own element by this action.')
+                    return True
                 return True
             elif capability_type == getattr(capability, 'type') and getattr(capability, permission) == True:
                 return True

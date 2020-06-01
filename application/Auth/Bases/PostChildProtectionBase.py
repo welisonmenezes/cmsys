@@ -19,10 +19,10 @@ class PostChildProtectionBase():
                     data = request.get_json()
                     if not 'post_id' in data:
                         return True
-                    post_result = authenticator.session.query(Post.id, Post.user_id).filter_by(id=data['post_id']).first()
+                    post_result = authenticator.session.query(Post.id, Post.user_id, Post.post_type_id).filter_by(id=data['post_id']).first()
                     if post_result:
                         owner_id = post_result[1]
-                        authenticator.verify_capabilities(capabilities, capability_type, 'can_write', owner_id=owner_id, user_id=passport['user'].id)
+                        authenticator.verify_capabilities(capabilities, capability_type, 'can_write', owner_id=owner_id, user_id=passport['user'].id, post_type_id=post_result[2])
                     else:
                         authenticator.verify_capabilities(capabilities, capability_type, 'can_write')
 
@@ -30,10 +30,10 @@ class PostChildProtectionBase():
                 elif request.method == 'DELETE':
                     el_result = authenticator.session.query(getattr(context, 'post_id')).filter_by(id=request.view_args['id']).first()
                     if el_result and el_result[0]:
-                        post_result = authenticator.session.query(Post.id, Post.user_id).filter_by(id=el_result[0]).first()
+                        post_result = authenticator.session.query(Post.id, Post.user_id, Post.post_type_id).filter_by(id=el_result[0]).first()
                         if post_result:
                             owner_id = post_result[1]
-                            authenticator.verify_capabilities(capabilities, capability_type, 'can_delete', owner_id=owner_id, user_id=passport['user'].id)
+                            authenticator.verify_capabilities(capabilities, capability_type, 'can_delete', owner_id=owner_id, user_id=passport['user'].id, post_type_id=post_result[2])
                         else:
                             authenticator.verify_capabilities(capabilities, capability_type, 'can_delete')
                     else:
