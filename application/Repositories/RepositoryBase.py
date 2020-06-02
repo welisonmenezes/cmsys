@@ -100,14 +100,17 @@ class RepositoryBase():
         }, 200
 
 
-    def get_result_by_unique_key(self, id, context, session, the_logged_user=None):
+    def get_result_by_unique_key(self, id, context, session):
         """Return a row by the given key."""
 
         fb = FilterBuilder(context, {})
         if context.__tablename__ == 'Post':
-            if not the_logged_user:
+            if not self.the_logged_user:
                 fb.set_range_of_dates_filter()
-                fb.filter += (getattr(context, 'is_protected') != True, getattr(context, 'status') == 'publish',)
+                fb.filter += (getattr(context, 'status') == 'publish',)
+            self.set_can_see_protected()
+            if not self.can_see_protected:
+                fb.filter += (getattr(context, 'is_protected') != True,)
 
         if Checker().can_be_integer(id):
             fb.filter += (getattr(context, 'id')==id,)

@@ -46,9 +46,10 @@ class PostRepository(RepositoryBase):
 
             if not self.the_logged_user:
                 fb.set_range_of_dates_filter()
+                fb.filter += (Post.status == 'publish',)
             self.set_can_see_protected()
             if not self.can_see_protected:
-                fb.filter += (Post.is_protected != True, Post.status == 'publish',)
+                fb.filter += (Post.is_protected != True,)
 
         except Exception as e:
             raise BadRequestError(str(e))
@@ -64,8 +65,7 @@ class PostRepository(RepositoryBase):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        self.set_can_see_protected()
-        result = self.get_result_by_unique_key(id, Post, self.session, the_logged_user=self.the_logged_user)
+        result = self.get_result_by_unique_key(id, Post, self.session)
         schema = PostSchema(many=False, exclude=self.get_exclude_fields(args, [
             'user', 'language', 'parent', 'children', 'post_type', 'nests', 'groupers', 'terms']))
         return self.handle_success(result, schema, 'get_by_id', 'Post')

@@ -146,7 +146,6 @@ class FilterBuilder():
 
             exp_kwargs = kwargs
             if 'joined_key' in kwargs:
-                print('bva')
                 exp_kwargs = {
                     'joined': kwargs['joined'],
                     'joined_key': 'expire_on'

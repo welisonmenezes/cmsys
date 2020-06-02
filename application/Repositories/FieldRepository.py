@@ -27,9 +27,10 @@ class FieldRepository(RepositoryBase):
         if not self.the_logged_user:
             self.joins.append(Post)
             fb.set_range_of_dates_filter(joined=Post, joined_key='publish_on')
+            fb.filter += (Post.status == 'publish',)
         self.set_can_see_protected()
         if not self.can_see_protected:
-            fb.filter += (Post.is_protected != True, Post.status == 'publish',)
+            fb.filter += (Post.is_protected != True,)
 
         query = self.session.query(Field).join(*self.joins, isouter=True).filter(*fb.get_filter()).order_by(*fb.get_order_by())
         result = Paginate(query, fb.get_page(), fb.get_limit())
@@ -43,10 +44,13 @@ class FieldRepository(RepositoryBase):
 
         self.set_can_see_protected()
         fb = FilterBuilder(Post, {})
+        self.joins.append(Post)
         if not self.the_logged_user:
-            self.joins.append(Post)
             fb.set_range_of_dates_filter(joined=Post, joined_key='publish_on')
-            fb.filter += (Post.is_protected != True, Post.status == 'publish',)
+            fb.filter += (Post.status == 'publish',)
+        self.set_can_see_protected()
+        if not self.can_see_protected:
+            fb.filter += (Post.is_protected != True,)
         
         fb.filter += (Field.id == id,)
         result = self.session.query(Field).join(*self.joins, isouter=True).filter(*fb.get_filter()).first()
