@@ -23,8 +23,9 @@ class NestRepository(RepositoryBase):
             fb.set_and_or_filter('s', 'or', [{'field':'name', 'type':'like'}, {'field':'description', 'type':'like'}])
         except Exception as e:
             raise BadRequestError(str(e))
-
-        query = self.session.query(Nest).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+        
+        self.set_protection_to_child_post(fb)
+        query = self.session.query(Nest).join(*self.joins, isouter=True).filter(*fb.get_filter()).order_by(*fb.get_order_by())
         result = Paginate(query, fb.get_page(), fb.get_limit())
         schema = NestSchema(many=True, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
         return self.handle_success(result, schema, 'get', 'Nest')
@@ -34,7 +35,10 @@ class NestRepository(RepositoryBase):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        result = self.session.query(Nest).filter_by(id=id).first()
+        fb = FilterBuilder(Post, {})
+        self.set_protection_to_child_post(fb)
+        fb.filter += (Nest.id == id,)
+        result = self.session.query(Nest).join(*self.joins, isouter=True).filter(*fb.get_filter()).first()
         schema = NestSchema(many=False, exclude=self.get_exclude_fields(args, ['post', 'post_type']))
         return self.handle_success(result, schema, 'get_by_id', 'Nest')
 
