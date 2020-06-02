@@ -107,12 +107,14 @@ class RepositoryBase():
         if context.__tablename__ == 'Post':
             if not the_logged_user:
                 fb.set_range_of_dates_filter()
-                fb.filter += ((context.is_protected != True),)
+                fb.filter += (getattr(context, 'is_protected') != True, getattr(context, 'status') == 'publish',)
 
         if Checker().can_be_integer(id):
-            return session.query(context).filter(*fb.get_filter()).filter_by(id=id).first()
+            fb.filter += (getattr(context, 'id')==id,)
+            return session.query(context).filter(*fb.get_filter()).first()
         else:
-            return session.query(context).filter(*fb.get_filter()).filter_by(name=id).first()
+            fb.filter += (getattr(context, 'name')==id,)
+            return session.query(context).filter(*fb.get_filter()).first()
 
     
     def get_existing_foreing_id(self, data, key, context, session, get_all_filelds= False):

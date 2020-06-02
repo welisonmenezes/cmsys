@@ -29,10 +29,9 @@ class FieldRepository(RepositoryBase):
             fb.set_range_of_dates_filter(joined=Post, joined_key='publish_on')
         self.set_can_see_protected()
         if not self.can_see_protected:
-            fb.filter += ((Post.is_protected != True),)
+            fb.filter += (Post.is_protected != True, Post.status == 'publish',)
 
         query = self.session.query(Field).join(*self.joins, isouter=True).filter(*fb.get_filter()).order_by(*fb.get_order_by())
-        print(query)
         result = Paginate(query, fb.get_page(), fb.get_limit())
         schema = FieldSchema(many=True, exclude=self.get_exclude_fields(args, ['post', 'grouper']))
         return self.handle_success(result, schema, 'get', 'Field')
@@ -47,9 +46,10 @@ class FieldRepository(RepositoryBase):
         if not self.the_logged_user:
             self.joins.append(Post)
             fb.set_range_of_dates_filter(joined=Post, joined_key='publish_on')
-            fb.filter += ((Post.is_protected != True),)
-
-        result = self.session.query(Field).join(*self.joins, isouter=True).filter(*fb.get_filter()).filter_by(id=id).first()
+            fb.filter += (Post.is_protected != True, Post.status == 'publish',)
+        
+        fb.filter += (Field.id == id,)
+        result = self.session.query(Field).join(*self.joins, isouter=True).filter(*fb.get_filter()).first()
         schema = FieldSchema(many=False, exclude=self.get_exclude_fields(args, ['post', 'grouper']))
         return self.handle_success(result, schema, 'get_by_id', 'Field')
 

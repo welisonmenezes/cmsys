@@ -7,7 +7,6 @@ from ErrorHandlers import BadRequestError, NotAuthorizedError
 
 # TODO: from post to be able to save/update/delete grouper and fields
 # TODO: see how implement the post childs range date and is_protected filters
-# TODO: implement the post status filter to non logged user
 
 class PostRepository(RepositoryBase):
     """Works like a layer witch gets or transforms data and makes the
@@ -49,7 +48,7 @@ class PostRepository(RepositoryBase):
                 fb.set_range_of_dates_filter()
             self.set_can_see_protected()
             if not self.can_see_protected:
-                fb.filter += ((Post.is_protected != True),)
+                fb.filter += (Post.is_protected != True, Post.status == 'publish',)
 
         except Exception as e:
             raise BadRequestError(str(e))
