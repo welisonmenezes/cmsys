@@ -328,8 +328,23 @@ class RepositoryBase():
 
 
     def set_can_see_protected(self):
+        """Update the property can_see_protected based on the logged user credentials."""
+
         if self.the_logged_user:
             capabilities = self.the_logged_user['user'].role.capabilities
             for capability in capabilities:
                 if getattr(capability, 'type') == 'see-protected':
                     self.can_see_protected = True
+
+
+    def set_protection_to_child_post(self, filter_builder):
+        """Set filters on child post to protect visibility by no logged and/or unauthorized user."""
+
+        self.joins.append(Post)
+        self.set_can_see_protected()
+        if not self.the_logged_user:
+            filter_builder.set_range_of_dates_filter(joined=Post, joined_key='publish_on')
+            filter_builder.filter += (Post.status == 'publish',)
+        if not self.can_see_protected:
+            filter_builder.filter += (Post.is_protected != True,)
+

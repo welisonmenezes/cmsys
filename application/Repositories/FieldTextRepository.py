@@ -19,7 +19,8 @@ class FieldTextRepository(RepositoryBase):
         fb = FilterBuilder(FieldText, args)
         fb.set_like_filters(['content'])
         fb.set_equals_filters(['field_id', 'grouper_id', 'post_id'])
-        query = self.session.query(FieldText).filter(*fb.get_filter()).order_by(*fb.get_order_by())
+        self.set_protection_to_child_post(fb)
+        query = self.session.query(FieldText).join(*self.joins, isouter=True).filter(*fb.get_filter()).order_by(*fb.get_order_by())
         result = Paginate(query, fb.get_page(), fb.get_limit())
         schema = FieldTextSchema(many=True)
         return self.handle_success(result, schema, 'get', 'FieldText')
@@ -29,7 +30,10 @@ class FieldTextRepository(RepositoryBase):
         """Returns a single row found by id recovered from model.
             Before applies the received query params arguments."""
 
-        result = self.session.query(FieldText).filter_by(id=id).first()
+        fb = FilterBuilder(Post, {})
+        self.set_protection_to_child_post(fb)
+        fb.filter += (FieldText.id == id,)
+        result = self.session.query(FieldText).join(*self.joins, isouter=True).filter(*fb.get_filter()).first()
         schema = FieldTextSchema(many=False)
         return self.handle_success(result, schema, 'get_by_id', 'FieldText')
 

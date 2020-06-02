@@ -12,13 +12,12 @@ class AuthUtils():
 
 
     def get_logged_in(self):
-        """"""
+        """Get the logged user if the given token is valid, otherwise, return False."""
 
         token = request.headers.get('Authorization')
         if token:
             try:
                 access = decode_token(token)
-
                 if 'identity' in access:
                     identity = access['identity']
                     if 'id' in identity and 'login' in identity and 'role' in identity:
@@ -28,8 +27,7 @@ class AuthUtils():
                                 'user': user,
                                 'access': access
                             }
-
-            except expression as identifier:
+            except Exception as e:
                 return False
         return False
 
