@@ -1,0 +1,36 @@
+.TopBar {
+    height: 100%;
+    
+    .btn-icon {
+        cursor: pointer;
+        font-size: 1.6rem;
+        color: #90a4ae;
+    }
+
+    ul {
+        height: 100%;
+
+        &.menu-icons {
+            padding-left: 10px;
+
+            li {
+                height: 26px;
+                margin-right: 5px;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+
+                span {
+                    display: inline-block;
+                    height: 26px;
+                }
+            }
+    
+            svg {
+                vertical-align: top;
+            }
+        }
+    }
+    
+}

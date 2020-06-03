@@ -13,7 +13,7 @@ function App() {
             <BrowserRouter>
                 <Switch>
                     <PublicRoute restricted={true} component={SignIn} path="/" exact />
-                    <PrivateRoute component={Dashboard} path="/dashboard" exact />
+                    <PrivateRoute component={Dashboard} path="/dashboard" />
                     <Route component={Error404} />
                 </Switch>
             </BrowserRouter>
