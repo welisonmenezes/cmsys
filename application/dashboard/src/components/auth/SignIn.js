@@ -1,26 +1,23 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom'
-import IsLoggedIn from '../../utils/auth/IsLoggedIn';
+import React from "react";
+import { Redirect } from "react-router-dom";
+import IsLoggedIn from "../../utils/auth/IsLoggedIn";
 
 function SignIn() {
-
     const renderRedirect = () => {
         if (this.state.redirect) {
-            return <Redirect to='/dashboard' />
+            return <Redirect to="/dashboard" />;
         }
-    }
+    };
 
     return (
         <div className="SignIn">
-            {IsLoggedIn() &&
-                renderRedirect()
-            }
+            {IsLoggedIn() && renderRedirect()}
 
-            {!IsLoggedIn() &&
+            {!IsLoggedIn() && (
                 <>
                     <h1>Login page</h1>
                 </>
-            }
+            )}
         </div>
     );
 }

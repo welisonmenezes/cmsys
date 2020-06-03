@@ -1,15 +1,14 @@
-import React from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import './Dashboard.scss';
-import TopBar from '../shared/top-bar/TopBar';
-import MainMenu from '../shared/main-menu/MainMenu';
-import Post from '../pages/Posts';
+import React from "react";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
+import "./Dashboard.scss";
+import TopBar from "../shared/top-bar/TopBar";
+import MainMenu from "../shared/main-menu/MainMenu";
+import Post from "../pages/Posts";
 
 function Dashboard() {
-
     let { url } = useRouteMatch();
 
-    console.log(url)
+    console.log(url);
 
     return (
         <div className="Dashboard">

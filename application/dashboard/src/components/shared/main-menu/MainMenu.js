@@ -1,8 +1,7 @@
-import React from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import React from "react";
+import { Link, useRouteMatch } from "react-router-dom";
 
 function MainMenu() {
-
     let { url } = useRouteMatch();
 
     return (
