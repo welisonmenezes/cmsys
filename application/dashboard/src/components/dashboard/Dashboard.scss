@@ -1,5 +1,6 @@
 .Dashboard {
-    & > header {
+
+    > header {
         background: #fff;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         position: fixed;
@@ -8,18 +9,32 @@
         height: 60px;
     }
 
-    & > section {
+    > section {
         background-color: #f2f7f8;
         padding-top: 60px;
 
-        & > aside {
+        > aside {
             background-color: #272c33;
             min-height: calc(100vh - 60px);
-            width: 240px;
+            width: 60px;
         }
 
-        & > main {
+        > main {
             padding: 15px 20px;
+            width: 100%;
         }
+
+    }
+
+    &.menu-opened {
+
+        > section {
+
+            > aside {
+                width: 240px;
+            }
+
+        }
+
     }
 }

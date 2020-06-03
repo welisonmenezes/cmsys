@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import "./Dashboard.scss";
+import { AppContext } from "../../contexts/AppContext";
 import TopBar from "../shared/top-bar/TopBar";
 import MainMenu from "../shared/main-menu/MainMenu";
 import Post from "../pages/Posts";
 
 const Dashboard = () => {
-    let { url } = useRouteMatch();
+    const { url } = useRouteMatch();
+    const { layoutState } = useContext(AppContext);
+
+    console.log(layoutState)
 
     return (
-        <div className="Dashboard">
+        <div className={`Dashboard ${layoutState.isMenuOpen ? "menu-opened" : ""}`}>
             <header>
                 <TopBar></TopBar>
             </header>
             <section className="d-flex">
-                <aside>
+                <aside className="nice-transition-width">
                     <MainMenu></MainMenu>
                 </aside>
                 <main>

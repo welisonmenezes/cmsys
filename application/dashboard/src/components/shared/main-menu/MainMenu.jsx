@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
+import { AppContext } from "../../../contexts/AppContext";
 
 const MainMenu = () => {
-    let { url } = useRouteMatch();
+    const { url } = useRouteMatch();
+    const { layoutState } = useContext(AppContext);
 
     return (
-        <div className="MainMenu">
+        <div className={`MainMenu noselect ${layoutState.isMenuOpen ? "menu-opened" : ""}`}>
             <Link to={`${url}/post`}>Post</Link>
         </div>
     );

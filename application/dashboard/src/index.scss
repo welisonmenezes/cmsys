@@ -14,3 +14,19 @@ li {
     transition-property: all;
     transition-timing-function: "easy";
 }
+
+.nice-transition-width {
+    transition-delay: 0;
+    transition-duration: 0.3s;
+    transition-property: width;
+    transition-timing-function: "easy";
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
