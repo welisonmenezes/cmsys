@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import IsLoggedIn from "../../utils/auth/IsLoggedIn";
 
-function SignIn() {
+const SignIn = () => {
     const renderRedirect = () => {
         if (this.state.redirect) {
             return <Redirect to="/dashboard" />;
@@ -20,6 +20,6 @@ function SignIn() {
             )}
         </div>
     );
-}
+};
 
 export default SignIn;

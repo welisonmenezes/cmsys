@@ -5,10 +5,8 @@ import TopBar from "../shared/top-bar/TopBar";
 import MainMenu from "../shared/main-menu/MainMenu";
 import Post from "../pages/Posts";
 
-function Dashboard() {
+const Dashboard = () => {
     let { url } = useRouteMatch();
-
-    console.log(url);
 
     return (
         <div className="Dashboard">
@@ -27,6 +25,6 @@ function Dashboard() {
             </section>
         </div>
     );
-}
+};
 
 export default Dashboard;

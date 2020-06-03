@@ -2,7 +2,7 @@ import React from "react";
 import { IoIosMenu, IoIosArrowRoundBack, IoIosClose } from "react-icons/io";
 import "./TopBar.scss";
 
-function TopBar() {
+const TopBar = () => {
     return (
         <div className="TopBar d-flex align-items-center">
             <ul className="d-flex align-items-center menu-icons">
@@ -24,6 +24,6 @@ function TopBar() {
             </ul>
         </div>
     );
-}
+};
 
 export default TopBar;

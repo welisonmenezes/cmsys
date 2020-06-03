@@ -7,7 +7,7 @@ import SignIn from "./components/auth/SignIn";
 import Dashboard from "./components/dashboard/Dashboard";
 import Error404 from "./components/error/Error404";
 
-function App() {
+const App = () => {
     return (
         <div className="App">
             <BrowserRouter>
