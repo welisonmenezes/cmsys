@@ -1,0 +1,57 @@
+.Menu {
+
+    a {
+        display: block;
+        font-size: 15px;
+        padding: 10px;
+        color: #798699;
+
+        &:hover {
+            color: #009efb;
+            border-color: #009efb;
+        }
+    }
+
+    > li {
+        > a {
+            border-left: 2px solid transparent;
+            
+            svg {
+                width: 20px;
+                height: 20px;
+                vertical-align: middle;
+            }
+
+            > span {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            &.menu-header {
+                &.active {
+                    border-color: #009efb;
+
+                    + .submenu {
+                        max-height: 150px;
+                    }
+                }
+            }
+        }            
+    }
+
+    .submenu {
+        padding-left: 28px;
+        max-height: 0;
+        overflow: hidden;
+
+        a {
+            font-size: 14px;
+        }
+
+        > li {
+            &:last-child {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
