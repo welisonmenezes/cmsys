@@ -4,7 +4,11 @@ import "./Dashboard.scss";
 import { AppContext } from "../../contexts/AppContext";
 import TopBar from "../shared/top-bar/TopBar";
 import MainMenu from "../shared/main-menu/MainMenu";
-import Post from "../pages/Posts";
+import Configurations from "../pages/Configurations/Configurations";
+import Medias from "../pages/Medias/Medias";
+import Posts from "../pages/Posts/Posts";
+import PostTypes from "../pages/PostTypes/PostTypes";
+import Users from "../pages/Users/Users";
 
 const Dashboard = () => {
     const { url } = useRouteMatch();
@@ -31,7 +35,11 @@ const Dashboard = () => {
                 <div className="mbl-overlay-menu nice-transition" onClick={toogleMenu}></div>
                 <main>
                     <Switch>
-                        <Route exact path={`${url}/post`} component={Post} />
+                        <Route exact path={`${url}/configurations`} component={Configurations} />
+                        <Route exact path={`${url}/medias`} component={Medias} />
+                        <Route exact path={`${url}/posts`} component={Posts} />
+                        <Route exact path={`${url}/post-types`} component={PostTypes} />
+                        <Route exact path={`${url}/users`} component={Users} />
                     </Switch>
                 </main>
             </section>
