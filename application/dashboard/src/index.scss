@@ -10,16 +10,37 @@ li {
 
 .nice-transition {
     transition-delay: 0;
-    transition-duration: 0.3s;
+    transition-duration: 0.6s;
     transition-property: all;
     transition-timing-function: "easy";
 }
 
-.nice-transition-width {
-    transition-delay: 0;
-    transition-duration: 0.3s;
-    transition-property: width;
-    transition-timing-function: "easy";
+.nice-transition.nt-width {
+    transition-property: width, 'min-width', 'max-width';
+}
+
+.nice-transition.nt-height {
+    transition-property: height, 'min-height', 'max-height';
+}
+
+.nice-transition.nt-left {
+    transition-property: left;
+}
+
+.nice-transition.nt-top {
+    transition-property: top;
+}
+
+.nice-transition.nt-right {
+    transition-property: right;
+}
+
+.nice-transition.nt-bottom {
+    transition-property: bottom;
+}
+
+.nice-transition.nt-left-width {
+    transition-property: width, left, 'min-width', 'max-width';
 }
 
 .noselect {

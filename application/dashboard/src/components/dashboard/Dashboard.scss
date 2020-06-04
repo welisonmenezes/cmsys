@@ -1,5 +1,4 @@
 .Dashboard {
-
     > header {
         background: #fff;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -7,23 +6,46 @@
         top: 0px;
         width: 100%;
         height: 60px;
+        z-index: 99;
+    }
+
+    .mbl-overlay-menu {
+        background-color: rgba(0, 0, 0,  .5);
+        width: 100vh;
+        height: 100vh;
+        position: fixed;
+        top: 60px;
+        pointer-events: none;
+        z-index: -9;
+        opacity: 0;
     }
 
     > section {
         background-color: #f2f7f8;
         padding-top: 60px;
+        position: relative;
 
         > aside {
             background-color: #272c33;
             min-height: calc(100vh - 60px);
             width: 60px;
+            min-width: 60px;
+
+            @media (max-width: 992px) {
+                position: absolute;
+                left: -240px;
+                right: 0;
+                z-index: 99;
+                width: 240px;
+                min-width: 240px;
+            }
         }
 
         > main {
             padding: 15px 20px;
             width: 100%;
+            min-height: calc(100vh - 60px);
         }
-
     }
 
     &.menu-opened {
@@ -32,9 +54,21 @@
 
             > aside {
                 width: 240px;
+                min-width: 240px;
+
+                @media (max-width: 992px) {
+                    left: 0;
+                }
             }
 
         }
 
+        @media (max-width: 992px) {
+            .mbl-overlay-menu {
+                pointer-events: auto;
+                z-index: 9;
+                opacity: 1;
+            }
+        }
     }
 }

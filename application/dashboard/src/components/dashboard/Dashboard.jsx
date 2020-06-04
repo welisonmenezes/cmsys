@@ -8,9 +8,16 @@ import Post from "../pages/Posts";
 
 const Dashboard = () => {
     const { url } = useRouteMatch();
-    const { layoutState } = useContext(AppContext);
+    const { layoutState, setLayoutState } = useContext(AppContext);
 
-    console.log(layoutState)
+    const toogleMenu = (e) => {
+        e.preventDefault();
+        if (layoutState.isMenuOpen) {
+            setLayoutState({ ...layoutState, isMenuOpen: false });
+        } else {
+            setLayoutState({ ...layoutState, isMenuOpen: true });
+        }
+    };
 
     return (
         <div className={`Dashboard ${layoutState.isMenuOpen ? "menu-opened" : ""}`}>
@@ -18,9 +25,10 @@ const Dashboard = () => {
                 <TopBar></TopBar>
             </header>
             <section className="d-flex">
-                <aside className="nice-transition-width">
+                <aside className="nice-transition nt-left-width">
                     <MainMenu></MainMenu>
                 </aside>
+                <div className="mbl-overlay-menu nice-transition" onClick={toogleMenu}></div>
                 <main>
                     <Switch>
                         <Route exact path={`${url}/post`} component={Post} />
