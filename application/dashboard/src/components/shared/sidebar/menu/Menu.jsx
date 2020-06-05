@@ -41,7 +41,9 @@ const Menu = () => {
     }
 
     return (
-        <ul className="Menu">
+        <ul className={`Menu ${
+            layoutState.isMenuOpen ? "menu-opened" : "menu-closed"
+        }`}>
             <li>
                 <NavLink
                     to={`${url}/posts`}
@@ -176,6 +178,7 @@ const Menu = () => {
                     to={`${url}/configurations`}
                     onClick={closeMenu}
                     activeClassName="active"
+                    className="menu-root"
                 >
                     <IoIosSettings /> <span>Configurações</span>
                 </NavLink>

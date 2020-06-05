@@ -1,5 +1,4 @@
 .Menu {
-
     a {
         display: block;
         font-size: 15px;
@@ -15,7 +14,8 @@
     > li {
         > a {
             border-left: 2px solid transparent;
-            
+            height: 42px;
+
             svg {
                 width: 20px;
                 height: 20px;
@@ -27,16 +27,14 @@
                 vertical-align: middle;
             }
 
-            &.menu-header {
-                &.active {
-                    border-color: #009efb;
+            &.active {
+                border-color: #009efb;
 
-                    + .submenu {
-                        max-height: 150px;
-                    }
+                + .submenu {
+                    max-height: 150px;
                 }
             }
-        }            
+        }
     }
 
     .submenu {
@@ -46,12 +44,83 @@
 
         a {
             font-size: 14px;
+
+            &.active {
+                color: #009efb;
+            }
         }
 
         > li {
             &:last-child {
                 margin-bottom: 10px;
             }
+        }
+    }
+
+    .nice-transition {
+        transition-duration: 0.3s;
+        transition-timing-function: "linear";
+    }
+
+    &.menu-opened {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    &.menu-closed {
+        @media (min-width: 992px) {
+            
+            .menu-header > span,
+            .menu-root > span,
+            .submenu {
+                display: none;
+                text-align: left;
+                background-color: #181c22;
+            }
+
+            .submenu {
+                padding-left: 10px;
+                max-height: none;
+            }
+
+            > li {
+                text-align: center;
+                position: relative;
+
+                
+                &:hover {
+                    background-color: #009efb;
+                    
+                    > a {
+                        color: #fff;
+
+                        > span {
+                            top: 0;
+                            padding: 10px;
+                            background-color: #009efb;
+                            height: 42px;
+                        }
+
+                        &.active {
+                            color: #fff;
+                        }
+                    }
+
+                    > a > span,
+                    .submenu {
+                        display: block;
+                        position: absolute;
+                        left: 60px;
+                        width: 200px;
+                    }
+
+                    .submenu {
+                        top: 42px;
+                    }
+                }
+                
+            }
+
         }
     }
 }
