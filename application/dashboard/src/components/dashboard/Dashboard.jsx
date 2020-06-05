@@ -15,12 +15,10 @@ const Dashboard = () => {
     const { layoutState, setLayoutState } = useContext(AppContext);
 
     useEffect(() => {
-        const { innerWidth: width } = window;
-        if (width <= 992) {
-            disableAnimationTemporarily();
-            setLayoutState({ ...layoutState, isMenuOpen: false });
-        }
-        hideMenuAtNarrowScreenOnResize();
+        hideMenuAtNarrowScreen();
+        window.addEventListener("resize", () => {
+            hideMenuAtNarrowScreen();
+        });
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const disableAnimationTemporarily = () => {
@@ -32,21 +30,17 @@ const Dashboard = () => {
             setTimeout(() => {
                 bg.classList.add("nice-transition");
                 aside.classList.add("nice-transition");
-            }, 10);
+            }, 1);
         }
     };
 
-    const hideMenuAtNarrowScreenOnResize = () => {
-        window.addEventListener("resize", () => {
-            const { innerWidth: width } = window;
-            const dashboard = document.querySelector(".Dashboard.menu-opened");
-            if (width <= 992 && dashboard) {
-                disableAnimationTemporarily();
-                setLayoutState({ ...layoutState, isMenuOpen: false });
-            } else {
-                disableAnimationTemporarily();
-            }
-        });
+    const hideMenuAtNarrowScreen = () => {
+        const { innerWidth: width } = window;
+        const dashboard = document.querySelector(".Dashboard.menu-opened");
+        disableAnimationTemporarily();
+        if (width <= 992 && dashboard) {
+            setLayoutState({ ...layoutState, isMenuOpen: false });
+        }
     };
 
     const closeMenu = () => {

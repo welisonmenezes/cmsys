@@ -1,15 +1,24 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 
 export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
+    const getLocalStorageMenuStatus = () => {
+        const status = localStorage.getItem("isMenuOpen");
+        return status && status === "true" ? true : false;
+    };
+
     const [layoutState, setLayoutState] = useState({
-        isMenuOpen: true,
+        isMenuOpen: getLocalStorageMenuStatus(),
     });
+
+    useEffect(() => {
+        localStorage.setItem("isMenuOpen", layoutState.isMenuOpen);
+    }, [layoutState.isMenuOpen]);
 
     return (
         <AppContext.Provider value={{ layoutState, setLayoutState }}>
-            { children }
+            {children}
         </AppContext.Provider>
     );
 };
