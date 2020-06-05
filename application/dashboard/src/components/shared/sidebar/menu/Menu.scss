@@ -69,7 +69,6 @@
 
     &.menu-closed {
         @media (min-width: 992px) {
-            
             .menu-header > span,
             .menu-root > span,
             .submenu {
@@ -87,10 +86,9 @@
                 text-align: center;
                 position: relative;
 
-                
                 &:hover {
                     background-color: #009efb;
-                    
+
                     > a {
                         color: #fff;
 
@@ -118,9 +116,7 @@
                         top: 42px;
                     }
                 }
-                
             }
-
         }
     }
 }

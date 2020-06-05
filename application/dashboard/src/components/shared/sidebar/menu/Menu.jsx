@@ -20,30 +20,43 @@ const Menu = () => {
             setLayoutState({ ...layoutState, isMenuOpen: false });
         }
     };
-
+    
     const toggleSubmenu = (e) => {
         e.preventDefault();
-        closeAllSubmenus();
-        if (e.currentTarget.classList.contains('active')) {
-            e.currentTarget.classList.remove('active');
-        } else {
-            e.currentTarget.classList.add('active');
+        const el = e.currentTarget;
+        const { innerWidth: width } = window;
+
+        if (
+            el.parentElement.parentElement.classList.contains("menu-closed") &&
+            width > 992
+        ) {
+            return;
         }
-    }
+
+        closeAllSubmenus();
+
+        if (el.classList.contains("active")) {
+            el.classList.remove("active");
+        } else {
+            el.classList.add("active");
+        }
+    };
 
     const closeAllSubmenus = () => {
-        let submenus = document.querySelectorAll('.menu-header');
+        let submenus = document.querySelectorAll(".menu-header");
         if (submenus) {
             for (let i = 0; i < submenus.length; i++) {
-                submenus[i].classList.remove('active');
+                submenus[i].classList.remove("active");
             }
         }
-    }
+    };
 
     return (
-        <ul className={`Menu ${
-            layoutState.isMenuOpen ? "menu-opened" : "menu-closed"
-        }`}>
+        <ul
+            className={`Menu ${
+                layoutState.isMenuOpen ? "menu-opened" : "menu-closed"
+            }`}
+        >
             <li>
                 <NavLink
                     to={`${url}/posts`}

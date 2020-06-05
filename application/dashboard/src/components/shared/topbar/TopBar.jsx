@@ -6,7 +6,7 @@ import "./TopBar.scss";
 const TopBar = () => {
     const { layoutState, setLayoutState } = useContext(AppContext);
 
-    const toogleMenu = (e) => {
+    const toggleMenu = (e) => {
         e.preventDefault();
         if (layoutState.isMenuOpen) {
             setLayoutState({ ...layoutState, isMenuOpen: false });
@@ -26,7 +26,7 @@ const TopBar = () => {
                     <li>
                         <span
                             className="btn-icon nice-transition"
-                            onClick={toogleMenu}
+                            onClick={toggleMenu}
                         >
                             <IoIosArrowRoundBack />
                         </span>
@@ -36,7 +36,7 @@ const TopBar = () => {
                     <li>
                         <span
                             className="btn-icon nice-transition"
-                            onClick={toogleMenu}
+                            onClick={toggleMenu}
                         >
                             <IoIosMenu />
                         </span>
