@@ -1,7 +1,9 @@
 .Menu {
+    margin-bottom: 50px;
+
     a {
         display: block;
-        font-size: 15px;
+        font-size: .95rem;
         padding: 10px;
         color: #798699;
 
@@ -43,7 +45,7 @@
         overflow: hidden;
 
         a {
-            font-size: 14px;
+            font-size: .9rem;
 
             &.active {
                 color: #009efb;

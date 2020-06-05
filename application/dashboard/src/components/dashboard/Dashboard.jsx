@@ -21,6 +21,18 @@ const Dashboard = () => {
         });
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+    useEffect(() => {
+        if (layoutState.isMenuOpen) {
+            const sidebar = document.querySelector(
+                ".Dashboard > section > aside"
+            );
+            if (sidebar) {
+                console.log("sexo");
+                sidebar.scrollTop = 0;
+            }
+        }
+    }, [layoutState]);
+
     const disableAnimationTemporarily = () => {
         const bg = document.querySelector(".Dashboard .mbl-overlay-menu");
         const aside = document.querySelector(".Dashboard > section > aside");

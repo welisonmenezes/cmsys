@@ -13,9 +13,9 @@ const Sidebar = () => {
                 layoutState.isMenuOpen ? "menu-opened" : ""
             }`}
         >
-            <figure className="fig-logo">
+            <figure className="fig-logo d-flex nice-transition">
                 <img src={logo} alt="WM Logo" />
-                Manager
+                <span>CMSYS</span>
             </figure>
             <Menu />
         </div>

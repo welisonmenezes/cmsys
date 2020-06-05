@@ -6,6 +6,7 @@ import {
     IoIosSettings,
     IoMdPaper,
     IoMdPeople,
+    IoIosHome
 } from "react-icons/io";
 import "./Menu.scss";
 import { AppContext } from "../../../../contexts/AppContext";
@@ -57,6 +58,17 @@ const Menu = () => {
                 layoutState.isMenuOpen ? "menu-opened" : "menu-closed"
             }`}
         >
+            <li>
+                <NavLink
+                    to={`${url}`}
+                    onClick={closeMenu}
+                    activeClassName="active"
+                    className="menu-root"
+                    exact
+                >
+                    <IoIosHome /> <span>Home</span>
+                </NavLink>
+            </li>
             <li>
                 <NavLink
                     to={`${url}/posts`}
