@@ -38,6 +38,13 @@
                 z-index: 99;
                 width: 200px;
                 min-width: 200px;
+                
+            }
+
+            &.overflowed:hover {
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: calc(100vh - 60px);
             }
         }
 
@@ -64,6 +71,8 @@
 
                 @media (max-width: 992px) {
                     left: 0;
+                    overflow: auto;
+                    height: calc(100vh - 60px);
                 }
             }
 

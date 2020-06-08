@@ -27,7 +27,6 @@ const Dashboard = () => {
                 ".Dashboard > section > aside"
             );
             if (sidebar) {
-                console.log("sexo");
                 sidebar.scrollTop = 0;
             }
         }

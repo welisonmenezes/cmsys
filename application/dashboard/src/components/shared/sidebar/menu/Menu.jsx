@@ -6,7 +6,7 @@ import {
     IoIosSettings,
     IoMdPaper,
     IoMdPeople,
-    IoIosHome
+    IoIosHome,
 } from "react-icons/io";
 import "./Menu.scss";
 import { AppContext } from "../../../../contexts/AppContext";
@@ -21,12 +21,11 @@ const Menu = () => {
             setLayoutState({ ...layoutState, isMenuOpen: false });
         }
     };
-    
+
     const toggleSubmenu = (e) => {
         e.preventDefault();
         const el = e.currentTarget;
         const { innerWidth: width } = window;
-
         if (
             el.parentElement.parentElement.classList.contains("menu-closed") &&
             width > 992
@@ -47,7 +46,46 @@ const Menu = () => {
         let submenus = document.querySelectorAll(".menu-header");
         if (submenus) {
             for (let i = 0; i < submenus.length; i++) {
-                submenus[i].classList.remove("active");
+                const active = submenus[i].parentElement.querySelector('.submenu a.active');
+                if (! active)
+                {
+                    submenus[i].classList.remove("active");
+                }
+            }
+        }
+    };
+
+    const isShortFreeHeight = (menu) => {
+        const { innerHeight: height } = window;
+        const freeHeight = height - 60 - 70 - 80;
+        const elHeight = menu.offsetHeight;
+        if (freeHeight < elHeight) {
+            if (!layoutState.isMenuOpen) {
+                menu.parentElement.parentElement.classList.add("was-closed");
+                
+            }
+            menu.parentElement.parentElement.classList.add("overflowed");
+            return true;
+        }
+        menu.parentElement.parentElement.classList.remove("overflowed");
+        return false;
+    };
+
+    const openMenuAtShortScreen = (e) => {
+        const menu = document.querySelector(".Menu");
+        if (menu && isShortFreeHeight(menu)) {
+            setLayoutState({ ...layoutState, isMenuOpen: true });
+        }
+    };
+
+    const closeMenuAtShortScreen = (e) => {
+        const menu = document.querySelector(".Menu");
+        if (menu) {
+            const parent = menu.parentElement.parentElement;
+            if (parent && parent.classList.contains("was-closed")) {
+                parent.classList.remove("was-closed");
+                setLayoutState({ ...layoutState, isMenuOpen: false });
+                closeAllSubmenus();
             }
         }
     };
@@ -57,6 +95,8 @@ const Menu = () => {
             className={`Menu ${
                 layoutState.isMenuOpen ? "menu-opened" : "menu-closed"
             }`}
+            onMouseLeave={closeMenuAtShortScreen}
+            onMouseEnter={openMenuAtShortScreen}
         >
             <li>
                 <NavLink
@@ -170,6 +210,16 @@ const Menu = () => {
             </li>
             <li>
                 <NavLink
+                    to={`${url}/configurations`}
+                    onClick={closeMenu}
+                    activeClassName="active"
+                    className="menu-root"
+                >
+                    <IoIosSettings /> <span>Configurações</span>
+                </NavLink>
+            </li>
+            <li>
+                <NavLink
                     to={`${url}/users`}
                     onClick={toggleSubmenu}
                     activeClassName="active"
@@ -197,16 +247,6 @@ const Menu = () => {
                         </NavLink>
                     </li>
                 </ul>
-            </li>
-            <li>
-                <NavLink
-                    to={`${url}/configurations`}
-                    onClick={closeMenu}
-                    activeClassName="active"
-                    className="menu-root"
-                >
-                    <IoIosSettings /> <span>Configurações</span>
-                </NavLink>
             </li>
         </ul>
     );
