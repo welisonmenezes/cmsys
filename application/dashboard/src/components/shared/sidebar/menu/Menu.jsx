@@ -82,10 +82,13 @@ const Menu = () => {
         const menu = document.querySelector(".Menu");
         if (menu) {
             const parent = menu.parentElement.parentElement;
-            if (parent && parent.classList.contains("was-closed")) {
-                parent.classList.remove("was-closed");
-                setLayoutState({ ...layoutState, isMenuOpen: false });
-                closeAllSubmenus();
+            if (parent) {
+                parent.scrollTop = 0;
+                if (parent.classList.contains("was-closed")) {
+                    parent.classList.remove("was-closed");
+                    setLayoutState({ ...layoutState, isMenuOpen: false });
+                    closeAllSubmenus();
+                }
             }
         }
     };
