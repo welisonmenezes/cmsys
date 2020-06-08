@@ -1,9 +1,63 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
 const WMEditor = () => {
+    useEffect(() => {
+        customScrollbar();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     const handleEditorChange = (e) => {
         console.log("Content was updated:", e.target.getContent());
+    };
+
+    const getFreeHeight = () => {
+        const { innerHeight: height } = window;
+        return height - 60 - 70;
+    };
+
+    const customScrollbar = () => {
+        let iframe = document.querySelector(".WMEditor .tox-edit-area iframe");
+        let attempts = 0;
+
+        setTimeout(() => {
+            if (!iframe && attempts < 1000) {
+                iframe = document.querySelector(
+                    ".WMEditor .tox-edit-area iframe"
+                );
+                attempts++;
+                if (iframe) {
+                    const style = document.createElement("style");
+                    style.textContent = `
+                    ::-webkit-scrollbar {
+                        width: 5px;
+                        height: 5px;
+                        background: #ccc;
+                    }
+                    ::-webkit-scrollbar-button {
+                        display: none;
+                    }
+                    ::-webkit-scrollbar-track {
+                        background-color: transparent;
+                    }
+                    ::-webkit-scrollbar-track-piece {
+                        background-color: transparent;
+                    }
+                    ::-webkit-scrollbar-thumb {
+                        background: #009efb;
+                    }
+                    ::-webkit-scrollbar-corner {
+                        background-color: transparent;
+                    }
+                    ::-webkit-resizer {
+                        background-color: transparent;
+                    }
+                    `;
+                    iframe.contentDocument.head.appendChild(style);
+                } else {
+                    customScrollbar();
+                }
+            }
+        }, 10);
     };
 
     return (
@@ -18,12 +72,12 @@ const WMEditor = () => {
                         );
                         freeTiny.style.display = "none";
                     },
-                    height: 500,
+                    max_height: getFreeHeight(),
                     menubar: false,
                     plugins: [
                         "advlist autolink lists link image media",
                         "charmap print preview anchor help",
-                        "searchreplace visualblocks code",
+                        "searchreplace visualblocks code autoresize",
                         "insertdatetime media table paste wordcount",
                     ],
                     toolbar:
@@ -44,6 +98,7 @@ const WMEditor = () => {
                             );
                         }, 2000);
                     },
+                    language: "pt_BR",
                 }}
                 onChange={handleEditorChange}
             />
