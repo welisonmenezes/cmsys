@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
+import UploaerThumb from "./UploaderThumb";
 
 const baseStyle = {
     flex: 1,
@@ -41,14 +42,20 @@ const Uploader = () => {
     } = useDropzone({
         accept: "image/*",
         onDrop: (acceptedFiles) => {
-            acceptedFiles.map((file) => {
+            acceptedFiles.map(async (file) => {
+                console.log(file)
                 var reader = new window.FileReader();
                 reader.readAsDataURL(file);
-                reader.onloadend = async function () {
+                reader.onloadend = function () {
                     const base64data = reader.result;
-                    setFiles([...files, { preview: base64data, key: "xxx" }]);
+                    setFiles(files => [
+                        ...files,
+                        {
+                            preview: base64data,
+                            key: new Date().getMilliseconds(),
+                        },
+                    ]);
                 };
-                return true;
             });
         },
     });
@@ -63,21 +70,13 @@ const Uploader = () => {
         [isDragActive, isDragReject, isDragAccept]
     );
 
-    const thumbs = files.map((file) => (
-        <div key={file.key}>
-            <div>
-                <img src={file.preview} alt="" />
-            </div>
-        </div>
-    ));
-
     return (
         <div>
             <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
                 <p>Drag 'n' drop some files here, or click to select files</p>
             </div>
-            <aside>{thumbs}</aside>
+            <UploaerThumb files={files} />
         </div>
     );
 };
