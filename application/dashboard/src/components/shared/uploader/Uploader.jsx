@@ -1,34 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import UploaerThumb from "./UploaderThumb";
-
-const baseStyle = {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "20px",
-    borderWidth: 2,
-    borderRadius: 2,
-    borderColor: "#798699",
-    borderStyle: "dashed",
-    backgroundColor: "#FFFFFF",
-    color: "#798699",
-    outline: "none",
-    transition: "border .24s ease-in-out",
-};
-
-const activeStyle = {
-    borderColor: "#009efb",
-};
-
-const acceptStyle = {
-    borderColor: "#009efb",
-};
-
-const rejectStyle = {
-    borderColor: "#ff1744",
-};
+import "./Uploader.scss";
 
 const Uploader = () => {
     const [files, setFiles] = useState([]);
@@ -60,19 +33,27 @@ const Uploader = () => {
         },
     });
 
-    const style = useMemo(
-        () => ({
-            ...baseStyle,
-            ...(isDragActive ? activeStyle : {}),
-            ...(isDragAccept ? acceptStyle : {}),
-            ...(isDragReject ? rejectStyle : {}),
-        }),
+    const theClass = useMemo(
+        () => {
+            let className = "area";
+            if (isDragActive) {
+                className += " drag-active";
+            }
+            if (isDragReject) {
+                className += " drag-reject";
+            }
+            if (isDragAccept) {
+                className += " drag-accept";
+            }
+            return className;
+        },
         [isDragActive, isDragReject, isDragAccept]
     );
 
     return (
-        <div>
-            <div {...getRootProps({ style })}>
+        <div className="Uploader">
+            {console.log(getRootProps())}
+            <div {...getRootProps({className: theClass})}>
                 <input {...getInputProps()} />
                 <p>Drag 'n' drop some files here, or click to select files</p>
             </div>

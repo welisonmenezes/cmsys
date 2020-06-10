@@ -1,0 +1,32 @@
+.Uploader {
+    .area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        border-width: 2px;
+        border-radius: 2px;
+        border-color: #798699;
+        border-style: dashed;
+        background-color: #FFFFFF;
+        color: #798699;
+        outline: none;
+        transition: border .24s ease-in-out;
+
+        p {
+            padding: 0;
+            margin: 0;
+        }
+
+        &.drag-active {
+            border-color: #009efb,
+        }
+        &.drag-reject {
+            border-color: #ff1744,
+        }
+        &.drag-accept {
+            border-color: #009efb,
+        }
+    }
+}
