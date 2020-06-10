@@ -88,3 +88,9 @@ a:hover {
     -ms-user-select: none;
     user-select: none;
 }
+
+.ellipse-text {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+  }

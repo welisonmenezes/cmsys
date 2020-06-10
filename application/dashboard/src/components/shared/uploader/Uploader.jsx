@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
-import UploaerThumb from "./UploaderThumb";
+import UploaderFiles from "./UploaderFiles";
 import "./Uploader.scss";
 
 const Uploader = () => {
@@ -26,6 +26,8 @@ const Uploader = () => {
                         {
                             preview: base64data,
                             key: new Date().getMilliseconds(),
+                            name: file.name,
+                            size: file.size
                         },
                     ]);
                 };
@@ -57,7 +59,7 @@ const Uploader = () => {
                 <input {...getInputProps()} />
                 <p>Drag 'n' drop some files here, or click to select files</p>
             </div>
-            <UploaerThumb files={files} />
+            <UploaderFiles files={files} />
         </div>
     );
 };

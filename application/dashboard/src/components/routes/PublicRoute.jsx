@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import IsLoggedIn from "../../utils/auth/IsLoggedIn";
+import IsLoggedIn from "../../utils/IsLoggedIn";
 
 const PublicRoute = ({ component: Component, restricted, ...rest }) => {
     return (

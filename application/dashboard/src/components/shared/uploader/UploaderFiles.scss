@@ -1,0 +1,68 @@
+.UploaderFiles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    color: #798699;
+
+    > div {
+        width: 100%;
+        border-bottom: solid 1px #f2f7f8;
+
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .thumb-grid {
+        width: 100%;
+        padding: .5rem;
+        background-color: #fff;
+
+        > div {
+            width: 25%;
+
+            &:first-child {
+                width: 20%;
+            }
+            &:last-child {
+                width: 30%;
+            }
+            &.ellipse-text {
+                padding-left: 1rem;
+            }
+        }
+    }
+
+    .thumb-item {
+        display: inline-flex;
+        width: 60px;
+        height: 60px;
+        box-sizing: border-box;
+
+        > div {
+            display: flex;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        img {
+            display: block;
+            width: auto;
+            height: 100%;
+        }
+    }
+
+    button {
+        margin-right: .5rem;
+
+        svg {
+            margin-top: -2px;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
