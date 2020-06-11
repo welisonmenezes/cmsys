@@ -1,10 +1,13 @@
 import React, { useState, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import UploaderFiles from "./UploaderFiles";
+import UploaderEditImage from "./UploaderEditImage";
 import "./Uploader.scss";
 
 const Uploader = () => {
     const [files, setFiles] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [preview, setPreview] = useState(null);
 
     const {
         getRootProps,
@@ -61,6 +64,16 @@ const Uploader = () => {
         console.log("Editing the file: ", file);
     };
 
+    const openModalImagePreview = (file) => {
+        setShowModal(true);
+        setPreview(file);
+    };
+
+    const closeModalImagePreview = () => {
+        setShowModal(false);
+        setPreview(null);
+    };
+
     return (
         <div className="Uploader">
             <div {...getRootProps({ className: theClass })}>
@@ -72,6 +85,12 @@ const Uploader = () => {
                 removeFile={removeFile}
                 uploadFile={uploadFile}
                 editFile={editFile}
+                openModalImagePreview={openModalImagePreview}
+            />
+            <UploaderEditImage
+                showModal={showModal}
+                closeModalImagePreview={closeModalImagePreview}
+                file={preview}
             />
         </div>
     );

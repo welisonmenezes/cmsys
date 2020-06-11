@@ -11,7 +11,7 @@ const UploaderFiles = (props) => {
                     <div className="thumb-grid d-flex justify-content-around align-items-center">
                         <div>
                             <div className="thumb-item">
-                                <div>
+                                <div onClick={() => {props.openModalImagePreview(file)}}>
                                     <img src={file.preview} alt="" />
                                 </div>
                             </div>
