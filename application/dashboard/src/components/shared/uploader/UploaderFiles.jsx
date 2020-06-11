@@ -23,14 +23,24 @@ const UploaderFiles = (props) => {
                             <span>{FormatBytes(file.size)}</span>
                         </div>
                         <div>
-                            <button className="btn btn-sm btn-primary">
+                            <button
+                                className="btn btn-sm btn-primary"
+                                onClick={() => props.uploadFile(file)}
+                            >
                                 <IoMdCloudUpload /> Enviar
                             </button>
-                            <button className="btn btn-sm btn-success">
+                            <button
+                                className="btn btn-sm btn-success"
+                                onClick={() => props.editFile(file)}
+                            >
                                 <IoMdCreate /> Editar
                             </button>
-                            <button className="btn btn-sm btn-danger">
-                                <IoIosCloseCircle /> Cancelar
+                            <button
+                                className="btn btn-sm btn-danger"
+                                onClick={() => props.removeFile(file.key)}
+                            >
+                                <IoIosCloseCircle />
+                                Cancelar
                             </button>
                         </div>
                     </div>
