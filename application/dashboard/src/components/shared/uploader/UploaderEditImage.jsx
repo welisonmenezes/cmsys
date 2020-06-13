@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { useEffect } from "react";
+import "./UploaderEditImage.scss";
 
 const UploaderEditImage = (prop) => {
     const [show, setShow] = useState(false);
@@ -20,27 +21,17 @@ const UploaderEditImage = (prop) => {
     return (
         <>
             <Modal
+                className="UploaderImageModal"
                 show={show}
                 onHide={prop.closeModalImagePreview}
                 animation={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal title</Modal.Title>
+                    <Modal.Title className="ellipse-text">{prop.file?.name}</Modal.Title>
                 </Modal.Header>
-
                 <Modal.Body>
                     {showPreview()}
                 </Modal.Body>
-
-                <Modal.Footer>
-                    <Button
-                        variant="secondary"
-                        onClick={prop.closeModalImagePreview}
-                    >
-                        Close
-                    </Button>
-                    <Button variant="primary">Save changes</Button>
-                </Modal.Footer>
             </Modal>
         </>
     );
