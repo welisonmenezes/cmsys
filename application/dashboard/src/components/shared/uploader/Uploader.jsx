@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import UploaderFiles from "./UploaderFiles";
-import UploaderEditImage from "./UploaderEditImage";
+import UploaderModal from "./UploaderModal";
 import "./Uploader.scss";
 
 const Uploader = () => {
@@ -16,7 +16,7 @@ const Uploader = () => {
         isDragAccept,
         isDragReject,
     } = useDropzone({
-        accept: "image/*",
+        accept: ["image/*", "application/pdf"],
         onDrop: (acceptedFiles) => {
             acceptedFiles.map(async (file) => {
                 var reader = new window.FileReader();
@@ -64,12 +64,12 @@ const Uploader = () => {
         console.log("Editing the file: ", file);
     };
 
-    const openModalImagePreview = (file) => {
+    const openUploaderModal = (file) => {
         setShowModal(true);
         setPreview(file);
     };
 
-    const closeModalImagePreview = () => {
+    const closeUploaderModal = () => {
         setShowModal(false);
         setPreview(null);
     };
@@ -85,11 +85,11 @@ const Uploader = () => {
                 removeFile={removeFile}
                 uploadFile={uploadFile}
                 editFile={editFile}
-                openModalImagePreview={openModalImagePreview}
+                openUploaderModal={openUploaderModal}
             />
-            <UploaderEditImage
+            <UploaderModal
                 showModal={showModal}
-                closeModalImagePreview={closeModalImagePreview}
+                closeUploaderModal={closeUploaderModal}
                 file={preview}
             />
         </div>

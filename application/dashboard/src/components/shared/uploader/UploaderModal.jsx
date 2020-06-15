@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useEffect } from "react";
-import "./UploaderEditImage.scss";
+import "./UploaderModal.scss";
 
-const UploaderEditImage = ({ showModal, file, closeModalImagePreview }) => {
+const UploaderModal = ({ showModal, file, closeUploaderModal }) => {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const UploaderEditImage = ({ showModal, file, closeModalImagePreview }) => {
             <Modal
                 className="UploaderImageModal"
                 show={show}
-                onHide={closeModalImagePreview}
+                onHide={closeUploaderModal}
                 animation={false}
             >
                 <Modal.Header closeButton>
@@ -35,4 +35,4 @@ const UploaderEditImage = ({ showModal, file, closeModalImagePreview }) => {
     );
 };
 
-export default UploaderEditImage;
+export default UploaderModal;

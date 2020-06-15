@@ -5,7 +5,7 @@ import { FormatBytes } from "../../../utils/FileUtils";
 
 const UploaderFiles = ({
     files,
-    openModalImagePreview,
+    openUploaderModal,
     uploadFile,
     editFile,
     removeFile,
@@ -19,7 +19,7 @@ const UploaderFiles = ({
                             <div className="thumb-item">
                                 <div
                                     onClick={() => {
-                                        openModalImagePreview(file);
+                                        openUploaderModal(file);
                                     }}
                                 >
                                     <img src={file.preview} alt="" />
