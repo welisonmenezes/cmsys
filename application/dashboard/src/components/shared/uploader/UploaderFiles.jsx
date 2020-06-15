@@ -3,15 +3,25 @@ import { IoMdCreate, IoIosCloseCircle, IoMdCloudUpload } from "react-icons/io";
 import "./UploaderFiles.scss";
 import { FormatBytes } from "../../../utils/FileUtils";
 
-const UploaderFiles = (props) => {
+const UploaderFiles = ({
+    files,
+    openModalImagePreview,
+    uploadFile,
+    editFile,
+    removeFile,
+}) => {
     return (
         <div className="UploaderFiles">
-            {props.files.map((file) => (
+            {files.map((file) => (
                 <div key={file.key}>
                     <div className="thumb-grid d-flex justify-content-around align-items-center">
                         <div>
                             <div className="thumb-item">
-                                <div onClick={() => {props.openModalImagePreview(file)}}>
+                                <div
+                                    onClick={() => {
+                                        openModalImagePreview(file);
+                                    }}
+                                >
                                     <img src={file.preview} alt="" />
                                 </div>
                             </div>
@@ -25,19 +35,19 @@ const UploaderFiles = (props) => {
                         <div>
                             <button
                                 className="btn btn-sm btn-primary"
-                                onClick={() => props.uploadFile(file)}
+                                onClick={() => uploadFile(file)}
                             >
                                 <IoMdCloudUpload /> Enviar
                             </button>
                             <button
                                 className="btn btn-sm btn-success"
-                                onClick={() => props.editFile(file)}
+                                onClick={() => editFile(file)}
                             >
                                 <IoMdCreate /> Editar
                             </button>
                             <button
                                 className="btn btn-sm btn-danger"
-                                onClick={() => props.removeFile(file.key)}
+                                onClick={() => removeFile(file.key)}
                             >
                                 <IoIosCloseCircle />
                                 Cancelar
