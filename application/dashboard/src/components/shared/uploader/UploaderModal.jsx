@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useEffect } from "react";
 import "./UploaderModal.scss";
+import UploaderPreview from "./UploaderPreview";
 
 const UploaderModal = ({ showModal, file, closeUploaderModal }) => {
     const [show, setShow] = useState(false);
@@ -9,12 +10,6 @@ const UploaderModal = ({ showModal, file, closeUploaderModal }) => {
     useEffect(() => {
         setShow(showModal);
     }, [showModal]);
-
-    const showPreview = () => {
-        if (file) {
-            return <img src={file.preview} alt="" />;
-        }
-    };
 
     return (
         <>
@@ -29,7 +24,7 @@ const UploaderModal = ({ showModal, file, closeUploaderModal }) => {
                         {file?.name}
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{showPreview()}</Modal.Body>
+                <Modal.Body>{<UploaderPreview file={file} />}</Modal.Body>
             </Modal>
         </>
     );

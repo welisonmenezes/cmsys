@@ -2,6 +2,7 @@ import React from "react";
 import { IoMdCreate, IoIosCloseCircle, IoMdCloudUpload } from "react-icons/io";
 import "./UploaderFiles.scss";
 import { FormatBytes } from "../../../utils/FileUtils";
+import UploaderPreview from "./UploaderPreview";
 
 const UploaderFiles = ({
     files,
@@ -22,7 +23,7 @@ const UploaderFiles = ({
                                         openUploaderModal(file);
                                     }}
                                 >
-                                    <img src={file.preview} alt="" />
+                                    <UploaderPreview file={file} origin="list" />
                                 </div>
                             </div>
                         </div>

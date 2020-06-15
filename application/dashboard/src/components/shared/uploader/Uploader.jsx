@@ -19,6 +19,7 @@ const Uploader = () => {
         accept: ["image/*", "application/pdf"],
         onDrop: (acceptedFiles) => {
             acceptedFiles.map(async (file) => {
+                //console.log(file)
                 var reader = new window.FileReader();
                 reader.readAsDataURL(file);
                 reader.onloadend = function () {
@@ -30,6 +31,7 @@ const Uploader = () => {
                             key: new Date().getMilliseconds(),
                             name: file.name,
                             size: file.size,
+                            type: file.type
                         },
                     ]);
                 };
